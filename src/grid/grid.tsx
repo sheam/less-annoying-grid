@@ -126,10 +126,6 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     );
 };
 
-interface TEST {
-    lastName: string;
-}
-
 function uuid(): string
 {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
