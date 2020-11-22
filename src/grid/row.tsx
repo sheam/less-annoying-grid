@@ -10,24 +10,24 @@ export interface IRowProps<TModel extends object>
 
 export const Row = <TModel extends object>(props: IRowProps<TModel>) =>
 {
-    return <div></div>;
-    // const allCols = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c);
-    // const uid = props.data.uid;
-    // return (
-    //     <tr title={`uid=${uid}`}>
-    //         {allCols.map(c => {
-    //                 if (c.type === 'data')
-    //                 {
-    //                     return <Cell key={`td-${uid}-${c.name}`} column={c} data={props.data}/>;
-    //                 }
-    //                 if (c.type === 'action')
-    //                 {
-    //                     return <ActionCell key={`td-${uid}-${c.name}`} column={c} data={props.data}/>;
-    //                 }
-    //             })
-    //         }
-    //     </tr>
-    // );
+    const allCols = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c);
+    const uid = props.data.uid;
+    return (
+        <tr title={`uid=${uid}`}>
+            {allCols.map(c => {
+                    if (c?.type === 'data')
+                    {
+                        return <Cell key={`td-${uid}-${c.name}`} column={c} data={props.data}/>;
+                    }
+                    if (c?.type === 'action')
+                    {
+                        return <ActionCell key={`td-${uid}-${c.name}`} column={c} data={props.data}/>;
+                    }
+                    throw new Error('unexpected cell type');
+                })
+            }
+        </tr>
+    );
 };
 
 interface ICellProps<TModel extends object>
@@ -40,9 +40,9 @@ export const Cell = <TModel extends object>({column: {field, hidden, renderDispl
 {
     return (
         <td hidden={hidden}>
-            {renderDisplay && renderDisplay(data.model) || ''}
+            {renderDisplay && renderDisplay(data.model)}
             {/* @ts-ignore */}
-            {!renderDisplay && ((data.model as any)[field].toString()) || ''}
+            {!renderDisplay && ((data.model as any)[field].toString())}
         </td>
     );
 };
@@ -60,7 +60,7 @@ export const ActionCell = <TModel extends object>({column, data}: IActionCellPro
                                     <button
                                         className={`action-${a.name}`}
                                         key={`action-${a.name}`}
-                                        onClick={() => a.handler(data.model, data.uid, data.dirty === true)}
+                                        onClick={() => a.handler(data.model, data.uid, data.dirty)}
                                     >
                                         {a.buttonContent}
                                     </button>)}

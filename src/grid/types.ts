@@ -70,7 +70,7 @@ export interface IDataResult<TModel extends object>
     data: TModel[];
 }
 
-export interface IDataState<TModel extends object>
+export interface IDataState
 {
     totalCount: number;
     data: IRowData[];

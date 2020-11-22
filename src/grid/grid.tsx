@@ -5,7 +5,7 @@ import {GridContext, IGridContext} from './context';
 import {Footer, IFooterProps} from './footer';
 import './grid.css';
 import {Header} from './header';
-import {IRowProps, Row} from './row';
+import {Row} from './row';
 import {Column, IDataResult, IDataState, IFieldFilter, IPagination, IRowData, ISortColumn} from './types';
 
 interface IGridProps<TModel extends object>
@@ -18,7 +18,7 @@ interface IGridProps<TModel extends object>
 
     getDataAsync: (pagination: IPagination, sort: ISortColumn|null, filters: IFieldFilter[]) => Promise<IDataResult<TModel>>;
 
-    editabl?: IGridEditable<TModel>;
+    editable?: IGridEditable<TModel>;
 }
 
 interface IGridEditable<TModel extends object>
@@ -45,12 +45,12 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     const [sort, setSort] = useState<ISortColumn|null>(null);
     const [filters, setFilters] = useState<IFieldFilter[]>([]);
     const [transmitting, setTransmitting] = useState<boolean>(false);
-    const [dataState, setDataState] = useState<IDataState<TModel>>({ totalCount: 0, data: [] });
+    const [dataState, setDataState] = useState<IDataState>({ totalCount: 0, data: [] });
 
     useEffect(() => {
         const fetch = async () => {
             const d = await props.getDataAsync(pagination, sort, filters);
-            const newState: IDataState<TModel> = {
+            const newState: IDataState = {
                 totalCount: d.totalCount,
                 data: d.data.map(m =>
                                  {
@@ -69,7 +69,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
         setTransmitting(true);
         // noinspection JSIgnoredPromiseFromCall
         fetch();
-    }, [pagination, sort, filters]);
+    }, [pagination, sort, filters, props]);
 
     const context: IGridContext = {
         pagination,
@@ -127,15 +127,11 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     );
 };
 
-interface TEST {
-    lastName: string;
-}
-
+//stealing from interwebs until next ES release which is supposed to have UID module
 function uuid(): string
 {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-        // tslint:disable-next-line:no-bitwise no-magic-numbers one-variable-per-declaration
-        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);  // eslint-disable-line
         return v.toString(16);
     });
 }
