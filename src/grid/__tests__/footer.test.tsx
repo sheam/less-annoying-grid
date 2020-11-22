@@ -12,6 +12,10 @@ const jumpButtonValue = (c: ShallowWrapper, index: number) => jumpButton(c, inde
 const jumpButtonDisabled  = (c: ShallowWrapper, index: number) => jumpButton(c, index).props().disabled;
 function setGridContextData(gridContext: GridContext.IGridContext): void
 {
+    if( !gridContext.setPagination )
+    {
+        gridContext.setPagination = jest.fn(); // default implementation
+    }
     jest
         .spyOn(GridContext, 'useGridContext')
         .mockImplementation(() => gridContext);
@@ -232,9 +236,10 @@ it('page size options', () => {
     );
 
     expect(getByTestId(component, 'page-size-select').find('option')).toHaveLength(3);
+
     if(!config.pageSizeOptions)
     {
-        throw new Error('config.pageSizeOptions not configured correctly for test');
+        throw new Error('pageSizeOptions not configured properly for test');
     }
     expect(getByTestId(component, 'page-size-select').find('option').at(0).props().value).toBe(config.pageSizeOptions[0]);
     expect(getByTestId(component, 'page-size-select').find('option').at(1).props().value).toBe(config.pageSizeOptions[1]);
