@@ -111,6 +111,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
                          </td>
                      </tr>
                     }
+                    {!showTransmitting && dataState.data.map(d => <Row columns={props.columns} data={d} />)}
                     </tbody>
 
                     {pagination &&
