@@ -1,33 +1,24 @@
 export interface IColumn<TModel extends object>
 {
-    type: 'data';
     name: string;
-    field?: string;
     hidden?: boolean;
+
+    //data column
+    field?: string;
     sortable?: boolean;
     editable?: IColumnEditable;
     renderDisplay?: (model: TModel) => JSX.Element|string;
+
+    //group column
+    subColumns?: Array<IColumn<TModel>>;
+
+    //action column
+    actions?: Array<IAction<TModel>>
 }
 
 interface IColumnEditable
 {
     editor: JSX.Element;
-}
-
-export interface IColumnGroup<TModel extends object>
-{
-    type: 'group';
-    name: string;
-    hidden?: boolean;
-    subColumns?: Array<IColumn<TModel>>;
-}
-
-export interface IActionColumn<TModel extends object>
-{
-    type: 'action';
-    name: string;
-    hidden?: boolean;
-    actions: Array<IAction<TModel>>;
 }
 
 export interface IRowData
@@ -43,8 +34,6 @@ export interface IAction<TModel extends object>
     buttonContent: JSX.Element|string;
     handler: (data: TModel, uid: string, dirty: boolean) => void;
 }
-
-export type Column<TModel extends object> = IColumn<TModel>|IColumnGroup<TModel>|IActionColumn<TModel>;
 
 export interface IFieldFilter
 {

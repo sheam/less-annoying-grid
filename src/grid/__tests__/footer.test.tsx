@@ -232,6 +232,10 @@ it('page size options', () => {
     );
 
     expect(getByTestId(component, 'page-size-select').find('option')).toHaveLength(3);
+    if(!config.pageSizeOptions)
+    {
+        throw Error('pageSizeOptions not setup properly in test');
+    }
     expect(getByTestId(component, 'page-size-select').find('option').at(0).props().value).toBe(config.pageSizeOptions[0]);
     expect(getByTestId(component, 'page-size-select').find('option').at(1).props().value).toBe(config.pageSizeOptions[1]);
     expect(getByTestId(component, 'page-size-select').find('option').at(2).props().value).toBe(config.pageSizeOptions[2]);

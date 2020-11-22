@@ -6,11 +6,11 @@ import {Footer, IFooterProps} from './footer';
 import './grid.css';
 import {Header} from './header';
 import {IRowProps, Row} from './row';
-import {Column, IDataResult, IDataState, IFieldFilter, IPagination, IRowData, ISortColumn} from './types';
+import {IColumn, IDataResult, IDataState, IFieldFilter, IPagination, IRowData, ISortColumn} from './types';
 
 interface IGridProps<TModel extends object>
 {
-    columns: Array<Column<TModel>>;
+    columns: Array<IColumn<TModel>>;
     footer?: IFooterProps;
 
     sortAscLabel?: JSX.Element | string;
@@ -82,7 +82,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
         setTransmitting,
     };
 
-    const totalColumns = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c).length;
+    const totalColumns = props.columns.flatMap(c => c.subColumns ? c.subColumns : c).length;
     const showTransmitting = transmitting && props.children?.transmittingState;
 
     return (

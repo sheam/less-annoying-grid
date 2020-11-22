@@ -3,7 +3,7 @@ import {shallow, ShallowWrapper} from 'enzyme';
 import * as React from 'react';
 import * as GridContext from '../context';
 import {Header} from '../header';
-import {Column, IColumn, ISortColumn} from '../types';
+import {IColumn, ISortColumn} from '../types';
 
 interface IDataRow
 {
@@ -23,21 +23,18 @@ function setGridContextData(gridContext: GridContext.IGridContext): void
 }
 
 it('renders simple header', () => {
-    const cols: Array<Column<IDataRow>> = [
+    const cols: Array<IColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'col 2',
             field: 'col2',
-            type: 'data',
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
     const c = shallow(
@@ -50,32 +47,27 @@ it('renders simple header', () => {
 });
 
 it('renders grouped header', () => {
-    const cols: Array<Column<IDataRow>> = [
+    const cols: Array<IColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'group 2',
-            type: 'group',
             subColumns: [
                 {
                     name: 'col 2 - sub1',
                     field: 'sub1',
-                    type: 'data',
                 },
                 {
                     name: 'col 2 - sub2',
                     field: 'sub2',
-                    type: 'data',
                 },
             ],
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
     const c = shallow(
@@ -83,8 +75,8 @@ it('renders grouped header', () => {
     );
 
     expect(headerCell(c, 0).text()).toContain(cols[0].name);
-    expect(headerCell(c, 1).text()).toContain(cols[1].type === 'group' ? cols[1].subColumns[0].name : 'error');
-    expect(headerCell(c, 2).text()).toContain(cols[1].type === 'group' ? cols[1].subColumns[1].name : 'error');
+    expect(headerCell(c, 1).text()).toContain(cols[1].subColumns ? cols[1].subColumns[0].name : 'error');
+    expect(headerCell(c, 2).text()).toContain(cols[1].subColumns ? cols[1].subColumns[1].name : 'error');
     expect(headerCell(c, 3).text()).toContain(cols[2].name);
 
     expect(getByTestId(c, 'group')).toHaveLength(cols.length);
@@ -101,17 +93,14 @@ it('renders sort ASC', () => {
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'col 2',
             field: 'col2',
-            type: 'data',
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
     const sort: ISortColumn = {
@@ -135,17 +124,14 @@ it('renders sort ASC custom', () => {
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'col 2',
             field: 'col2',
-            type: 'data',
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
     const sort: ISortColumn = {
@@ -169,17 +155,14 @@ it('renders sort DESC', () => {
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'col 2',
             field: 'col2',
-            type: 'data',
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
     const sort: ISortColumn = {
@@ -203,20 +186,17 @@ it('non-sortable header clicked -> no sorting', () => {
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'col 2',
             field: 'col2',
-            type: 'data',
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
-    const sort: ISortColumn = null;
+    const sort: ISortColumn|null = null;
     const sortAscLabel = 'v';
     const sortDescLabel = '^';
     const setSort = jest.fn();
@@ -235,21 +215,18 @@ it('no sort to sort -> ASC', () => {
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'col 2',
             field: 'col2',
             sortable: true,
-            type: 'data',
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
-    const sort: ISortColumn = null;
+    const sort: ISortColumn|null = null;
     const sortAscLabel = 'v';
     const sortDescLabel = '^';
     const setSort = jest.fn();
@@ -268,18 +245,15 @@ it('ASC sort col clicked -> DESC', () => {
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'col 2',
             field: 'col2',
             sortable: true,
-            type: 'data',
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
     const sort: ISortColumn = {
@@ -304,18 +278,15 @@ it('DESC sort col clicked -> no sorting', () => {
         {
             name: 'col 1',
             field: 'col1',
-            type: 'data',
         },
         {
             name: 'col 2',
             field: 'col2',
             sortable: true,
-            type: 'data',
         },
         {
             name: 'col 3',
             field: 'col3',
-            type: 'data',
         },
     ];
     const sort: ISortColumn = {

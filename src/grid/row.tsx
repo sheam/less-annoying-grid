@@ -1,6 +1,6 @@
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import {Column, IActionColumn, IColumn, IRowData} from './types';
+import {IColumn, IRowData} from './types';
 
 export interface IRowProps<TModel extends object>
 {
@@ -49,18 +49,18 @@ export const Cell = <TModel extends object>({column: {field, hidden, renderDispl
 
 interface IActionCellProps<TModel extends object>
 {
-    column: IActionColumn<TModel>;
+    column: IColumn<TModel>;
     data: IRowData;
 }
 export const ActionCell = <TModel extends object>({column, data}: IActionCellProps<TModel>) =>
 {
     return (
         <td hidden={column.hidden}>
-            {column.actions.map(a =>
+            {column.actions && column.actions.map(a =>
                                     <button
                                         className={`action-${a.name}`}
                                         key={`action-${a.name}`}
-                                        onClick={() => a.handler(data.model, data.uid, data.dirty === true)}
+                                        onClick={() => a.handler(data.model, data.uid, data.dirty)}
                                     >
                                         {a.buttonContent}
                                     </button>)}

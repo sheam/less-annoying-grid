@@ -1,27 +1,25 @@
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
 import {useGridContext} from './context';
-import {Column, IActionColumn, IColumn, ISortColumn} from './types';
+import {IColumn, ISortColumn} from './types';
 
 export interface IHeaderProps<TModel extends object>
 {
-    columns: Array<Column<TModel>>;
+    columns: Array<IColumn<TModel>>;
     toolbar?: JSX.Element;
 
     sortAscLabel?: JSX.Element | string;
     sortDescLabel?: JSX.Element | string;
 }
 
-type ActionOrDataCol<TModel extends object> = IColumn<TModel>|IActionColumn<TModel>;
-
 export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
 {
     {
         const {sort, setSort} = useGridContext();
 
-        const getGroupHeaderCell = (c: Column<TModel>): JSX.Element =>
+        const getGroupHeaderCell = (c: IColumn<TModel>): JSX.Element =>
         {
-            if (c.type !== 'group' || !c.subColumns)
+            if (!c.subColumns)
             {
                 return <th key={`no-group-${c.name}`} hidden={c.hidden} data-test="group"/>;
             }
@@ -33,9 +31,9 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
             );
         };
 
-        const getHeaderCell = (c: IColumn<TModel>|IActionColumn<TModel>): JSX.Element =>
+        const getHeaderCell = (c: IColumn<TModel>): JSX.Element =>
         {
-            if (c.type === 'action')
+            if (c.actions)
             {
                 return (
                     <th key={c.name} hidden={c.hidden} data-test="header">
@@ -95,7 +93,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
 
         const columns = props.columns;
 
-        const hasGroups = !!columns.find(c => c.type === 'group');
+        const hasGroups = !!columns.find(c => c.subColumns);
         // @ts-ignore
         const allCols: ActionOrDataCol<TModel>[] = columns.flatMap(c => c.type === 'group' ? c.subColumns : c).filter(c => c?.type === 'action'|| c?.type === 'data');
         return (
