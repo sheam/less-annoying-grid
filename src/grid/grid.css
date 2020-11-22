@@ -1,0 +1,16 @@
+div.bn-grid table {
+  width: 90%;
+  border-collapse: collapse;
+}
+div.bn-grid table h4 {
+  color: red;
+}
+div.bn-grid table th,
+div.bn-grid table td {
+  border: 1px solid blue;
+  padding: 1rem;
+}
+div.bn-grid table tfoot .bn-jumps button:disabled {
+  background-color: #5bc0de;
+}
+/*# sourceMappingURL=grid.css.map */
