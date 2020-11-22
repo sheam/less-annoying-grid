@@ -126,6 +126,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     );
 };
 
+//this is gross, but just stealing it from stack interwebs until next ES release which supposed to have a UID module
 function uuid(): string
 {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
