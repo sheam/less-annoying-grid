@@ -4,11 +4,11 @@ import {Column, IActionColumn, IColumn, IRowData} from './types';
 
 export interface IRowProps<TModel extends object>
 {
-    columns: IColumn<TModel>[];
+    columns: Column<TModel>[];
     data: IRowData;
 }
 
-export const Row = <TModel extends object>(props: IRowProps<IRowData>) =>
+export const Row = <TModel extends object>(props: IRowProps<TModel>) =>
 {
     return <div></div>;
     // const allCols = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c);
