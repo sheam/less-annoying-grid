@@ -26,7 +26,6 @@ export const Row = <TModel extends object>(props: IRowProps<TModel>) => {
 
 export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) => {
     const {editingContext} = useGridContext();
-    const [editField, setEditField] = useState<string|null>(null);
     const [rowData, setRowData] = useState(props.data);
 
     if (!editingContext) {
@@ -34,36 +33,37 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
     }
 
     const columns = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c);
-    const uid = props.data.uid;
+    const uid = props.data.rowId;
 
     const startEditing = (field: string) =>
     {
         console.log(`editing ${field}`);
 
-        editingContext.setIsEditing(true);
-        editingContext.setEditRowId(props.data.uid)
-        setEditField(field);
+        editingContext.setEditField({ rowId: props.data.rowId, field: field});
         setRowData(cloneData(props.data));
     }
 
     const onChange = (model: TModel) =>
     {
-        if(!editField)
+        if(!editingContext.editField)
         {
             throw new Error('on change fired without an edit field set');
         }
-        const hasChanges = (model as any)[editField] !== (rowData.model as any)[editField];
-        setRowData({ uid: props.data.uid, model, dirty: rowData.dirty||hasChanges })
+        const hasChanges = (model as any)[editingContext.editField.field] !== (rowData.model as any)[editingContext.editField.field];
+        setRowData({ rowId: props.data.rowId, model, dirty: rowData.dirty||hasChanges })
     }
 
     const doneEditing = (commitChanges: boolean, advance: Direction ) => {
-        console.log(`    done editing ${editField}: dirty=${rowData.dirty} commit=${commitChanges}`);
+        console.log(`    done editing ${editingContext.editField?.field}: dirty=${rowData.dirty} commit=${commitChanges}`);
 
-        const wasEditingField = editField;
+        if(!editingContext.editField)
+        {
+            throw new Error('doneEditing called but now editField in context');
+        }
 
-        editingContext.setIsEditing(false);
-        editingContext.setEditRowId(null)
-        setEditField(null);
+        const wasEditingField = editingContext.editField;
+
+        editingContext.setEditField(null);
 
         if(commitChanges && rowData.dirty)
         {
@@ -81,24 +81,43 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
                 {
                     return false;
                 }
-                return c.field === wasEditingField;
+                return c.field === wasEditingField?.field;
             });
+
             if(currentIndex < 0)
             {
                 throw new Error('could not find the field that was just being edited');
             }
-            const searchOffset = advance === 'forward' ? 1 : -1;
-            const nextField = columns.slice(currentIndex+searchOffset).find(c => !(!c || c.type !== 'data' || c.hidden || !c.editable || !c.field));
-            if(nextField?.type === 'data' && nextField.field)
+
+            let nextField: Column<TModel>|undefined;
+            const searchIncrement = advance === 'forward' ? 1 : -1;
+            for(let i=currentIndex+searchIncrement; i < columns.length && i >= 0; i+= searchIncrement)
             {
-                startEditing(nextField.field);
+                const c = columns[i];
+                if(colIsEditable(c))
+                {
+                    nextField = c;
+                    break;
+                }
+            }
+            if(nextField?.type === 'data' && nextField?.field)
+            {
+                    startEditing(nextField.field);
+            }
+            else
+            {
+                nextField = columns.find(c => !(!c || c.type !== 'data' || c.hidden || !c.editable || !c.field));
+                if(nextField?.type === 'data' && nextField?.field)
+                {
+                    editingContext.setEditField({ field: nextField.field, rowId: wasEditingField?.rowId + searchIncrement});
+                }
             }
         }
     };
 
     const classes: string[] = [];
     if(rowData.dirty) classes.push('modified');
-    if(editField) classes.push('edit-row');
+    if(editingContext.editField) classes.push('edit-row');
 
     return (
         <tr className={classes.join('-')}>
@@ -108,7 +127,7 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
                         key={`td-${uid}-${c.name}`}
                         column={c}
                         data={rowData}
-                        isEditing={editField === c.field && props.data.uid === editingContext.editRowId}
+                        isEditing={editingContext?.editField?.field === c.field && editingContext?.editField?.rowId === props.data.rowId}
                         startEditing={startEditing}
                         doneEditing={doneEditing}
                         onChange={onChange}
@@ -123,6 +142,8 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
         </tr>
     );
 };
+
+const colIsEditable = <TModel extends object>(c: Column<TModel>|undefined) => !(!c || c.type !== 'data' || c.hidden || !c.editable || !c.field);
 
 interface ICellProps<TModel extends object> {
     column: IColumn<TModel>;
@@ -182,7 +203,7 @@ export const CellInlineEdit = <TModel extends object>(
 
 export const RowReadOnly = <TModel extends object>(props: IRowProps<TModel>) => {
     const columns = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c);
-    const uid = props.data.uid;
+    const uid = props.data.rowId;
 
     return (
         <tr>
@@ -221,7 +242,7 @@ export const ActionCell = <TModel extends object>({column, data}: IActionCellPro
                 <button
                     className={`action-${a.name}`}
                     key={`action-${a.name}`}
-                    onClick={() => a.handler(data.model, data.uid, data.dirty)}
+                    onClick={() => a.handler(data.model, data.rowId, data.dirty)}
                 >
                     {a.buttonContent}
                 </button>)}

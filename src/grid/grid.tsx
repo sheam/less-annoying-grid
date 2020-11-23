@@ -14,9 +14,8 @@ import {
     IPagination,
     IRowData,
     ISortColumn,
-    GridEditMode
+    GridEditMode, IEditField
 } from './types';
-import {uuid} from "./util";
 
 interface IGridProps<TModel extends object>
 {
@@ -60,19 +59,19 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     const [dataState, setDataState] = useState<IDataState>({ totalCount: 0, data: [] });
     const [isEditing, setIsEditing] = useState(false);
     const [needsSave, setNeedsSave] = useState(false);
-    const [editRowId, setEditRowId] = useState<string|null>(null);
+    const [editField, setEditField] = useState<IEditField|null>(null);
 
     useEffect(() => {
         const fetch = async () => {
             const d = await props.getDataAsync(pagination, sort, filters);
             const newState: IDataState = {
                 totalCount: d.totalCount,
-                data: d.data.map(m =>
+                data: d.data.map((m,i) =>
                                  {
                                      const result: IRowData = {
                                          dirty: false,
                                          model: m,
-                                         uid: uuid(),
+                                         rowId: i+1,
                                      };
                                      return result;
                                  }),
@@ -89,10 +88,10 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     const updateRow = (rowData: IRowData): boolean =>
     {
         console.log('saving row');
-         const existingRow = dataState.data.find(r => r.uid === rowData.uid);
+         const existingRow = dataState.data.find(r => r.rowId === rowData.rowId);
          if(!existingRow)
          {
-             throw new Error(`unable to find row with id=${rowData.uid}`);
+             throw new Error(`unable to find row with id=${rowData.rowId}`);
          }
          existingRow.dirty = rowData.dirty;
          existingRow.model = rowData.model;
@@ -100,6 +99,30 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
 
          return true; //success
     };
+
+    const setCurrentEditField = (editField: IEditField|null) =>
+    {
+        if(editField)
+        {
+            const row = dataState.data.find(r => r.rowId === editField.rowId);
+            if(row)
+            {
+                setEditField(editField);
+                setIsEditing(true);
+            }
+            else
+            {
+
+                setEditField(null);
+                setIsEditing(false);
+            }
+        }
+        else
+        {
+            setIsEditing(false);
+            setEditField(null);
+        }
+    }
 
     const context: IGridContext = {
         pagination,
@@ -117,10 +140,9 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
         context.editingContext = {
             isEditing,
             needsSave,
-            setIsEditing,
             isSaving,
-            editRowId,
-            setEditRowId,
+            editField,
+            setEditField: setCurrentEditField,
             updateRow,
             editMode: props.editable.editMode,
             autoSave: props.editable.autoSave,
@@ -157,7 +179,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
                          </td>
                      </tr>
                     }
-                    {dataState.data.map(d => <Row key={d.uid} columns={props.columns} data={d} />)}
+                    {dataState.data.map(d => <Row key={d.rowId} columns={props.columns} data={d} />)}
                     </tbody>
 
                     {pagination &&

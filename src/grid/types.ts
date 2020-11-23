@@ -59,16 +59,22 @@ export interface IActionColumn<TModel extends object>
 
 export interface IRowData
 {
-    uid: string;
+    rowId: number;
     model: any;
     dirty: boolean;
+}
+
+export interface IEditField
+{
+    rowId: number;
+    field: string;
 }
 
 export interface IAction<TModel extends object>
 {
     name: string;
     buttonContent: JSX.Element|string;
-    handler: (data: TModel, uid: string, dirty: boolean) => void;
+    handler: (data: TModel, rowId: number, dirty: boolean) => void;
 }
 
 export type Column<TModel extends object> = IColumn<TModel>|IColumnGroup<TModel>|IActionColumn<TModel>;
