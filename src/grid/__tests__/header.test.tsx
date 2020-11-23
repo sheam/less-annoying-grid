@@ -75,8 +75,10 @@ it('renders grouped header', () => {
     );
 
     expect(headerCell(c, 0).text()).toContain(cols[0].name);
-    expect(headerCell(c, 1).text()).toContain(cols[1].subColumns ? cols[1].subColumns[0].name : 'error');
-    expect(headerCell(c, 2).text()).toContain(cols[1].subColumns ? cols[1].subColumns[1].name : 'error');
+    // @ts-ignore
+    expect(headerCell(c, 1).text()).toContain(cols[1].type === 'group' ? cols[1].subColumns[0].name : 'error');
+    // @ts-ignore
+    expect(headerCell(c, 2).text()).toContain(cols[1].type === 'group' ? cols[1].subColumns[1].name : 'error');
     expect(headerCell(c, 3).text()).toContain(cols[2].name);
 
     expect(getByTestId(c, 'group')).toHaveLength(cols.length);
@@ -196,7 +198,7 @@ it('non-sortable header clicked -> no sorting', () => {
             field: 'col3',
         },
     ];
-    const sort: ISortColumn|null = null;
+    const sort = null;
     const sortAscLabel = 'v';
     const sortDescLabel = '^';
     const setSort = jest.fn();
@@ -226,7 +228,7 @@ it('no sort to sort -> ASC', () => {
             field: 'col3',
         },
     ];
-    const sort: ISortColumn|null = null;
+    const sort = null;
     const sortAscLabel = 'v';
     const sortDescLabel = '^';
     const setSort = jest.fn();

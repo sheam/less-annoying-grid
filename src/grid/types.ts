@@ -6,7 +6,7 @@ export interface IColumn<TModel extends object>
     //data column
     field?: string;
     sortable?: boolean;
-    editable?: IColumnEditable;
+    editable?: ColumnEditorType;
     renderDisplay?: (model: TModel) => JSX.Element|string;
 
     //group column
@@ -16,10 +16,8 @@ export interface IColumn<TModel extends object>
     actions?: Array<IAction<TModel>>
 }
 
-interface IColumnEditable
-{
-    editor: JSX.Element;
-}
+type ColumnEditorType = 'number'|'date'|'text';
+export type GridEditMode = 'inline'|'row'|'external';
 
 export interface IRowData
 {
@@ -59,7 +57,7 @@ export interface IDataResult<TModel extends object>
     data: TModel[];
 }
 
-export interface IDataState<TModel extends object>
+export interface IDataState
 {
     totalCount: number;
     data: IRowData[];

@@ -12,6 +12,10 @@ const jumpButtonValue = (c: ShallowWrapper, index: number) => jumpButton(c, inde
 const jumpButtonDisabled  = (c: ShallowWrapper, index: number) => jumpButton(c, index).props().disabled;
 function setGridContextData(gridContext: GridContext.IGridContext): void
 {
+    if( !gridContext.setPagination )
+    {
+        gridContext.setPagination = jest.fn(); // default implementation
+    }
     jest
         .spyOn(GridContext, 'useGridContext')
         .mockImplementation(() => gridContext);
@@ -232,9 +236,10 @@ it('page size options', () => {
     );
 
     expect(getByTestId(component, 'page-size-select').find('option')).toHaveLength(3);
+
     if(!config.pageSizeOptions)
     {
-        throw Error('pageSizeOptions not setup properly in test');
+        throw new Error('pageSizeOptions not configured properly for test');
     }
     expect(getByTestId(component, 'page-size-select').find('option').at(0).props().value).toBe(config.pageSizeOptions[0]);
     expect(getByTestId(component, 'page-size-select').find('option').at(1).props().value).toBe(config.pageSizeOptions[1]);
@@ -266,4 +271,96 @@ it('changing page size', () => {
     expect(getByTestId(component, 'page-size-select')).toHaveLength(1);
     getByTestId(component, 'page-size-select').simulate('change', {target: { value: 5}});
     expect(setPaginationMock).toHaveBeenCalledWith({currentPage: 1, pageSize: 5});
+});
+
+it('disabled when needs saving', () => {
+    const pagination: IPagination = {
+        currentPage: 1,
+        pageSize: 10,
+    };
+    const config: IFooterProps = {
+        pageSizeOptions: [5, 10, 100], //should not render the 1000 because it doesn't make sense
+    };
+    const totalCount = 100;
+    const numColumns = 4;
+
+    const setPaginationMock = jest.fn();
+    setGridContextData({
+        pagination,
+        setPagination: setPaginationMock,
+        editingContext: {
+            needsSave: true,
+            setEditRowId: jest.fn(),
+            setNeedsSave: jest.fn(),
+            setIsEditing: jest.fn(),
+            editMode: 'inline',
+            isEditing: false,
+            editRowId: null
+        }
+    });
+
+    const component = shallow(
+        <Footer
+            totalCount={totalCount}
+            numColumns={numColumns}
+            config={config}
+        />,
+    );
+
+    expect(getByTestId(component, 'next-button').prop('disabled')).toBeTruthy();
+    expect(getByTestId(component, 'prev-button').prop('disabled')).toBeTruthy();
+    expect(getByTestId(component, 'page-size-select').prop('disabled')).toBeTruthy();
+
+    const jumps = getByTestId(component, 'jump');
+    for(let i=0; i < jumps.length; i++)
+    {
+        expect(jumps.at(0).prop('disabled')).toBeTruthy();
+    }
+});
+
+
+
+it('disabled when needs editing', () => {
+    const pagination: IPagination = {
+        currentPage: 1,
+        pageSize: 10,
+    };
+    const config: IFooterProps = {
+        pageSizeOptions: [5, 10, 100], //should not render the 1000 because it doesn't make sense
+    };
+    const totalCount = 100;
+    const numColumns = 4;
+
+    const setPaginationMock = jest.fn();
+    setGridContextData({
+        pagination,
+        setPagination: setPaginationMock,
+        editingContext: {
+            needsSave: false,
+            setEditRowId: jest.fn(),
+            setNeedsSave: jest.fn(),
+            setIsEditing: jest.fn(),
+            editMode: 'inline',
+            isEditing: true,
+            editRowId: '123'
+        }
+    });
+
+    const component = shallow(
+        <Footer
+            totalCount={totalCount}
+            numColumns={numColumns}
+            config={config}
+        />,
+    );
+
+    expect(getByTestId(component, 'next-button').prop('disabled')).toBeTruthy();
+    expect(getByTestId(component, 'prev-button').prop('disabled')).toBeTruthy();
+    expect(getByTestId(component, 'page-size-select').prop('disabled')).toBeTruthy();
+
+    const jumps = getByTestId(component, 'jump');
+    for(let i=0; i < jumps.length; i++)
+    {
+        expect(jumps.at(0).prop('disabled')).toBeTruthy();
+    }
 });

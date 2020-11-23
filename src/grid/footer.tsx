@@ -23,27 +23,13 @@ export interface IFooterProps
 
 export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInternalFooterProps) =>
 {
-    const { pagination, setPagination } = useGridContext();
+    const { pagination, setPagination, editingContext } = useGridContext();
     if(!setPagination || !pagination) return <></>;
 
-    const setPaginationDataSafe = (currentPage: number, pageSize: number) =>
-    {
-        const newTotalPages = getTotalPages(props.totalCount, pageSize);
-        if (currentPage < 1)
-        {
-            currentPage = 1;
-        }
-        if (currentPage > newTotalPages)
-        {
-            currentPage = newTotalPages;
-        }
+    const isEditing = !!(editingContext?.isEditing || editingContext?.needsSave);
 
-        setPagination({currentPage, pageSize});
-    };
-    const jumpToPage = (currentPage: number) =>
-    {
-        setPagination({currentPage, pageSize: pagination.pageSize});
-    };
+    const setPaginationDataSafe = (newCurrentPage: number, pageSize: number) => setPagination({ currentPage: clamp(newCurrentPage, 1, getTotalPages(props.totalCount, pageSize)), pageSize });
+    const jumpToPage = (currentPage: number) => setPagination({currentPage, pageSize: pagination.pageSize});
 
     const totalPages = getTotalPages(props.totalCount, pagination.pageSize);
     const pageSizeOptions = getPageSizeOptions(
@@ -63,6 +49,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
                             data-test="prev-button"
                             className="bn-prev-next"
                             title="previous page"
+                            disabled={isEditing}
                             onClick={() => setPaginationDataSafe(
                                 pagination.currentPage - 1,
                                 pagination.pageSize)}
@@ -73,11 +60,13 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
                             pagination.currentPage,
                             totalPages,
                             jumpToPage,
-                            props.config?.numPageJumpButtons)}
+                            props.config?.numPageJumpButtons,
+                            isEditing)}
                         <button
                             data-test="next-button"
                             className="bn-prev-next"
                             title="next page"
+                            disabled={isEditing}
                             onClick={() => setPaginationDataSafe(
                                 pagination.currentPage + 1,
                                 pagination.pageSize)}
@@ -88,6 +77,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
                     <span className="bn-page-size" title="number of items to display">
                         <select
                             data-test="page-size-select"
+                            disabled={isEditing}
                             value={pagination.pageSize}
                             onChange={e => setPaginationDataSafe(
                                 pagination.currentPage,
@@ -106,11 +96,25 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
     );
 };
 
+function clamp(n: number, min: number, max: number): number
+{
+    if(n > max)
+    {
+        return max;
+    }
+    if(n < min)
+    {
+        return min;
+    }
+    return n;
+}
+
 function getPageJumpButtons(
     currentPage: number,
     totalPages: number,
     setPage: (n: number) => void,
-    numJumpButtons: number|undefined): JSX.Element
+    numJumpButtons: number|undefined,
+    disabled: boolean): JSX.Element
 {
     const defaultNumJumpButtons = 7;
     const two = 2;
@@ -150,7 +154,8 @@ function getPageJumpButtons(
                                    data-test="jump"
                                    value={n}
                                    title={n === totalPages ? 'jump to the last page' : `jump to page ${n}`}
-                                   disabled={n === currentPage}
+                                   className={n === currentPage?'current-page-button':''}
+                                   disabled={n === currentPage||disabled}
                                    onClick={e => setPage(parseInt((e.target as any).value, 10))}
                                >
                                    {n}

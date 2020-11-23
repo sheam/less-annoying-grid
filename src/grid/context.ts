@@ -1,7 +1,7 @@
 /* tslint:disable:interface-over-type-literal */
 import * as React from 'react';
 import {useContext} from 'react';
-import {IFieldFilter, IPagination, ISortColumn} from './types';
+import {GridEditMode, IFieldFilter, IPagination, ISortColumn} from './types';
 
 export interface IGridContext
 {
@@ -16,6 +16,22 @@ export interface IGridContext
 
     transmitting?: boolean;
     setTransmitting?: (isLoading: boolean) => void;
+
+    editingContext?: IGridEditContext;
+}
+
+interface IGridEditContext
+{
+    editMode: GridEditMode
+
+    isEditing: boolean;
+    setIsEditing: (isEditing: boolean) => void;
+
+    needsSave: boolean;
+    setNeedsSave: (needsSave: boolean) => void;
+
+    editRowId: string|null;
+    setEditRowId: (editRowId: string|null) => void;
 }
 
 export const GridContext = React.createContext<IGridContext>({});

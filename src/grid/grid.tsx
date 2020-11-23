@@ -5,8 +5,17 @@ import {GridContext, IGridContext} from './context';
 import {Footer, IFooterProps} from './footer';
 import './grid.css';
 import {Header} from './header';
-import {IRowProps, Row} from './row';
-import {IColumn, IDataResult, IDataState, IFieldFilter, IPagination, IRowData, ISortColumn} from './types';
+import {Row} from './row';
+import {
+    Column,
+    IDataResult,
+    IDataState,
+    IFieldFilter,
+    IPagination,
+    IRowData,
+    ISortColumn,
+    GridEditMode
+} from './types';
 
 interface IGridProps<TModel extends object>
 {
@@ -18,12 +27,12 @@ interface IGridProps<TModel extends object>
 
     getDataAsync: (pagination: IPagination, sort: ISortColumn|null, filters: IFieldFilter[]) => Promise<IDataResult<TModel>>;
 
-    editabl?: IGridEditable<TModel>;
+    editable?: IGridEditConfig<TModel>;
 }
 
-interface IGridEditable<TModel extends object>
+interface IGridEditConfig<TModel extends object>
 {
-    editMode: 'inline' | 'inline-auto' | 'popup-auto';
+    editMode: GridEditMode;
     updateModelAsync: (model: TModel) => Promise<TModel>;
     addModelAsync: (model: TModel) => Promise<TModel>;
     deleteModelAsync: (model: TModel) => Promise<void>;
@@ -45,12 +54,15 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     const [sort, setSort] = useState<ISortColumn|null>(null);
     const [filters, setFilters] = useState<IFieldFilter[]>([]);
     const [transmitting, setTransmitting] = useState<boolean>(false);
-    const [dataState, setDataState] = useState<IDataState<TModel>>({ totalCount: 0, data: [] });
+    const [dataState, setDataState] = useState<IDataState>({ totalCount: 0, data: [] });
+    const [isEditing, setIsEditing] = useState(false);
+    const [needsSave, setNeedsSave] = useState(false);
+    const [editRowId, setEditRowId] = useState<string|null>(null);
 
     useEffect(() => {
         const fetch = async () => {
             const d = await props.getDataAsync(pagination, sort, filters);
-            const newState: IDataState<TModel> = {
+            const newState: IDataState = {
                 totalCount: d.totalCount,
                 data: d.data.map(m =>
                                  {
@@ -69,7 +81,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
         setTransmitting(true);
         // noinspection JSIgnoredPromiseFromCall
         fetch();
-    }, [pagination, sort, filters]);
+    }, [pagination, sort, filters, props]);
 
     const context: IGridContext = {
         pagination,
@@ -81,6 +93,18 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
         setFilters,
         setTransmitting,
     };
+    if(props.editable)
+    {
+        context.editingContext = {
+            isEditing,
+            needsSave,
+            setIsEditing,
+            setNeedsSave,
+            editRowId,
+            setEditRowId,
+            editMode: props.editable?.editMode,
+        };
+    }
 
     const totalColumns = props.columns.flatMap(c => c.subColumns ? c.subColumns : c).length;
     const showTransmitting = transmitting && props.children?.transmittingState;
@@ -111,6 +135,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
                          </td>
                      </tr>
                     }
+                    {!showTransmitting && dataState.data.map(d => <Row key={d.uid} columns={props.columns} data={d} />)}
                     </tbody>
 
                     {pagination &&
@@ -126,12 +151,11 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     );
 };
 
-//this is gross, but just stealing it from stack interwebs until next ES release which supposed to have a UID module
+//stealing from interwebs until next ES release which is supposed to have UID module
 function uuid(): string
 {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-        // tslint:disable-next-line:no-bitwise no-magic-numbers one-variable-per-declaration
-        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);  // eslint-disable-line
         return v.toString(16);
     });
 }

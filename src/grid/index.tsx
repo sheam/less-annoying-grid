@@ -1,13 +1,14 @@
+import {Grid} from './grid';
+import {IFooterProps} from './footer';
+import {IGridContext, GridContext} from './context';
 export * from './types';
 
-import {Grid} from './grid';
-import {IFooterProps} from "./footer";
-import {IGridContext, GridContext} from './context';
-
 export {
-    IGridContext,
     GridContext,
-    IFooterProps,
-    Grid,
-}
+    Grid
+};
+export type {
+        IGridContext,
+        IFooterProps
+    };
 
