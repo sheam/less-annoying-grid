@@ -12,6 +12,12 @@ const TestGrid: React.FunctionComponent = (): JSX.Element =>
                 sortAscLabel="(ASC)"
                 sortDescLabel="(DESC)"
                 getDataAsync={getDataAsync}
+                editable={{
+                    editMode: "inline",
+                    addModelAsync: (m) => new Promise<IData>(() => m),
+                    updateModelAsync: (m) => new Promise<IData>(() => m),
+                    deleteModelAsync: (m) => new Promise<void>(() => {})
+                }}
             >
                 {{
                     toolbar: <ToolBar/>,
@@ -26,9 +32,16 @@ export default TestGrid;
 
 const cols: Array<Column<IData>> = [
     {
+        name: 'Col 0',
+        field: 'num',
+        type: 'data',
+        editable: 'number'
+    },
+    {
         name: 'Col 1',
         field: 'one',
         type: 'data',
+        editable: 'text'
     },
     {
         name: 'Group 1',
@@ -53,7 +66,7 @@ const cols: Array<Column<IData>> = [
             },
             {
                 name: 'Col 3C',
-                field: 'threeB',
+                field: 'threeC',
                 renderDisplay: m => <u>3c-{m.threeB}</u>,
                 type: 'data',
             },
@@ -71,6 +84,17 @@ const cols: Array<Column<IData>> = [
         sortable: true,
         type: 'data',
     },
+    // {
+    //     type: 'action',
+    //     name: 'actions',
+    //     actions: [
+    //         {
+    //             name: 'delete',
+    //             buttonContent: 'DEL',
+    //             handler: ((data, uid, dirty) => )
+    //         }
+    //     ]
+    // }
 ];
 
 // tslint:disable-next-line:no-empty-interface
@@ -123,9 +147,9 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
             >
                 Sort By Col 4 DESC
             </button>
-            <label onChange={filterChanged}>
+            <label>
                 Filter:
-                <select value={currentFilter}>
+                <select value={currentFilter} onChange={filterChanged}>
                     <option value="">none</option>
                     <option value="100">100's</option>
                     <option value="200">200's</option>
@@ -138,6 +162,7 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
 
 interface IData
 {
+    num: number;
     one: string;
     two: string;
     threeA: string;
@@ -155,6 +180,7 @@ function generateData(n: number)
     {
         const rowNum = i + 1;
         result.push({
+                        num: 100+i,
                         one: `${rowNum}-1`,
                         two: `${rowNum}-2`,
                         threeA: `${rowNum}-3a`,

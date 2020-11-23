@@ -6,7 +6,16 @@ import {Footer, IFooterProps} from './footer';
 import './grid.css';
 import {Header} from './header';
 import {Row} from './row';
-import {Column, IDataResult, IDataState, IFieldFilter, IPagination, IRowData, ISortColumn} from './types';
+import {
+    Column,
+    IDataResult,
+    IDataState,
+    IFieldFilter,
+    IPagination,
+    IRowData,
+    ISortColumn,
+    GridEditMode
+} from './types';
 
 interface IGridProps<TModel extends object>
 {
@@ -18,12 +27,12 @@ interface IGridProps<TModel extends object>
 
     getDataAsync: (pagination: IPagination, sort: ISortColumn|null, filters: IFieldFilter[]) => Promise<IDataResult<TModel>>;
 
-    editable?: IGridEditable<TModel>;
+    editable?: IGridEditConfig<TModel>;
 }
 
-interface IGridEditable<TModel extends object>
+interface IGridEditConfig<TModel extends object>
 {
-    editMode: 'inline' | 'inline-auto' | 'popup-auto';
+    editMode: GridEditMode;
     updateModelAsync: (model: TModel) => Promise<TModel>;
     addModelAsync: (model: TModel) => Promise<TModel>;
     deleteModelAsync: (model: TModel) => Promise<void>;
@@ -46,6 +55,9 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     const [filters, setFilters] = useState<IFieldFilter[]>([]);
     const [transmitting, setTransmitting] = useState<boolean>(false);
     const [dataState, setDataState] = useState<IDataState>({ totalCount: 0, data: [] });
+    const [isEditing, setIsEditing] = useState(false);
+    const [needsSave, setNeedsSave] = useState(false);
+    const [editRowId, setEditRowId] = useState<string|null>(null);
 
     useEffect(() => {
         const fetch = async () => {
@@ -81,6 +93,18 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
         setFilters,
         setTransmitting,
     };
+    if(props.editable)
+    {
+        context.editingContext = {
+            isEditing,
+            needsSave,
+            setIsEditing,
+            setNeedsSave,
+            editRowId,
+            setEditRowId,
+            editMode: props.editable?.editMode,
+        };
+    }
 
     const totalColumns = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c).length;
     const showTransmitting = transmitting && props.children?.transmittingState;
@@ -111,7 +135,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
                          </td>
                      </tr>
                     }
-                    {!showTransmitting && dataState.data.map(d => <Row columns={props.columns} data={d} />)}
+                    {!showTransmitting && dataState.data.map(d => <Row key={d.uid} columns={props.columns} data={d} />)}
                     </tbody>
 
                     {pagination &&

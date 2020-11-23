@@ -5,14 +5,12 @@ export interface IColumn<TModel extends object>
     field?: string;
     hidden?: boolean;
     sortable?: boolean;
-    editable?: IColumnEditable;
+    editable?: ColumnEditorType;
     renderDisplay?: (model: TModel) => JSX.Element|string;
 }
 
-interface IColumnEditable
-{
-    editor: JSX.Element;
-}
+type ColumnEditorType = 'number'|'date'|'text';
+export type GridEditMode = 'inline'|'row'|'external';
 
 export interface IColumnGroup<TModel extends object>
 {
