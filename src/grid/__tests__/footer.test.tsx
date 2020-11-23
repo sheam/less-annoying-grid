@@ -290,12 +290,12 @@ it('disabled when needs saving', () => {
         setPagination: setPaginationMock,
         editingContext: {
             needsSave: true,
-            setEditRowId: jest.fn(),
+            isSaving: false,
+            setEditField: jest.fn(),
             updateRow: jest.fn(),
-            setIsEditing: jest.fn(),
             editMode: 'inline',
             isEditing: false,
-            editRowId: null,
+            editField: null,
             autoSave: false,
         }
     });
@@ -338,12 +338,12 @@ it('disabled when needs editing', () => {
         setPagination: setPaginationMock,
         editingContext: {
             needsSave: false,
-            setEditRowId: jest.fn(),
+            isSaving: false,
             updateRow: jest.fn(),
-            setIsEditing: jest.fn(),
+            editField: { rowId: 1, field : 'one' },
+            setEditField: jest.fn(),
             editMode: 'inline',
             isEditing: true,
-            editRowId: '123',
             autoSave: false,
         }
     });
