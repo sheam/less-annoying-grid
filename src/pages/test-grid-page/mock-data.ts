@@ -9,8 +9,8 @@ export interface IData
     two: string;
     threeA: string;
     threeB: string;
-    four: string;
-    five: string;
+    four: number;
+    five: number;
     key: number;
 }
 
@@ -62,7 +62,8 @@ export function getData(pagination: IPagination, sort: ISortColumn|null, filters
         {
             if (f.field === 'four' && f.operator === 'contains')
             {
-                data = data.filter(x => x.four.indexOf(f.value) >= 0);
+                // eslint-disable-next-line eqeqeq
+                data = data.filter(x => x.four == parseInt(f.value));
             }
         }
     }
@@ -88,8 +89,8 @@ function generateData(n: number)
             two: `${rowNum}-2`,
             threeA: `${rowNum}-3a`,
             threeB: `${rowNum}-3b`,
-            four: `${rowNum}-4`,
-            five: `${rowNum}-5`,
+            four: (i%4)+1,
+            five: (i%4)+1,
             key: i+1,
         });
     }

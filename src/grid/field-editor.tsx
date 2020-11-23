@@ -1,33 +1,31 @@
 import * as React from 'react';
 import {ChangeEvent, KeyboardEvent} from "react";
-import {Direction} from "./types";
+import {ColumnEditorType, Direction} from "./types";
 
 interface IFieldEditorProps
 {
     model: any;
     field: string;
-    inputType: InputType;
+    editorType: ColumnEditorType;
     editComplete: (commitChanges: boolean, advance: Direction) => void;
     onChange: (model: any) => void;
 }
 
-type InputType = 'number'|'text'|'date'|undefined;
-
-export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({model, field, inputType, editComplete, onChange}) =>
+export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({model, field, editorType, editComplete, onChange}) =>
 {
-    const changeHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    const inputType = editorType.type === 'values' ? editorType.subType : editorType.type;
+    const changeHandler = (e: ChangeEvent<HTMLInputElement>|ChangeEvent<HTMLSelectElement>) =>
     {
         (model as any)[field] = coerceValueType(e.target.value, inputType);
-        (model as any)['four'] = 'changed';
         onChange(model);
     };
 
-    const focusLost = (_: ChangeEvent<HTMLInputElement>) =>
+    const focusLost = () =>
     {
         editComplete(true, 'none');
     };
 
-    const detectSpecialKeys = (e: KeyboardEvent<HTMLInputElement>) =>
+    const detectSpecialKeys = (e: KeyboardEvent<HTMLInputElement>|KeyboardEvent<HTMLSelectElement>) =>
     {
         if(e.key === 'Escape')
         {
@@ -47,17 +45,71 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({model, 
     };
 
     const stringFieldValue = (model as any)[field]?.toString() || '';
-    return (
-        <input
-            name={field}
-            type={inputType}
-            value={stringFieldValue}
-            autoFocus={true}
-            onKeyDown={detectSpecialKeys}
-            onChange={changeHandler}
-            onBlur={focusLost} />
-    );
+
+    if(editorType.type === 'text')
+    {
+        return (
+            <input
+                name={field}
+                type="text"
+                value={stringFieldValue}
+                maxLength={editorType.maxLength}
+                autoFocus={true}
+                onKeyDown={detectSpecialKeys}
+                onChange={changeHandler}
+                onBlur={focusLost} />
+        );
+    }
+    if(editorType.type === 'number')
+    {
+        return (
+            <input
+                name={field}
+                type="number"
+                min={editorType.min}
+                max={editorType.max}
+                step={editorType.step}
+                value={stringFieldValue}
+                autoFocus={true}
+                onKeyDown={detectSpecialKeys}
+                onChange={changeHandler}
+                onBlur={focusLost} />
+        );
+    }
+    if(editorType.type === 'date')
+    {
+        return (
+            <input
+                name={field}
+                type="date"
+                min={editorType.startRange?.toString()}
+                max={editorType.endRange?.toString()}
+                value={stringFieldValue}
+                autoFocus={true}
+                onKeyDown={detectSpecialKeys}
+                onChange={changeHandler}
+                onBlur={focusLost} />
+        );
+    }
+    if(editorType.type === 'values')
+    {
+        return (
+            <select
+                name={field}
+                value={stringFieldValue}
+                autoFocus={true}
+                onKeyDown={detectSpecialKeys}
+                onBlur={focusLost}
+                onChange={changeHandler}
+            >
+                {editorType.values.map(({text, value}, i) => <option key={i} value={value}>{text}</option>)}
+            </select>
+        );
+    }
+    throw new Error('Unhandled editor type');
 };
+
+type InputType = 'number'|'text'|'date';
 
 function coerceValueType(value: string, inputType: InputType): any
 {

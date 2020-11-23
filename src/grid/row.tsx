@@ -158,9 +158,13 @@ export const CellInlineEdit = <TModel extends object>(
 
     if (isEditing)
     {
+        if(!editable)
+        {
+            throw new Error(`column for field ${field} is being edited, but has not defined editor`);
+        }
         return (
             <td hidden={hidden}>
-                <FieldEditor model={cloneData(data.model)} field={field} inputType={editable} onChange={onChange} editComplete={doneEditing}/>
+                <FieldEditor model={cloneData(data.model)} field={field} editorType={editable} onChange={onChange} editComplete={doneEditing}/>
             </td>
         );
     }
@@ -196,7 +200,7 @@ export const RowReadOnly = <TModel extends object>(props: IRowProps<TModel>) => 
     );
 };
 
-export const CellReadonly = <TModel extends object>({column: {field, hidden, renderDisplay, editable}, data}: ICellProps<TModel>) => {
+export const CellReadonly = <TModel extends object>({column: {field, hidden, renderDisplay}, data}: ICellProps<TModel>) => {
     return (
         <td hidden={hidden}>
             {renderDisplay && renderDisplay(data.model)}

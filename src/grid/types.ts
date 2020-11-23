@@ -9,7 +9,36 @@ export interface IColumn<TModel extends object>
     renderDisplay?: (model: TModel) => JSX.Element|string;
 }
 
-type ColumnEditorType = 'number'|'date'|'text';
+export interface IEditorText
+{
+    type: 'text',
+    maxLength?: number,
+}
+
+export interface IEditorNumber
+{
+    type: 'number',
+    min?: number,
+    max?: number,
+    step?: number,
+}
+
+export interface IEditorDate
+{
+    type: 'date',
+    startRange?: Date,
+    endRange?: Date,
+}
+
+export interface IEditorValues
+{
+    type: 'values',
+    subType: 'text'|'number',
+    values: { text: string, value: any }[],
+}
+
+export type ColumnEditorType = IEditorText|IEditorNumber|IEditorDate|IEditorValues;
+
 export type GridEditMode = 'inline'|'row'|'external';
 
 export interface IColumnGroup<TModel extends object>

@@ -45,13 +45,13 @@ const cols: Array<Column<IMockData>> = [
         name: 'Col 0',
         field: 'num',
         type: 'data',
-        editable: 'number'
+        editable: { type: 'number', min: 0, max: 100, step: 5  }
     },
     {
         name: 'Col 1',
         field: 'one',
         type: 'data',
-        editable: 'text'
+        editable: { type: 'text', maxLength: 4  }
     },
     {
         name: 'Group 1',
@@ -87,12 +87,19 @@ const cols: Array<Column<IMockData>> = [
         field: 'four',
         hidden: false,
         type: 'data',
+        editable: { type: 'values', subType: 'number', values: [
+            { text: 'one', value: 1},
+            { text: 'two', value: 2},
+            { text: 'three', value: 3},
+            { text: 'four', value: 4},
+        ]}
     },
     {
         name: 'Col 5',
         field: 'five',
         sortable: true,
         type: 'data',
+        editable: { type: 'values', subType: 'number', values: [1,2,3,4].map(n => { return { text: n.toString(), value: n }})}
     },
     // {
     //     type: 'action',
@@ -162,8 +169,10 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
                 Filter:
                 <select value={currentFilter} onChange={filterChanged}>
                     <option value="">none</option>
-                    <option value="100">100's</option>
-                    <option value="200">200's</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
                 </select>
             </label>
         </div>
