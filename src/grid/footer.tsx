@@ -12,6 +12,7 @@ interface IInternalFooterProps
 export interface IFooterProps
 {
     pageSizeOptions?: number[];
+    initialPageSize?: number;
     numPageJumpButtons?: number;
 
     firstLabel?: string;
@@ -26,7 +27,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
     const { pagination, setPagination, editingContext } = useGridContext();
     if(!setPagination || !pagination) return <></>;
 
-    const isEditing = !!(editingContext?.isEditing || editingContext?.needsSave);
+    const preventPaging = !!(editingContext?.isEditing || editingContext?.needsSave);
 
     const setPaginationDataSafe = (newCurrentPage: number, pageSize: number) => setPagination({ currentPage: clamp(newCurrentPage, 1, getTotalPages(props.totalCount, pageSize)), pageSize });
     const jumpToPage = (currentPage: number) => setPagination({currentPage, pageSize: pagination.pageSize});
@@ -41,7 +42,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
     const prevLabel = props.config?.prevLabel || '<';
 
     return (
-        <tfoot>
+        <tfoot title={preventPaging?'paging disabled when the grid contains unsaved data':''}>
             <tr>
                 <td colSpan={props.numColumns}>
                     <span className="bn-navigation">
@@ -49,7 +50,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
                             data-test="prev-button"
                             className="bn-prev-next"
                             title="previous page"
-                            disabled={isEditing}
+                            disabled={preventPaging}
                             onClick={() => setPaginationDataSafe(
                                 pagination.currentPage - 1,
                                 pagination.pageSize)}
@@ -61,12 +62,12 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
                             totalPages,
                             jumpToPage,
                             props.config?.numPageJumpButtons,
-                            isEditing)}
+                            preventPaging)}
                         <button
                             data-test="next-button"
                             className="bn-prev-next"
                             title="next page"
-                            disabled={isEditing}
+                            disabled={preventPaging}
                             onClick={() => setPaginationDataSafe(
                                 pagination.currentPage + 1,
                                 pagination.pageSize)}
@@ -77,7 +78,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (props: IInt
                     <span className="bn-page-size" title="number of items to display">
                         <select
                             data-test="page-size-select"
-                            disabled={isEditing}
+                            disabled={preventPaging}
                             value={pagination.pageSize}
                             onChange={e => setPaginationDataSafe(
                                 pagination.currentPage,

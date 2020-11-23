@@ -16,6 +16,7 @@ import {
     ISortColumn,
     GridEditMode
 } from './types';
+import {uuid} from "./util";
 
 interface IGridProps<TModel extends object>
 {
@@ -33,6 +34,7 @@ interface IGridProps<TModel extends object>
 interface IGridEditConfig<TModel extends object>
 {
     editMode: GridEditMode;
+    autoSave: boolean;
     updateModelAsync: (model: TModel) => Promise<TModel>;
     addModelAsync: (model: TModel) => Promise<TModel>;
     deleteModelAsync: (model: TModel) => Promise<void>;
@@ -43,17 +45,18 @@ interface IChildren
     children?: {
         toolbar?: JSX.Element;
         emptyState?: JSX.Element;
-        transmittingState?: JSX.Element;
+        loadingState?: JSX.Element;
+        savingState?: JSX.Element;
     };
 }
 
-
 export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWithChildren<IChildren>) =>
 {
-    const [pagination, setPagination] = useState<IPagination>({currentPage: 1, pageSize: 10});
+    const [pagination, setPagination] = useState<IPagination>(getDefaultPagination(props.footer?.initialPageSize));
     const [sort, setSort] = useState<ISortColumn|null>(null);
     const [filters, setFilters] = useState<IFieldFilter[]>([]);
-    const [transmitting, setTransmitting] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [dataState, setDataState] = useState<IDataState>({ totalCount: 0, data: [] });
     const [isEditing, setIsEditing] = useState(false);
     const [needsSave, setNeedsSave] = useState(false);
@@ -75,23 +78,39 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
                                  }),
             };
             setDataState(newState);
-            setTransmitting(false);
+            setIsLoading(false);
         };
 
-        setTransmitting(true);
+        setIsLoading(true);
         // noinspection JSIgnoredPromiseFromCall
         fetch();
     }, [pagination, sort, filters, props]);
 
+    const updateRow = (rowData: IRowData): boolean =>
+    {
+        console.log('saving row');
+         const existingRow = dataState.data.find(r => r.uid === rowData.uid);
+         if(!existingRow)
+         {
+             throw new Error(`unable to find row with id=${rowData.uid}`);
+         }
+         existingRow.dirty = rowData.dirty;
+         existingRow.model = rowData.model;
+         setNeedsSave(needsSave||rowData.dirty);
+
+         return true; //success
+    };
+
     const context: IGridContext = {
         pagination,
-        sort,
-        filters,
-        transmitting,
         setPagination,
+        resetPagination: () => setPagination(getDefaultPagination(props.footer?.initialPageSize)),
+        sort,
         setSort,
+        filters,
         setFilters,
-        setTransmitting,
+        isLoading: isLoading,
+        setIsLoading: setIsLoading,
     };
     if(props.editable)
     {
@@ -99,19 +118,29 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
             isEditing,
             needsSave,
             setIsEditing,
-            setNeedsSave,
+            isSaving,
             editRowId,
             setEditRowId,
-            editMode: props.editable?.editMode,
+            updateRow,
+            editMode: props.editable.editMode,
+            autoSave: props.editable.autoSave,
         };
     }
 
     const totalColumns = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c).length;
-    const showTransmitting = transmitting && props.children?.transmittingState;
+    const showLoading = isLoading && props.children?.loadingState;
+    const showSaving = isSaving && props.children?.savingState;
+    const showSync = showLoading || showSaving;
 
     return (
         <GridContext.Provider value={context}>
             <div className="bn-grid">
+                <div hidden={!showSync} className="sync-panel">
+                    <div className="sync-panel-content">
+                        {showLoading && props.children?.loadingState}
+                        {showSaving && props.children?.savingState}
+                    </div>
+                </div>
                 <table>
                     <Header
                         columns={props.columns}
@@ -121,21 +150,14 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
                     />
 
                     <tbody>
-                    {showTransmitting &&
-                     <tr>
-                         <td colSpan={totalColumns}>
-                             {props.children?.transmittingState}
-                         </td>
-                     </tr>
-                    }
-                    {!showTransmitting && !dataState.totalCount && props.children?.emptyState &&
+                    {!showLoading && !dataState.totalCount && props.children?.emptyState &&
                      <tr>
                          <td colSpan={totalColumns}>
                              {props.children.emptyState}
                          </td>
                      </tr>
                     }
-                    {!showTransmitting && dataState.data.map(d => <Row key={d.uid} columns={props.columns} data={d} />)}
+                    {dataState.data.map(d => <Row key={d.uid} columns={props.columns} data={d} />)}
                     </tbody>
 
                     {pagination &&
@@ -151,11 +173,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     );
 };
 
-//stealing from interwebs until next ES release which is supposed to have UID module
-function uuid(): string
+function getDefaultPagination(initialPageSize: number|undefined): IPagination
 {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);  // eslint-disable-line
-        return v.toString(16);
-    });
+    return { currentPage: 1, pageSize: initialPageSize||10};
 }

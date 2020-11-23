@@ -1,9 +1,10 @@
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import {Column, IActionColumn, IColumn, IRowData} from './types';
+import {Column, Direction, IActionColumn, IColumn, IRowData} from './types';
 import {FieldEditor} from "./field-editor";
 import {useGridContext} from "./context";
 import {useState} from "react";
+import {cloneData} from "./util";
 
 export interface IRowProps<TModel extends object> {
     columns: Column<TModel>[];
@@ -26,6 +27,8 @@ export const Row = <TModel extends object>(props: IRowProps<TModel>) => {
 export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) => {
     const {editingContext} = useGridContext();
     const [editField, setEditField] = useState<string|null>(null);
+    const [rowData, setRowData] = useState(props.data);
+
     if (!editingContext) {
         throw new Error('RowInlineEdit can not be used with a not editable grid');
     }
@@ -33,25 +36,82 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
     const columns = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c);
     const uid = props.data.uid;
 
-    const setEditing = (field: string, isEditing: boolean, hasChanged: boolean) => {
-        console.log(`editing ${field}? ${isEditing?'yes':'no'}`);
+    const startEditing = (field: string) =>
+    {
+        console.log(`editing ${field}`);
 
-        editingContext.setIsEditing(isEditing);
-        editingContext.setNeedsSave(editingContext.needsSave||hasChanged)
-        editingContext.setEditRowId(isEditing ? props.data.uid : null)
-        setEditField(isEditing ? field : null);
+        editingContext.setIsEditing(true);
+        editingContext.setEditRowId(props.data.uid)
+        setEditField(field);
+        setRowData(cloneData(props.data));
+    }
+
+    const onChange = (model: TModel) =>
+    {
+        if(!editField)
+        {
+            throw new Error('on change fired without an edit field set');
+        }
+        const hasChanges = (model as any)[editField] !== (rowData.model as any)[editField];
+        setRowData({ uid: props.data.uid, model, dirty: rowData.dirty||hasChanges })
+    }
+
+    const doneEditing = (commitChanges: boolean, advance: Direction ) => {
+        console.log(`    done editing ${editField}: dirty=${rowData.dirty} commit=${commitChanges}`);
+
+        const wasEditingField = editField;
+
+        editingContext.setIsEditing(false);
+        editingContext.setEditRowId(null)
+        setEditField(null);
+
+        if(commitChanges && rowData.dirty)
+        {
+            editingContext.updateRow(rowData);
+        }
+        else
+        {
+            setRowData(props.data);
+        }
+
+        if(advance !== 'none')
+        {
+            const currentIndex = columns.findIndex(c => {
+                if(!c || c.type !== 'data')
+                {
+                    return false;
+                }
+                return c.field === wasEditingField;
+            });
+            if(currentIndex < 0)
+            {
+                throw new Error('could not find the field that was just being edited');
+            }
+            const searchOffset = advance === 'forward' ? 1 : -1;
+            const nextField = columns.slice(currentIndex+searchOffset).find(c => !(!c || c.type !== 'data' || c.hidden || !c.editable || !c.field));
+            if(nextField?.type === 'data' && nextField.field)
+            {
+                startEditing(nextField.field);
+            }
+        }
     };
 
+    const classes: string[] = [];
+    if(rowData.dirty) classes.push('modified');
+    if(editField) classes.push('edit-row');
+
     return (
-        <tr>
+        <tr className={classes.join('-')}>
             {columns.map(c => {
                 if (c?.type === 'data') {
                     return <CellInlineEdit
                         key={`td-${uid}-${c.name}`}
                         column={c}
-                        data={props.data}
+                        data={rowData}
                         isEditing={editField === c.field && props.data.uid === editingContext.editRowId}
-                        setIsEditing={setEditing}
+                        startEditing={startEditing}
+                        doneEditing={doneEditing}
+                        onChange={onChange}
                     />;
                 }
                 if (c?.type === 'action') {
@@ -69,9 +129,11 @@ interface ICellProps<TModel extends object> {
     data: IRowData;
 }
 
-interface ICellInlineEditProps {
+interface ICellInlineEditProps<TModel extends object> {
     isEditing: boolean;
-    setIsEditing: (field: string, isEditing: boolean, hasChanged: boolean) => void;
+    startEditing: (field: string) => void;
+    onChange: (model: TModel) => void;
+    doneEditing: (commitChanges: boolean, advance: Direction) => void;
 }
 
 export const CellInlineEdit = <TModel extends object>(
@@ -84,8 +146,10 @@ export const CellInlineEdit = <TModel extends object>(
         },
         data,
         isEditing,
-        setIsEditing
-    }: ICellProps<TModel> & ICellInlineEditProps) =>
+        startEditing,
+        onChange,
+        doneEditing,
+    }: ICellProps<TModel> & ICellInlineEditProps<TModel>) =>
 {
     if(!field)
     {
@@ -94,19 +158,15 @@ export const CellInlineEdit = <TModel extends object>(
 
     if (isEditing)
     {
-        const doneEditing = (model: any, hasChanged: boolean) =>
-        {
-            setIsEditing(field, false, hasChanged);
-        };
         return (
             <td hidden={hidden}>
-                <FieldEditor model={data.model} field={field} inputType={editable} editComplete={doneEditing}/>
+                <FieldEditor model={cloneData(data.model)} field={field} inputType={editable} onChange={onChange} editComplete={doneEditing}/>
             </td>
         );
     }
     else
     {
-        const clickHandler = editable ? () => setIsEditing(field, true, false) : undefined;
+        const clickHandler = editable ? () => startEditing(field) : undefined;
         return (
             <td hidden={hidden} onClick={clickHandler}>
                 {renderDisplay && renderDisplay(data.model)}

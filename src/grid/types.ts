@@ -73,3 +73,5 @@ export interface IDataState
     totalCount: number;
     data: IRowData[];
 }
+
+export type Direction = 'forward'|'backward'|'none';

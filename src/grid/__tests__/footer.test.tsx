@@ -291,11 +291,12 @@ it('disabled when needs saving', () => {
         editingContext: {
             needsSave: true,
             setEditRowId: jest.fn(),
-            setNeedsSave: jest.fn(),
+            updateRow: jest.fn(),
             setIsEditing: jest.fn(),
             editMode: 'inline',
             isEditing: false,
-            editRowId: null
+            editRowId: null,
+            autoSave: false,
         }
     });
 
@@ -338,11 +339,12 @@ it('disabled when needs editing', () => {
         editingContext: {
             needsSave: false,
             setEditRowId: jest.fn(),
-            setNeedsSave: jest.fn(),
+            updateRow: jest.fn(),
             setIsEditing: jest.fn(),
             editMode: 'inline',
             isEditing: true,
-            editRowId: '123'
+            editRowId: '123',
+            autoSave: false,
         }
     });
 

@@ -1,37 +1,61 @@
 import * as React from 'react';
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, KeyboardEvent} from "react";
+import {Direction} from "./types";
 
 interface IFieldEditorProps
 {
     model: any;
     field: string;
     inputType: InputType;
-    editComplete: (model: any, hasChanged: boolean) => void;
+    editComplete: (commitChanges: boolean, advance: Direction) => void;
+    onChange: (model: any) => void;
 }
 
 type InputType = 'number'|'text'|'date'|undefined;
 
-export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({model, field, inputType, editComplete}) =>
+export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({model, field, inputType, editComplete, onChange}) =>
 {
-    const [fieldValue, setFieldValue] = useState((model as any)[field].toString());
-    const changeHandler = (e: ChangeEvent<HTMLInputElement>) => setFieldValue(e.target.value);
-    const onDoneEditing = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(`done editing ${field}`);
-        const newVal = e.target.value;
-        const oldVal = (model as any)[field].toString();
-        const hasChanged = newVal !== oldVal;
-        (model as any)[field] = coerceValueType(newVal, inputType);
-        editComplete(model, hasChanged);
-    }
-    const stringFieldValue = fieldValue?.toString() || '';
+    const changeHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    {
+        (model as any)[field] = coerceValueType(e.target.value, inputType);
+        (model as any)['four'] = 'changed';
+        onChange(model);
+    };
+
+    const focusLost = (_: ChangeEvent<HTMLInputElement>) =>
+    {
+        editComplete(true, 'none');
+    };
+
+    const detectSpecialKeys = (e: KeyboardEvent<HTMLInputElement>) =>
+    {
+        if(e.key === 'Escape')
+        {
+            e.preventDefault();
+            editComplete(false, 'none');
+        }
+        if(e.key === 'Enter')
+        {
+            e.preventDefault();
+            editComplete(true, 'none');
+        }
+        if(e.key === 'Tab')
+        {
+            e.preventDefault();
+            editComplete(true,  e.shiftKey ? 'backward' : 'forward');
+        }
+    };
+
+    const stringFieldValue = (model as any)[field]?.toString() || '';
     return (
         <input
             name={field}
             type={inputType}
             value={stringFieldValue}
             autoFocus={true}
+            onKeyDown={detectSpecialKeys}
             onChange={changeHandler}
-            onBlur={onDoneEditing} />
+            onBlur={focusLost} />
     );
 };
 

@@ -1,5 +1,27 @@
+div.bn-grid {
+  position: relative;
+}
+div.bn-grid .sync-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: whitesmoke;
+  opacity: 80%;
+  color: darkcyan;
+  font-weight: bold;
+  border: 1px solid pink;
+}
+div.bn-grid .sync-panel .sync-panel-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 div.bn-grid table {
-  width: 90%;
+  width: 100%;
   border-collapse: collapse;
 }
 div.bn-grid table h4 {

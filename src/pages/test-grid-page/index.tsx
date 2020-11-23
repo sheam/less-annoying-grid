@@ -2,11 +2,14 @@
 import * as React from 'react';
 import {FormEvent, useContext} from 'react';
 import {Column, Grid, GridContext, IDataResult, IFieldFilter, IPagination, ISortColumn} from "../../grid";
+import {getData as getMockData, IData as IMockData, update} from "./mock-data";
+import './styles.css';
 
 const TestGrid: React.FunctionComponent = (): JSX.Element =>
 {
 
     return (
+        <div className="container">
             <Grid
                 columns={cols}
                 sortAscLabel="(ASC)"
@@ -14,23 +17,30 @@ const TestGrid: React.FunctionComponent = (): JSX.Element =>
                 getDataAsync={getDataAsync}
                 editable={{
                     editMode: "inline",
-                    addModelAsync: (m) => new Promise<IData>(() => m),
-                    updateModelAsync: (m) => new Promise<IData>(() => m),
+                    autoSave: true,
+                    addModelAsync: (m) => new Promise<IMockData>(() => m),
+                    updateModelAsync: (m) => updateDataAsync(m),
                     deleteModelAsync: (m) => new Promise<void>(() => {})
                 }}
             >
                 {{
                     toolbar: <ToolBar/>,
                     emptyState: <i>no data</i>,
-                    transmittingState: <i>the data is loading</i>,
+                    loadingState: <i>the data is loading</i>,
                 }}
             </Grid>
+        </div>
     );
 };
 
 export default TestGrid;
 
-const cols: Array<Column<IData>> = [
+const cols: Array<Column<IMockData>> = [
+    {
+        name: 'Key',
+        field: 'key',
+        type: 'data'
+    },
     {
         name: 'Col 0',
         field: 'num',
@@ -104,14 +114,15 @@ interface IToolbarProps
 
 const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
 {
-    const {setSort, filters, setFilters} = useContext(GridContext);
-    if(!setSort||!setFilters)
+    const {setSort, filters, setFilters, resetPagination} = useContext(GridContext);
+    if(!setSort||!setFilters||!resetPagination)
     {
-        throw new Error('setSort or setFilters not defined');
+        throw new Error('configuration error');
     }
 
     const filterChanged = (e: FormEvent): void =>
     {
+        resetPagination();
         const val = (e.target as any).value.toString();
         if (!val)
         {
@@ -160,90 +171,24 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
 
 };
 
-interface IData
+function getDataAsync(pagination: IPagination, sort: ISortColumn|null, filters: IFieldFilter[]): Promise<IDataResult<IMockData>>
 {
-    num: number;
-    one: string;
-    two: string;
-    threeA: string;
-    threeB: string;
-    four: string;
-    five: string;
-}
-
-const _data = generateData(1000);
-
-function generateData(n: number)
-{
-    const result: IData[] = [];
-    for (let i = 0; i < n; i++)
-    {
-        const rowNum = i + 1;
-        result.push({
-                        num: 100+i,
-                        one: `${rowNum}-1`,
-                        two: `${rowNum}-2`,
-                        threeA: `${rowNum}-3a`,
-                        threeB: `${rowNum}-3b`,
-                        four: `${rowNum}-4`,
-                        five: `${rowNum}-5`,
-                    });
-    }
-    return result;
-}
-
-function getDataAsync(pagination: IPagination, sort: ISortColumn|null, filters: IFieldFilter[]): Promise<IDataResult<IData>>
-{
-    return new Promise<IDataResult<IData>>(resolve => {
-        const data = getData(pagination, sort, filters);
+    return new Promise<IDataResult<IMockData>>(resolve => {
+        const data = getMockData(pagination, sort, filters);
         setTimeout(() => {
             resolve(data);
-        }, 0);
+        }, 1000);
     });
 }
 
-function getData(pagination: IPagination, sort: ISortColumn|null, filters: IFieldFilter[]): IDataResult<IData>
+function updateDataAsync(model: IMockData): Promise<IMockData>
 {
-    console.log('getting data');
-
-    const compare = (a: IData, b: IData): number =>
-    {
-        if(!sort) return 0;
-
-        const aVal = (a as any)[sort.field].toString();
-        const bVal = (b as any)[sort.field].toString();
-        let compareResult = 0;
-        if (aVal < bVal)
-        {
-            compareResult = -1;
-        }
-        if (aVal > bVal)
-        {
-            compareResult = 1;
-        }
-        if (sort.direction === 'DESC')
-        {
-            compareResult *= -1;
-        }
-        return compareResult;
-    };
-
-    let data = sort ? _data.slice(0).sort(compare) : _data;
-    if (filters)
-    {
-        for (const f of filters)
-        {
-            if (f.field === 'four' && f.operator === 'contains')
-            {
-                data = data.filter(x => x.four.indexOf(f.value) >= 0);
-            }
-        }
-    }
-
-    const skip = (pagination.currentPage - 1) * pagination.pageSize;
-    return {
-        data: data
-            .slice(skip, skip + pagination.pageSize),
-        totalCount: data.length,
-    };
+    return new Promise<IMockData>(resolve => {
+        const result = update(model);
+        setTimeout(() => {
+            resolve(result);
+        }, 3000);
+    });
 }
+
+
