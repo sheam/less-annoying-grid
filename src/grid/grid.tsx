@@ -5,7 +5,6 @@ import {GridContext, IGridContext} from './context';
 import {Footer, IFooterProps} from './footer';
 import './grid.css';
 import {Header} from './header';
-import {Row} from './row';
 import {
     Column,
     IDataResult,
@@ -16,6 +15,7 @@ import {
     ISortColumn,
     GridEditMode, IEditField
 } from './types';
+import {Row} from "./rowData";
 
 interface IGridProps<TModel extends object>
 {
