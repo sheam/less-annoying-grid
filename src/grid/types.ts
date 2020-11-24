@@ -112,3 +112,5 @@ export interface IDataState
 }
 
 export enum Direction {none = 'none', forward = 'forward', backward = 'backward'}
+
+export type Setter<TVal> = (v: TVal) => void;

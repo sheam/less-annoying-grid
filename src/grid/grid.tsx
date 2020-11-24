@@ -14,7 +14,7 @@ import {
     IFieldFilter,
     IPagination,
     IRowData,
-    ISortColumn,
+    ISortColumn, Setter,
     SyncAction
 } from './types';
 import {Row} from "./rowData";
@@ -64,68 +64,8 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
     const [needsSave, setNeedsSave] = useState(false);
     const [editField, setEditField] = useState<IEditField|null>(null);
 
-    useEffect(() => {
-        const fetch = async () => {
-            const d = await props.getDataAsync(pagination, sort, filters);
-            const newState: IDataState = {
-                totalCount: d.totalCount,
-                data: d.data.map((m,i) =>
-                                 {
-                                     const result: IRowData = {
-                                         syncAction: SyncAction.unchanged,
-                                         model: m,
-                                         rowId: i+1,
-                                     };
-                                     return result;
-                                 }),
-            };
-            setDataState(newState);
-            setIsLoading(false);
-        };
-
-        setIsLoading(true);
-        // noinspection JSIgnoredPromiseFromCall
-        fetch();
-    }, [pagination, sort, filters, props]);
-
-    const updateRow = (rowData: IRowData): boolean =>
-    {
-        console.log('saving row');
-         const existingRow = dataState.data.find(r => r.rowId === rowData.rowId);
-         if(!existingRow)
-         {
-             throw new Error(`unable to find row with id=${rowData.rowId}`);
-         }
-         existingRow.syncAction = rowData.syncAction;
-         existingRow.model = rowData.model;
-         setNeedsSave(needsSave||hasChanged(rowData));
-
-         return true; //success
-    };
-
-    const setCurrentEditField = (editField: IEditField|null) =>
-    {
-        if(editField)
-        {
-            const row = dataState.data.find(r => r.rowId === editField.rowId);
-            if(row)
-            {
-                setEditField(editField);
-                setIsEditing(true);
-            }
-            else
-            {
-
-                setEditField(null);
-                setIsEditing(false);
-            }
-        }
-        else
-        {
-            setIsEditing(false);
-            setEditField(null);
-        }
-    }
+    useEffect(() => loadData(setDataState, setIsLoading, pagination, sort, filters, props.getDataAsync),
+        [pagination, sort, filters, props]);
 
     const context: IGridContext = {
         pagination,
@@ -145,8 +85,8 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
             needsSave,
             isSaving,
             editField,
-            setEditField: setCurrentEditField,
-            updateRow,
+            setEditField: (ef) => setCurrentEditField(ef, dataState, setEditField, setIsEditing),
+            updateRow: (rowData) => updateRow(rowData, dataState, needsSave, setNeedsSave),
             editMode: props.editable.editMode,
             autoSave: props.editable.autoSave,
         };
@@ -197,6 +137,101 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
         </GridContext.Provider>
     );
 };
+
+function useGridState(initialPageSize: number)
+{
+    const [pagination, setPagination] = useState<IPagination>(getDefaultPagination(initialPageSize));
+    const [sort, setSort] = useState<ISortColumn|null>(null);
+    const [filters, setFilters] = useState<IFieldFilter[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [dataState, setDataState] = useState<IDataState>({ totalCount: 0, data: [] });
+    const [isEditing, setIsEditing] = useState(false);
+    const [needsSave, setNeedsSave] = useState(false);
+    const [editField, setEditField] = useState<IEditField|null>(null);
+
+    return {
+        pagination, setPagination,
+        sort, setSort,
+        filters, setFilters,
+        isLoading, setIsLoading,
+        isSaving, setIsSaving,
+        dataState, setDataState,
+        isEditing, setIsEditing,
+        needsSave, setNeedsSave,
+        editField, setEditField,
+    };
+}
+
+function loadData<TModel extends object>(
+    setDataState: Setter<IDataState>,
+    setIsLoading: Setter<boolean>,
+    pagination: IPagination,
+    sort: ISortColumn|null,
+    filters: IFieldFilter[],
+    getDataAsync: (p: IPagination, s: ISortColumn|null, f: IFieldFilter[]) => Promise<IDataResult<TModel>>)
+{
+    const fetch = async () => {
+        const d = await getDataAsync(pagination, sort, filters);
+        const newState: IDataState = {
+            totalCount: d.totalCount,
+            data: d.data.map((m,i) =>
+            {
+                const result: IRowData = {
+                    syncAction: SyncAction.unchanged,
+                    model: m,
+                    rowId: i+1,
+                };
+                return result;
+            }),
+        };
+        setDataState(newState);
+        setIsLoading(false);
+    };
+
+    setIsLoading(true);
+    // noinspection JSIgnoredPromiseFromCall
+    fetch();
+}
+
+function updateRow(rowData: IRowData, dataState: IDataState, needsSave: boolean, setNeedsSave: Setter<boolean>): boolean
+{
+    console.log('saving row');
+    const existingRow = dataState.data.find(r => r.rowId === rowData.rowId);
+    if(!existingRow)
+    {
+        throw new Error(`unable to find row with id=${rowData.rowId}`);
+    }
+    existingRow.syncAction = rowData.syncAction;
+    existingRow.model = rowData.model;
+    setNeedsSave(needsSave||hasChanged(rowData));
+
+    return true; //success
+}
+
+const setCurrentEditField = (editField: IEditField|null, dataState: IDataState, setEditField: Setter<IEditField|null>, setIsEditing: Setter<boolean>) =>
+{
+    if(editField)
+    {
+        const row = dataState.data.find(r => r.rowId === editField.rowId);
+        if(row)
+        {
+            setEditField(editField);
+            setIsEditing(true);
+        }
+        else
+        {
+
+            setEditField(null);
+            setIsEditing(false);
+        }
+    }
+    else
+    {
+        setEditField(null);
+        setIsEditing(false);
+    }
+}
 
 function getDefaultPagination(initialPageSize: number|undefined): IPagination
 {

@@ -1,22 +1,22 @@
 /* tslint:disable:interface-over-type-literal */
 import * as React from 'react';
 import {useContext} from 'react';
-import {GridEditMode, IEditField, IFieldFilter, IPagination, IRowData, ISortColumn} from './types';
+import {GridEditMode, IEditField, IFieldFilter, IPagination, IRowData, ISortColumn, Setter} from './types';
 
 export interface IGridContext
 {
     pagination?: IPagination;
-    setPagination?: (p: IPagination) => void;
+    setPagination?: Setter<IPagination>;
     resetPagination?: () => void;
 
     sort?: ISortColumn|null;
-    setSort?: (s: ISortColumn|null) => void;
+    setSort?: Setter<ISortColumn|null>;
 
     filters?: IFieldFilter[];
-    setFilters?: (fs: IFieldFilter[]) => void;
+    setFilters?: Setter<IFieldFilter[]>;
 
     isLoading?: boolean;
-    setIsLoading?: (isLoading: boolean) => void;
+    setIsLoading?: Setter<boolean>;
 
     editingContext?: IGridEditContext;
 }
@@ -32,7 +32,7 @@ interface IGridEditContext
     isSaving: boolean;
 
     editField: IEditField|null;
-    setEditField: (editField: IEditField|null) => void;
+    setEditField: Setter<IEditField|null>;
 
     updateRow: (rowData: IRowData) => boolean;
     //deleteRow: (rowData: IRowData) => boolean;
