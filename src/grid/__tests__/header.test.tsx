@@ -1,25 +1,26 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
-import {shallow, ShallowWrapper} from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import * as GridContext from '../context';
-import {Header} from '../header';
-import {Column, IColumn, ISortColumn} from '../types';
+import { Header } from '../header';
+import { Column, IColumn, ISortColumn } from '../types';
 
-interface IDataRow
-{
+interface IDataRow {
     col1: string;
     col2: string;
     col3: string;
 }
 
-const getByTestId = (c: ShallowWrapper, name: string) => c.find(`[data-test="${name}"]`);
-const headerCell = (c: ShallowWrapper, index: number) => getByTestId(c, 'header').at(index);
-const groupCell = (c: ShallowWrapper, index: number) => getByTestId(c, 'group').at(index);
-function setGridContextData(gridContext: GridContext.IGridContext): void
-{
-    jest
-        .spyOn(GridContext, 'useGridContext')
-        .mockImplementation(() => gridContext);
+const getByTestId = (c: ShallowWrapper, name: string) =>
+    c.find(`[data-test="${name}"]`);
+const headerCell = (c: ShallowWrapper, index: number) =>
+    getByTestId(c, 'header').at(index);
+const groupCell = (c: ShallowWrapper, index: number) =>
+    getByTestId(c, 'group').at(index);
+function setGridContextData(gridContext: GridContext.IGridContext): void {
+    jest.spyOn(GridContext, 'useGridContext').mockImplementation(
+        () => gridContext
+    );
 }
 
 it('renders simple header', () => {
@@ -40,9 +41,7 @@ it('renders simple header', () => {
             type: 'data',
         },
     ];
-    const c = shallow(
-        <Header columns={cols} />,
-    );
+    const c = shallow(<Header columns={cols} />);
 
     expect(headerCell(c, 0).text()).toContain(cols[0].name);
     expect(headerCell(c, 1).text()).toContain(cols[1].name);
@@ -78,15 +77,17 @@ it('renders grouped header', () => {
             type: 'data',
         },
     ];
-    const c = shallow(
-        <Header columns={cols} />,
-    );
+    const c = shallow(<Header columns={cols} />);
 
     expect(headerCell(c, 0).text()).toContain(cols[0].name);
     // @ts-ignore
-    expect(headerCell(c, 1).text()).toContain(cols[1].type === 'group' ? cols[1].subColumns[0].name : 'error');
+    expect(headerCell(c, 1).text()).toContain(
+        cols[1].type === 'group' ? cols[1].subColumns[0].name : 'error'
+    );
     // @ts-ignore
-    expect(headerCell(c, 2).text()).toContain(cols[1].type === 'group' ? cols[1].subColumns[1].name : 'error');
+    expect(headerCell(c, 2).text()).toContain(
+        cols[1].type === 'group' ? cols[1].subColumns[1].name : 'error'
+    );
     expect(headerCell(c, 3).text()).toContain(cols[2].name);
 
     expect(getByTestId(c, 'group')).toHaveLength(cols.length);
@@ -95,7 +96,6 @@ it('renders grouped header', () => {
     expect(groupCell(c, 1).props().colSpan).toBe(2);
 
     expect(groupCell(c, 1).text()).toContain(cols[1].name);
-
 });
 
 it('renders sort ASC', () => {
@@ -126,7 +126,11 @@ it('renders sort ASC', () => {
     setGridContextData({ sort, setSort });
 
     const c = shallow(
-        <Header columns={cols} sortAscLabel={sortAscLabel} sortDescLabel={sortDescLabel} />,
+        <Header
+            columns={cols}
+            sortAscLabel={sortAscLabel}
+            sortDescLabel={sortDescLabel}
+        />
     );
 
     expect(headerCell(c, 1).text()).toContain(sortAscLabel);
@@ -160,7 +164,11 @@ it('renders sort ASC custom', () => {
     setGridContextData({ sort, setSort });
 
     const c = shallow(
-        <Header columns={cols} sortAscLabel={sortAscLabel} sortDescLabel={sortDescLabel}/>,
+        <Header
+            columns={cols}
+            sortAscLabel={sortAscLabel}
+            sortDescLabel={sortDescLabel}
+        />
     );
 
     expect(headerCell(c, 1).text()).toContain(sortAscLabel);
@@ -194,7 +202,11 @@ it('renders sort DESC', () => {
     setGridContextData({ sort, setSort });
 
     const c = shallow(
-        <Header columns={cols} sortAscLabel={sortAscLabel} sortDescLabel={sortDescLabel}/>,
+        <Header
+            columns={cols}
+            sortAscLabel={sortAscLabel}
+            sortDescLabel={sortDescLabel}
+        />
     );
 
     expect(headerCell(c, 1).text()).toContain(sortDescLabel);
@@ -225,7 +237,11 @@ it('non-sortable header clicked -> no sorting', () => {
     setGridContextData({ sort, setSort });
 
     const c = shallow(
-        <Header columns={cols} sortAscLabel={sortAscLabel} sortDescLabel={sortDescLabel}/>,
+        <Header
+            columns={cols}
+            sortAscLabel={sortAscLabel}
+            sortDescLabel={sortDescLabel}
+        />
     );
 
     headerCell(c, 1).simulate('click');
@@ -258,7 +274,11 @@ it('no sort to sort -> ASC', () => {
     setGridContextData({ sort, setSort });
 
     const c = shallow(
-        <Header columns={cols} sortAscLabel={sortAscLabel} sortDescLabel={sortDescLabel}/>,
+        <Header
+            columns={cols}
+            sortAscLabel={sortAscLabel}
+            sortDescLabel={sortDescLabel}
+        />
     );
 
     headerCell(c, 1).simulate('click');
@@ -294,7 +314,11 @@ it('ASC sort col clicked -> DESC', () => {
     setGridContextData({ sort, setSort });
 
     const c = shallow(
-        <Header columns={cols} sortAscLabel={sortAscLabel} sortDescLabel={sortDescLabel}/>,
+        <Header
+            columns={cols}
+            sortAscLabel={sortAscLabel}
+            sortDescLabel={sortDescLabel}
+        />
     );
 
     headerCell(c, 1).simulate('click');
@@ -330,7 +354,11 @@ it('DESC sort col clicked -> no sorting', () => {
     setGridContextData({ sort, setSort });
 
     const c = shallow(
-        <Header columns={cols} sortAscLabel={sortAscLabel} sortDescLabel={sortDescLabel}/>,
+        <Header
+            columns={cols}
+            sortAscLabel={sortAscLabel}
+            sortDescLabel={sortDescLabel}
+        />
     );
 
     headerCell(c, 1).simulate('click');

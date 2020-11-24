@@ -1,13 +1,24 @@
 /* tslint:disable:max-line-length no-magic-numbers no-console jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import {FormEvent, useContext} from 'react';
-import {Column, Grid, GridContext, GridEditMode, IDataResult, IFieldFilter, IPagination, ISortColumn} from "../../grid";
-import {getData as getMockData, IData as IMockData, update} from "./mock-data";
+import { FormEvent, useContext } from 'react';
+import {
+    Column,
+    Grid,
+    GridContext,
+    GridEditMode,
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+} from '../../grid';
+import {
+    getData as getMockData,
+    IData as IMockData,
+    update,
+} from './mock-data';
 import './styles.css';
 
-const TestGrid: React.FunctionComponent = (): JSX.Element =>
-{
-
+const TestGrid: React.FunctionComponent = (): JSX.Element => {
     return (
         <div className="container">
             <Grid
@@ -18,13 +29,13 @@ const TestGrid: React.FunctionComponent = (): JSX.Element =>
                 editable={{
                     editMode: GridEditMode.inline,
                     autoSave: true,
-                    addModelAsync: (m) => new Promise<IMockData>(() => m),
-                    updateModelAsync: (m) => updateDataAsync(m),
-                    deleteModelAsync: (m) => new Promise<void>(() => {})
+                    addModelAsync: m => new Promise<IMockData>(() => m),
+                    updateModelAsync: m => updateDataAsync(m),
+                    deleteModelAsync: m => new Promise<void>(() => {}),
                 }}
             >
                 {{
-                    toolbar: <ToolBar/>,
+                    toolbar: <ToolBar />,
                     emptyState: <i>no data</i>,
                     loadingState: <i>the data is loading</i>,
                 }}
@@ -39,19 +50,19 @@ const cols: Array<Column<IMockData>> = [
     {
         name: 'Key',
         field: 'key',
-        type: 'data'
+        type: 'data',
     },
     {
         name: 'Col 0',
         field: 'num',
         type: 'data',
-        editable: { type: 'number', min: 0, max: 100, step: 5  }
+        editable: { type: 'number', min: 0, max: 100, step: 5 },
     },
     {
         name: 'Col 1',
         field: 'one',
         type: 'data',
-        editable: { type: 'text', maxLength: 4  }
+        editable: { type: 'text', maxLength: 4 },
     },
     {
         name: 'Group 1',
@@ -87,19 +98,29 @@ const cols: Array<Column<IMockData>> = [
         field: 'four',
         hidden: false,
         type: 'data',
-        editable: { type: 'values', subType: 'number', values: [
-            { text: 'one', value: 1},
-            { text: 'two', value: 2},
-            { text: 'three', value: 3},
-            { text: 'four', value: 4},
-        ]}
+        editable: {
+            type: 'values',
+            subType: 'number',
+            values: [
+                { text: 'one', value: 1 },
+                { text: 'two', value: 2 },
+                { text: 'three', value: 3 },
+                { text: 'four', value: 4 },
+            ],
+        },
     },
     {
         name: 'Col 5',
         field: 'five',
         sortable: true,
         type: 'data',
-        editable: { type: 'values', subType: 'number', values: [1,2,3,4].map(n => { return { text: n.toString(), value: n }})}
+        editable: {
+            type: 'values',
+            subType: 'number',
+            values: [1, 2, 3, 4].map(n => {
+                return { text: n.toString(), value: n };
+            }),
+        },
     },
     // {
     //     type: 'action',
@@ -115,41 +136,38 @@ const cols: Array<Column<IMockData>> = [
 ];
 
 // tslint:disable-next-line:no-empty-interface
-interface IToolbarProps
-{
-}
+interface IToolbarProps {}
 
-const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
-{
-    const {setSort, filters, setFilters, resetPagination, editingContext} = useContext(GridContext);
-    if(!setSort||!setFilters||!resetPagination)
-    {
+const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
+    const {
+        setSort,
+        filters,
+        setFilters,
+        resetPagination,
+        editingContext,
+    } = useContext(GridContext);
+    if (!setSort || !setFilters || !resetPagination) {
         throw new Error('configuration error');
     }
 
-    const filterChanged = (e: FormEvent): void =>
-    {
+    const filterChanged = (e: FormEvent): void => {
         resetPagination();
         const val = (e.target as any).value.toString();
-        if (!val)
-        {
+        if (!val) {
             setFilters([]);
-        }
-        else
-        {
+        } else {
             setFilters([
-                                 {
-                                     field: 'four',
-                                     operator: 'contains',
-                                     value: val,
-                                 },
-                             ]);
+                {
+                    field: 'four',
+                    operator: 'contains',
+                    value: val,
+                },
+            ]);
         }
     };
 
     let currentFilter = '';
-    if (filters && filters.length > 0)
-    {
+    if (filters && filters.length > 0) {
         currentFilter = filters[0].value;
     }
     const canSave = editingContext?.needsSave || editingContext?.isSaving;
@@ -157,12 +175,12 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
         <div>
             <h4>Product SKUs</h4>
             <button
-                onClick={() => setSort({field: 'four', direction: 'ASC'})}
+                onClick={() => setSort({ field: 'four', direction: 'ASC' })}
             >
                 Sort By Col 4 ASC
             </button>
             <button
-                onClick={() => setSort({field: 'four', direction: 'DESC'})}
+                onClick={() => setSort({ field: 'four', direction: 'DESC' })}
             >
                 Sort By Col 4 DESC
             </button>
@@ -176,16 +194,16 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
                     <option value="4">4</option>
                 </select>
             </label>
-            <button disabled={!canSave}>
-                Save
-            </button>
+            <button disabled={!canSave}>Save</button>
         </div>
     );
-
 };
 
-function getDataAsync(pagination: IPagination, sort: ISortColumn|null, filters: IFieldFilter[]): Promise<IDataResult<IMockData>>
-{
+function getDataAsync(
+    pagination: IPagination,
+    sort: ISortColumn | null,
+    filters: IFieldFilter[]
+): Promise<IDataResult<IMockData>> {
     return new Promise<IDataResult<IMockData>>(resolve => {
         const data = getMockData(pagination, sort, filters);
         setTimeout(() => {
@@ -194,8 +212,7 @@ function getDataAsync(pagination: IPagination, sort: ISortColumn|null, filters: 
     });
 }
 
-function updateDataAsync(model: IMockData): Promise<IMockData>
-{
+function updateDataAsync(model: IMockData): Promise<IMockData> {
     return new Promise<IMockData>(resolve => {
         const result = update(model);
         setTimeout(() => {
@@ -203,5 +220,3 @@ function updateDataAsync(model: IMockData): Promise<IMockData>
         }, 3000);
     });
 }
-
-

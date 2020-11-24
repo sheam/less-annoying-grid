@@ -15,6 +15,7 @@ import {
     IPagination,
     IRowData,
     ISortColumn,
+    Setter,
     SyncAction,
 } from './types';
 import { Row } from './rowData';
@@ -156,40 +157,24 @@ function getGridContext<TModel extends object>(
 }
 
 interface IGridState {
-    setPagination: (
-        value: ((prevState: IPagination) => IPagination) | IPagination
-    ) => void;
     pagination: IPagination;
-    setIsEditing: (value: ((prevState: boolean) => boolean) | boolean) => void;
+    setPagination: Setter<IPagination>;
     isEditing: boolean;
+    setIsEditing: Setter<boolean>;
     dataState: IDataState;
-    setDataState: (
-        value: ((prevState: IDataState) => IDataState) | IDataState
-    ) => void;
+    setDataState: Setter<IDataState>;
     sort: ISortColumn | null;
+    setSort: Setter<ISortColumn | null>;
     filters: IFieldFilter[];
-    setEditField: (
-        value:
-            | ((prevState: IEditField | null) => IEditField | null)
-            | IEditField
-            | null
-    ) => void;
-    setIsSaving: (value: ((prevState: boolean) => boolean) | boolean) => void;
-    setNeedsSave: (value: ((prevState: boolean) => boolean) | boolean) => void;
-    needsSave: boolean;
-    setSort: (
-        value:
-            | ((prevState: ISortColumn | null) => ISortColumn | null)
-            | ISortColumn
-            | null
-    ) => void;
-    isLoading: boolean;
+    setFilters: Setter<IFieldFilter[]>;
     editField: IEditField | null;
-    setIsLoading: (value: ((prevState: boolean) => boolean) | boolean) => void;
-    setFilters: (
-        value: ((prevState: IFieldFilter[]) => IFieldFilter[]) | IFieldFilter[]
-    ) => void;
+    setEditField: Setter<IEditField | null>;
     isSaving: boolean;
+    setIsSaving: Setter<boolean>;
+    needsSave: boolean;
+    setNeedsSave: Setter<boolean>;
+    isLoading: boolean;
+    setIsLoading: Setter<boolean>;
 }
 
 function useGridState<TModel extends object>(

@@ -1,4 +1,4 @@
-import {Column, IColumn, IRowData} from "../types";
+import { Column, IColumn, IRowData } from '../types';
 
 export interface IRowProps<TModel extends object> {
     columns: Column<TModel>[];

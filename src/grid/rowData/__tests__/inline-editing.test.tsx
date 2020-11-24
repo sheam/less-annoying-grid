@@ -1,30 +1,29 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
-import {mount, ReactWrapper, ShallowWrapper} from 'enzyme';
+import { mount, ReactWrapper, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import {GridEditMode, IRowData} from "../../types";
-import * as GridContext from "../../context";
-import {IGridContext} from "../../context";
-import {cols, data} from "./mock-data";
-import {RowReadOnly} from "../row-readonly";
-import {RowInlineEdit} from "../row-inline-edit";
-import {cloneData} from "../../util";
+import { GridEditMode, IRowData } from '../../types';
+import * as GridContext from '../../context';
+import { IGridContext } from '../../context';
+import { cols, data } from './mock-data';
+import { RowReadOnly } from '../row-readonly';
+import { RowInlineEdit } from '../row-inline-edit';
+import { cloneData } from '../../util';
 
-const getByTestId = (c: ReactWrapper|ShallowWrapper, name: string) => c.find(`[data-test="${name}"]`);
-const getCellAt = (c: ReactWrapper|ShallowWrapper, index: number) => c.find(`[data-test="data-row"]`).find('td').at(index);
+const getByTestId = (c: ReactWrapper | ShallowWrapper, name: string) =>
+    c.find(`[data-test="${name}"]`);
+const getCellAt = (c: ReactWrapper | ShallowWrapper, index: number) =>
+    c.find(`[data-test="data-row"]`).find('td').at(index);
 
-function setGridContextData(gridContext: GridContext.IGridContext): void
-{
-    if( !gridContext.setPagination )
-    {
+function setGridContextData(gridContext: GridContext.IGridContext): void {
+    if (!gridContext.setPagination) {
         gridContext.setPagination = jest.fn(); // default implementation
     }
-    jest
-        .spyOn(GridContext, 'useGridContext')
-        .mockImplementation(() => gridContext);
+    jest.spyOn(GridContext, 'useGridContext').mockImplementation(
+        () => gridContext
+    );
 }
 
-it('renders a rows of readonly data', async() => {
-
+it('renders a rows of readonly data', async () => {
     const model = data[0];
     const rowData: IRowData = { rowId: 1, model, dirty: false };
     const c = mount(
@@ -42,7 +41,7 @@ it('renders a rows of readonly data', async() => {
     expect(getCellAt(c, 2).text()).toContain('a');
 });
 
-it('renders a rows of inline edit data', async() => {
+it('renders a rows of inline edit data', async () => {
     const gridContext: IGridContext = {
         editingContext: {
             isEditing: false,
@@ -53,7 +52,7 @@ it('renders a rows of inline edit data', async() => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
-        }
+        },
     };
     setGridContextData(gridContext);
 
@@ -62,7 +61,7 @@ it('renders a rows of inline edit data', async() => {
     const c = mount(
         <table>
             <tbody>
-            <RowInlineEdit data={rowData} columns={cols} />
+                <RowInlineEdit data={rowData} columns={cols} />
             </tbody>
         </table>
     ).update();
@@ -74,7 +73,7 @@ it('renders a rows of inline edit data', async() => {
     expect(getCellAt(c, 2).text()).toContain('a');
 });
 
-it('renders an editor in number col', async() => {
+it('renders an editor in number col', async () => {
     const gridContext: IGridContext = {
         editingContext: {
             isEditing: false,
@@ -85,7 +84,7 @@ it('renders an editor in number col', async() => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
-        }
+        },
     };
     setGridContextData(gridContext);
 
@@ -93,18 +92,24 @@ it('renders an editor in number col', async() => {
     const rowData: IRowData = { rowId: 1, model, dirty: false };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[0];
-    if(editCol.type === 'data' && gridContext.editingContext && editCol.field)
-    {
+    if (
+        editCol.type === 'data' &&
+        gridContext.editingContext &&
+        editCol.field
+    ) {
         editCol.editable = {
             type: 'number',
-        }
+        };
 
-        gridContext.editingContext.editField = { field: editCol.field, rowId: rowData.rowId };
+        gridContext.editingContext.editField = {
+            field: editCol.field,
+            rowId: rowData.rowId,
+        };
     }
     const c = mount(
         <table>
             <tbody>
-            <RowInlineEdit data={rowData} columns={colsWithEdit} />
+                <RowInlineEdit data={rowData} columns={colsWithEdit} />
             </tbody>
         </table>
     ).update();
@@ -117,7 +122,7 @@ it('renders an editor in number col', async() => {
     expect(cell.find('input').prop('type')).toBe('number');
 });
 
-it('renders an editor in text col', async() => {
+it('renders an editor in text col', async () => {
     const gridContext: IGridContext = {
         editingContext: {
             isEditing: false,
@@ -128,7 +133,7 @@ it('renders an editor in text col', async() => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
-        }
+        },
     };
     setGridContextData(gridContext);
 
@@ -136,18 +141,24 @@ it('renders an editor in text col', async() => {
     const rowData: IRowData = { rowId: 1, model, dirty: false };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[1];
-    if(editCol.type === 'data' && gridContext.editingContext && editCol.field)
-    {
+    if (
+        editCol.type === 'data' &&
+        gridContext.editingContext &&
+        editCol.field
+    ) {
         editCol.editable = {
             type: 'text',
-        }
+        };
 
-        gridContext.editingContext.editField = { field: editCol.field, rowId: rowData.rowId };
+        gridContext.editingContext.editField = {
+            field: editCol.field,
+            rowId: rowData.rowId,
+        };
     }
     const c = mount(
         <table>
             <tbody>
-            <RowInlineEdit data={rowData} columns={colsWithEdit} />
+                <RowInlineEdit data={rowData} columns={colsWithEdit} />
             </tbody>
         </table>
     ).update();
@@ -160,7 +171,7 @@ it('renders an editor in text col', async() => {
     expect(cell.find('input').prop('type')).toBe('text');
 });
 
-it('renders an editor in date col', async() => {
+it('renders an editor in date col', async () => {
     const gridContext: IGridContext = {
         editingContext: {
             isEditing: false,
@@ -171,7 +182,7 @@ it('renders an editor in date col', async() => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
-        }
+        },
     };
     setGridContextData(gridContext);
 
@@ -179,18 +190,24 @@ it('renders an editor in date col', async() => {
     const rowData: IRowData = { rowId: 1, model, dirty: false };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[3];
-    if(editCol.type === 'data' && gridContext.editingContext && editCol.field)
-    {
+    if (
+        editCol.type === 'data' &&
+        gridContext.editingContext &&
+        editCol.field
+    ) {
         editCol.editable = {
             type: 'date',
-        }
+        };
 
-        gridContext.editingContext.editField = { field: editCol.field, rowId: rowData.rowId };
+        gridContext.editingContext.editField = {
+            field: editCol.field,
+            rowId: rowData.rowId,
+        };
     }
     const c = mount(
         <table>
             <tbody>
-            <RowInlineEdit data={rowData} columns={colsWithEdit} />
+                <RowInlineEdit data={rowData} columns={colsWithEdit} />
             </tbody>
         </table>
     ).update();
@@ -203,7 +220,7 @@ it('renders an editor in date col', async() => {
     expect(cell.find('input').prop('type')).toBe('date');
 });
 
-it('renders an editor with drop down values', async() => {
+it('renders an editor with drop down values', async () => {
     const gridContext: IGridContext = {
         editingContext: {
             isEditing: false,
@@ -214,7 +231,7 @@ it('renders an editor with drop down values', async() => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
-        }
+        },
     };
     setGridContextData(gridContext);
 
@@ -222,8 +239,11 @@ it('renders an editor with drop down values', async() => {
     const rowData: IRowData = { rowId: 1, model, dirty: false };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[3];
-    if(editCol.type === 'data' && gridContext.editingContext && editCol.field)
-    {
+    if (
+        editCol.type === 'data' &&
+        gridContext.editingContext &&
+        editCol.field
+    ) {
         editCol.editable = {
             type: 'values',
             subType: 'text',
@@ -232,15 +252,18 @@ it('renders an editor with drop down values', async() => {
                 { text: 'b', value: 'b' },
                 { text: 'c', value: 'c' },
                 { text: 'd', value: 'd' },
-            ]
-        }
+            ],
+        };
 
-        gridContext.editingContext.editField = { field: editCol.field, rowId: rowData.rowId };
+        gridContext.editingContext.editField = {
+            field: editCol.field,
+            rowId: rowData.rowId,
+        };
     }
     const c = mount(
         <table>
             <tbody>
-            <RowInlineEdit data={rowData} columns={colsWithEdit} />
+                <RowInlineEdit data={rowData} columns={colsWithEdit} />
             </tbody>
         </table>
     ).update();

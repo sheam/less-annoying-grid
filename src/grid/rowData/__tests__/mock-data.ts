@@ -1,9 +1,16 @@
-import {Column, IDataResult, IFieldFilter, IPagination, ISortColumn} from "../../types";
-import {getData as getMockData, IData as IMockData} from "../../../pages/test-grid-page/mock-data";
+import {
+    Column,
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+} from '../../types';
+import {
+    getData as getMockData,
+    IData as IMockData,
+} from '../../../pages/test-grid-page/mock-data';
 
-
-export interface IData
-{
+export interface IData {
     numVal: number;
     textVal: string;
     enumVal: string;
@@ -58,12 +65,17 @@ export const data: IData[] = [
         enumVal: 'd',
         birthday: new Date('1980-01-01'),
     },
-]
+];
 
-export const numIndex = 0, textIndex = 1, enumIndex = 2;
+export const numIndex = 0,
+    textIndex = 1,
+    enumIndex = 2;
 
-export function getDataAsync(pagination: IPagination, sort: ISortColumn|null, filters: IFieldFilter[]): Promise<IDataResult<IData>>
-{
+export function getDataAsync(
+    pagination: IPagination,
+    sort: ISortColumn | null,
+    filters: IFieldFilter[]
+): Promise<IDataResult<IData>> {
     return new Promise<IDataResult<IData>>(resolve => {
         setTimeout(() => {
             resolve({ totalCount: data.length, data });
