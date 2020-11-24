@@ -1,10 +1,10 @@
 /* tslint:disable:jsx-no-multiline-js */
 import * as React from 'react';
-import {PropsWithChildren, useEffect, useState} from 'react';
-import {GridContext, IGridContext} from './context';
-import {Footer, IFooterProps} from './footer';
+import { PropsWithChildren, useEffect, useState } from 'react';
+import { GridContext, IGridContext } from './context';
+import { Footer, IFooterProps } from './footer';
 import './grid.css';
-import {Header} from './header';
+import { Header } from './header';
 import {
     Column,
     GridEditMode,
@@ -15,10 +15,10 @@ import {
     IPagination,
     IRowData,
     ISortColumn,
-    SyncAction
+    SyncAction,
 } from './types';
-import {Row} from "./rowData";
-import {hasChanged} from "./util";
+import { Row } from './rowData';
+import { hasChanged } from './util';
 
 interface IGridProps<TModel extends object> {
     columns: Array<Column<TModel>>;
@@ -27,7 +27,11 @@ interface IGridProps<TModel extends object> {
     sortAscLabel?: JSX.Element | string;
     sortDescLabel?: JSX.Element | string;
 
-    getDataAsync: (pagination: IPagination, sort: ISortColumn | null, filters: IFieldFilter[]) => Promise<IDataResult<TModel>>;
+    getDataAsync: (
+        pagination: IPagination,
+        sort: ISortColumn | null,
+        filters: IFieldFilter[]
+    ) => Promise<IDataResult<TModel>>;
 
     editable?: IGridEditConfig<TModel>;
 }
@@ -49,16 +53,22 @@ interface IChildren {
     };
 }
 
-export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWithChildren<IChildren>) => {
+export const Grid = <TModel extends object>(
+    props: IGridProps<TModel> & PropsWithChildren<IChildren>
+) => {
     const state = useGridState(props);
 
-    useEffect(() => loadData(state, props.getDataAsync),
+    useEffect(
+        () => loadData(state, props.getDataAsync),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [state.pagination, state.sort, state.filters, props]);
+        [state.pagination, state.sort, state.filters, props]
+    );
 
     const context = getGridContext(props, state);
 
-    const totalColumns = props.columns.flatMap(c => c.type === 'group' ? c.subColumns : c).length;
+    const totalColumns = props.columns.flatMap(c =>
+        c.type === 'group' ? c.subColumns : c
+    ).length;
     const showLoading = state.isLoading && props.children?.loadingState;
     const showSaving = state.isSaving && props.children?.savingState;
     const showSync = showLoading || showSaving;
@@ -81,35 +91,48 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
                     />
 
                     <tbody>
-                    {!showLoading && !state.dataState.totalCount && props.children?.emptyState &&
-                    <tr>
-                        <td colSpan={totalColumns}>
-                            {props.children.emptyState}
-                        </td>
-                    </tr>
-                    }
-                    {state.dataState.data.map(d => <Row key={d.rowId} columns={props.columns} data={d}/>)}
+                        {!showLoading &&
+                            !state.dataState.totalCount &&
+                            props.children?.emptyState && (
+                                <tr>
+                                    <td colSpan={totalColumns}>
+                                        {props.children.emptyState}
+                                    </td>
+                                </tr>
+                            )}
+                        {state.dataState.data.map(d => (
+                            <Row
+                                key={d.rowId}
+                                columns={props.columns}
+                                data={d}
+                            />
+                        ))}
                     </tbody>
 
-                    {state.pagination &&
-                    <Footer
-                        numColumns={totalColumns}
-                        totalCount={state.dataState.totalCount}
-                        config={props.footer}
-                    />
-                    }
+                    {state.pagination && (
+                        <Footer
+                            numColumns={totalColumns}
+                            totalCount={state.dataState.totalCount}
+                            config={props.footer}
+                        />
+                    )}
                 </table>
             </div>
         </GridContext.Provider>
     );
 };
 
-function getGridContext<TModel extends object>(props: IGridProps<TModel>, state: IGridState): IGridContext
-{
+function getGridContext<TModel extends object>(
+    props: IGridProps<TModel>,
+    state: IGridState
+): IGridContext {
     const context: IGridContext = {
         pagination: state.pagination,
         setPagination: state.setPagination,
-        resetPagination: () => state.setPagination(getDefaultPagination(props.footer?.initialPageSize)),
+        resetPagination: () =>
+            state.setPagination(
+                getDefaultPagination(props.footer?.initialPageSize)
+            ),
         sort: state.sort,
         setSort: state.setSort,
         filters: state.filters,
@@ -123,8 +146,8 @@ function getGridContext<TModel extends object>(props: IGridProps<TModel>, state:
             needsSave: state.needsSave,
             isSaving: state.isSaving,
             editField: state.editField,
-            setEditField: (ef) => setCurrentEditField(ef, state),
-            updateRow: (rowData) => updateRow(rowData, state),
+            setEditField: ef => setCurrentEditField(ef, state),
+            updateRow: rowData => updateRow(rowData, state),
             editMode: props.editable.editMode,
             autoSave: props.editable.autoSave,
         };
@@ -133,55 +156,96 @@ function getGridContext<TModel extends object>(props: IGridProps<TModel>, state:
 }
 
 interface IGridState {
-    setPagination: (value: (((prevState: IPagination) => IPagination) | IPagination)) => void;
+    setPagination: (
+        value: ((prevState: IPagination) => IPagination) | IPagination
+    ) => void;
     pagination: IPagination;
-    setIsEditing: (value: (((prevState: boolean) => boolean) | boolean)) => void;
+    setIsEditing: (value: ((prevState: boolean) => boolean) | boolean) => void;
     isEditing: boolean;
     dataState: IDataState;
-    setDataState: (value: (((prevState: IDataState) => IDataState) | IDataState)) => void;
+    setDataState: (
+        value: ((prevState: IDataState) => IDataState) | IDataState
+    ) => void;
     sort: ISortColumn | null;
     filters: IFieldFilter[];
-    setEditField: (value: (((prevState: (IEditField | null)) => (IEditField | null)) | IEditField | null)) => void;
-    setIsSaving: (value: (((prevState: boolean) => boolean) | boolean)) => void;
-    setNeedsSave: (value: (((prevState: boolean) => boolean) | boolean)) => void;
+    setEditField: (
+        value:
+            | ((prevState: IEditField | null) => IEditField | null)
+            | IEditField
+            | null
+    ) => void;
+    setIsSaving: (value: ((prevState: boolean) => boolean) | boolean) => void;
+    setNeedsSave: (value: ((prevState: boolean) => boolean) | boolean) => void;
     needsSave: boolean;
-    setSort: (value: (((prevState: (ISortColumn | null)) => (ISortColumn | null)) | ISortColumn | null)) => void;
+    setSort: (
+        value:
+            | ((prevState: ISortColumn | null) => ISortColumn | null)
+            | ISortColumn
+            | null
+    ) => void;
     isLoading: boolean;
     editField: IEditField | null;
-    setIsLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void;
-    setFilters: (value: (((prevState: IFieldFilter[]) => IFieldFilter[]) | IFieldFilter[])) => void;
-    isSaving: boolean
+    setIsLoading: (value: ((prevState: boolean) => boolean) | boolean) => void;
+    setFilters: (
+        value: ((prevState: IFieldFilter[]) => IFieldFilter[]) | IFieldFilter[]
+    ) => void;
+    isSaving: boolean;
 }
 
-function useGridState<TModel extends object>(props: IGridProps<TModel>): IGridState {
-    const [pagination, setPagination] = useState<IPagination>(getDefaultPagination(props.footer?.initialPageSize));
+function useGridState<TModel extends object>(
+    props: IGridProps<TModel>
+): IGridState {
+    const [pagination, setPagination] = useState<IPagination>(
+        getDefaultPagination(props.footer?.initialPageSize)
+    );
     const [sort, setSort] = useState<ISortColumn | null>(null);
     const [filters, setFilters] = useState<IFieldFilter[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [dataState, setDataState] = useState<IDataState>({totalCount: 0, data: []});
+    const [dataState, setDataState] = useState<IDataState>({
+        totalCount: 0,
+        data: [],
+    });
     const [isEditing, setIsEditing] = useState(false);
     const [needsSave, setNeedsSave] = useState(false);
     const [editField, setEditField] = useState<IEditField | null>(null);
 
     return {
-        pagination, setPagination,
-        sort, setSort,
-        filters, setFilters,
-        isLoading, setIsLoading,
-        isSaving, setIsSaving,
-        dataState, setDataState,
-        isEditing, setIsEditing,
-        needsSave, setNeedsSave,
-        editField, setEditField,
+        pagination,
+        setPagination,
+        sort,
+        setSort,
+        filters,
+        setFilters,
+        isLoading,
+        setIsLoading,
+        isSaving,
+        setIsSaving,
+        dataState,
+        setDataState,
+        isEditing,
+        setIsEditing,
+        needsSave,
+        setNeedsSave,
+        editField,
+        setEditField,
     };
 }
 
 function loadData<TModel extends object>(
     state: IGridState,
-    getDataAsync: (p: IPagination, s: ISortColumn | null, f: IFieldFilter[]) => Promise<IDataResult<TModel>>) {
+    getDataAsync: (
+        p: IPagination,
+        s: ISortColumn | null,
+        f: IFieldFilter[]
+    ) => Promise<IDataResult<TModel>>
+) {
     const fetch = async () => {
-        const d = await getDataAsync(state.pagination, state.sort, state.filters);
+        const d = await getDataAsync(
+            state.pagination,
+            state.sort,
+            state.filters
+        );
         const newState: IDataState = {
             totalCount: d.totalCount,
             data: d.data.map((m, i) => {
@@ -205,7 +269,9 @@ function loadData<TModel extends object>(
 
 function updateRow(rowData: IRowData, state: IGridState): boolean {
     console.log('saving row');
-    const existingRow = state.dataState.data.find(r => r.rowId === rowData.rowId);
+    const existingRow = state.dataState.data.find(
+        r => r.rowId === rowData.rowId
+    );
     if (!existingRow) {
         throw new Error(`unable to find row with id=${rowData.rowId}`);
     }
@@ -216,7 +282,10 @@ function updateRow(rowData: IRowData, state: IGridState): boolean {
     return true; //success
 }
 
-const setCurrentEditField = (editField: IEditField | null, state: IGridState) => {
+const setCurrentEditField = (
+    editField: IEditField | null,
+    state: IGridState
+) => {
     if (editField) {
         const row = state.dataState.data.find(r => r.rowId === editField.rowId);
         if (row) {
@@ -230,8 +299,10 @@ const setCurrentEditField = (editField: IEditField | null, state: IGridState) =>
         state.setEditField(null);
         state.setIsEditing(false);
     }
-}
+};
 
-function getDefaultPagination(initialPageSize: number | undefined): IPagination {
-    return {currentPage: 1, pageSize: initialPageSize || 10};
+function getDefaultPagination(
+    initialPageSize: number | undefined
+): IPagination {
+    return { currentPage: 1, pageSize: initialPageSize || 10 };
 }
