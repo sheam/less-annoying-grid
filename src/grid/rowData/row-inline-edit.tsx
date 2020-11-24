@@ -90,8 +90,18 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
             }
             else
             {
-                nextField = columns.find(c => !(!c || c.type !== 'data' || c.hidden || !c.editable || !c.field));
-                if(nextField?.type === 'data' && nextField?.field)
+                nextField = undefined;
+                const startIndex = advance === Direction.forward ? 0 : columns.length - 1;
+                for(let i= startIndex; i < columns.length && i >= 0; i+= searchIncrement)
+                {
+                    const c = columns[i];
+                    if(colIsEditable(c))
+                    {
+                        nextField = c;
+                        break;
+                    }
+                }
+                if(nextField && nextField.type === 'data' && nextField.field)
                 {
                     editingContext.setEditField({ field: nextField.field, rowId: wasEditingField?.rowId + searchIncrement});
                 }
@@ -99,7 +109,7 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
         }
     };
 
-    const classes: string[] = [];
+    const classes = [rowData.syncAction.toString()];
     if(hasChanged(rowData)) classes.push('modified');
     if(editingContext.editField) classes.push('edit-row');
 
