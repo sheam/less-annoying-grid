@@ -13,8 +13,11 @@ import {
     IEditField,
     IFieldFilter,
     IPagination,
+    IProgress,
     IRowData,
     ISortColumn,
+    ISyncData,
+    ISyncDataResult,
     Setter,
     SyncAction,
 } from './types';
@@ -40,9 +43,10 @@ interface IGridProps<TModel extends object> {
 interface IGridEditConfig<TModel extends object> {
     editMode: GridEditMode;
     autoSave: boolean;
-    updateModelAsync: (model: TModel) => Promise<TModel>;
-    addModelAsync: (model: TModel) => Promise<TModel>;
-    deleteModelAsync: (model: TModel) => Promise<void>;
+    syncChanges: (
+        changes: Array<ISyncData<TModel>>,
+        updateProgress: Setter<IProgress>
+    ) => Promise<Array<ISyncDataResult<TModel>>>;
 }
 
 interface IChildren {
@@ -292,6 +296,42 @@ function getDefaultPagination(
     return { currentPage: 1, pageSize: initialPageSize || 10 };
 }
 
-function syncChanges(state: IGridState) {
-    const changedRows = state.dataState.data.filter(r => hasChanged(r));
+async function syncChanges<TModel extends object>(
+    state: IGridState,
+    props: IGridProps<TModel>
+): Promise<ISyncDataResult<TModel>[]> {
+    if (!props.editable) {
+        throw new Error(
+            'attempt to call syncChanges when grid is not editable'
+        );
+    }
+    if (state.isSaving) {
+        throw new Error(
+            'attempt to call syncChanges when sync already in progress'
+        );
+    }
+
+    const updateProgress = (p: IProgress) => {};
+
+    state.setIsSaving(true);
+    const changes = state.dataState.data
+        .filter(r => hasChanged(r))
+        .map(r => {
+            const result: ISyncData<TModel> = {
+                model: r.model,
+                rowId: r.rowId,
+                syncAction: r.syncAction,
+            };
+            return result;
+        });
+
+    try {
+        const result = await props.editable.syncChanges(
+            changes,
+            updateProgress
+        );
+        return result;
+    } finally {
+        state.setIsSaving(false);
+    }
 }

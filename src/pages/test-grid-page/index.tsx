@@ -9,10 +9,15 @@ import {
     IDataResult,
     IFieldFilter,
     IPagination,
+    IProgress,
     ISortColumn,
+    ISyncData,
+    ISyncDataResult,
+    Setter,
 } from '../../grid';
 import {
     getData as getMockData,
+    IData,
     IData as IMockData,
     update,
 } from './mock-data';
@@ -29,9 +34,7 @@ const TestGrid: React.FunctionComponent = (): JSX.Element => {
                 editable={{
                     editMode: GridEditMode.inline,
                     autoSave: true,
-                    addModelAsync: m => new Promise<IMockData>(() => m),
-                    updateModelAsync: m => updateDataAsync(m),
-                    deleteModelAsync: m => new Promise<void>(() => {}),
+                    syncChanges: syncDataAsync,
                 }}
             >
                 {{
@@ -212,11 +215,11 @@ function getDataAsync(
     });
 }
 
-function updateDataAsync(model: IMockData): Promise<IMockData> {
-    return new Promise<IMockData>(resolve => {
-        const result = update(model);
-        setTimeout(() => {
-            resolve(result);
-        }, 3000);
+function syncDataAsync(
+    changes: Array<ISyncData<IMockData>>,
+    updateProgress: Setter<IProgress>
+): Promise<Array<ISyncDataResult<IMockData>>> {
+    return new Promise<Array<ISyncDataResult<IMockData>>>(resolve => {
+        resolve([]); //TODO
     });
 }

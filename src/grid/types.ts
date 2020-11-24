@@ -124,3 +124,21 @@ export enum Direction {
 }
 
 export type Setter<TVal> = (v: TVal) => void;
+
+export interface ISyncData<TModel extends object> {
+    model: TModel;
+    rowId: number;
+    syncAction: SyncAction;
+}
+
+export interface ISyncDataResult<TModel extends object>
+    extends ISyncData<TModel> {
+    success: boolean;
+    error?: string;
+}
+
+export interface IProgress {
+    current: number;
+    total: number;
+    message?: string;
+}

@@ -80,12 +80,12 @@ it('renders grouped header', () => {
     const c = shallow(<Header columns={cols} />);
 
     expect(headerCell(c, 0).text()).toContain(cols[0].name);
-    // @ts-ignore
     expect(headerCell(c, 1).text()).toContain(
+        // @ts-ignore
         cols[1].type === 'group' ? cols[1].subColumns[0].name : 'error'
     );
-    // @ts-ignore
     expect(headerCell(c, 2).text()).toContain(
+        // @ts-ignore
         cols[1].type === 'group' ? cols[1].subColumns[1].name : 'error'
     );
     expect(headerCell(c, 3).text()).toContain(cols[2].name);
