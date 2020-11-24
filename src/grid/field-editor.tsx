@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ChangeEvent, KeyboardEvent} from "react";
+import {ChangeEvent, KeyboardEvent} from 'react';
 import {ColumnEditorType, Direction} from "./types";
 
 interface IFieldEditorProps
@@ -22,7 +22,7 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({model, 
 
     const focusLost = () =>
     {
-        editComplete(true, 'none');
+        editComplete(true, Direction.none);
     };
 
     const detectSpecialKeys = (e: KeyboardEvent<HTMLInputElement>|KeyboardEvent<HTMLSelectElement>) =>
@@ -30,17 +30,17 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({model, 
         if(e.key === 'Escape')
         {
             e.preventDefault();
-            editComplete(false, 'none');
+            editComplete(false, Direction.none);
         }
         if(e.key === 'Enter')
         {
             e.preventDefault();
-            editComplete(true, 'none');
+            editComplete(true, Direction.none);
         }
         if(e.key === 'Tab')
         {
             e.preventDefault();
-            editComplete(true,  e.shiftKey ? 'backward' : 'forward');
+            editComplete(true,  e.shiftKey ? Direction.backward : Direction.forward);
         }
     };
 

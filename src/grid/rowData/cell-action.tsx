@@ -14,7 +14,7 @@ export const ActionCell = <TModel extends object>({column, data}: IActionCellPro
                 <button
                     className={`action-${a.name}`}
                     key={`action-${a.name}`}
-                    onClick={() => a.handler(data.model, data.rowId, data.dirty)}
+                    onClick={() => a.handler(data.model, data.rowId, data.syncAction)}
                 >
                     {a.buttonContent}
                 </button>)}

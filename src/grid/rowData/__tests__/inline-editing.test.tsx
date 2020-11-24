@@ -1,10 +1,10 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
 import {mount, ReactWrapper, ShallowWrapper} from 'enzyme';
 import * as React from 'react';
-import {IRowData} from "../../types";
+import {GridEditMode, IRowData} from "../../types";
 import * as GridContext from "../../context";
-import {cols, data} from "./mock-data";
 import {IGridContext} from "../../context";
+import {cols, data} from "./mock-data";
 import {RowReadOnly} from "../row-readonly";
 import {RowInlineEdit} from "../row-inline-edit";
 import {cloneData} from "../../util";
@@ -51,7 +51,7 @@ it('renders a rows of inline edit data', async() => {
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
-            editMode: 'inline',
+            editMode: GridEditMode.inline,
             autoSave: false,
         }
     };
@@ -83,7 +83,7 @@ it('renders an editor in number col', async() => {
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
-            editMode: 'inline',
+            editMode: GridEditMode.inline,
             autoSave: false,
         }
     };
@@ -126,7 +126,7 @@ it('renders an editor in text col', async() => {
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
-            editMode: 'inline',
+            editMode: GridEditMode.inline,
             autoSave: false,
         }
     };
@@ -169,7 +169,7 @@ it('renders an editor in date col', async() => {
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
-            editMode: 'inline',
+            editMode: GridEditMode.inline,
             autoSave: false,
         }
     };
@@ -212,7 +212,7 @@ it('renders an editor with drop down values', async() => {
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
-            editMode: 'inline',
+            editMode: GridEditMode.inline,
             autoSave: false,
         }
     };

@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import * as GridContext from '../context';
 import {Footer, IFooterProps} from '../footer';
-import {IPagination} from '../types';
+import {GridEditMode, IPagination} from '../types';
 
 const getByTestId = (c: ShallowWrapper, name: string) => c.find(`[data-test="${name}"]`);
 const jumpButton = (c: ShallowWrapper, index: number) => getByTestId(c, 'jump').at(index);
@@ -293,7 +293,7 @@ it('disabled when needs saving', () => {
             isSaving: false,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
-            editMode: 'inline',
+            editMode: GridEditMode.inline,
             isEditing: false,
             editField: null,
             autoSave: false,
@@ -342,7 +342,7 @@ it('disabled when needs editing', () => {
             updateRow: jest.fn(),
             editField: { rowId: 1, field : 'one' },
             setEditField: jest.fn(),
-            editMode: 'inline',
+            editMode: GridEditMode.inline,
             isEditing: true,
             autoSave: false,
         }

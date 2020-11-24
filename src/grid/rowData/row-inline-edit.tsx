@@ -1,8 +1,8 @@
 import {useGridContext} from "../context";
-import {useState} from "react";
-import {cloneData} from "../util";
-import {Column, Direction} from "../types";
 import * as React from "react";
+import {useState} from "react";
+import {cloneData, getNewSyncAction, hasChanged} from "../util";
+import {Column, Direction, SyncAction} from "../types";
 import {IRowProps} from "./types";
 import {CellInlineEdit} from "./cell-inline-edit";
 import {ActionCell} from "./cell-action";
@@ -33,11 +33,12 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
             throw new Error('on change fired without an edit field set');
         }
         const hasChanges = (model as any)[editingContext.editField.field] !== (rowData.model as any)[editingContext.editField.field];
-        setRowData({ rowId: props.data.rowId, model, dirty: rowData.dirty||hasChanges })
+        const newSyncAction = hasChanges ? SyncAction.updated : SyncAction.unchanged;
+        setRowData({ rowId: props.data.rowId, model, syncAction: getNewSyncAction(props.data.syncAction, newSyncAction) })
     }
 
     const doneEditing = (commitChanges: boolean, advance: Direction ) => {
-        console.log(`    done editing ${editingContext.editField?.field}: dirty=${rowData.dirty} commit=${commitChanges}`);
+        console.log(`    done editing ${editingContext.editField?.field}: syncAction=${rowData.syncAction} commit=${commitChanges}`);
 
         if(!editingContext.editField)
         {
@@ -48,7 +49,7 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
 
         editingContext.setEditField(null);
 
-        if(commitChanges && rowData.dirty)
+        if(commitChanges && hasChanged(rowData))
         {
             editingContext.updateRow(rowData);
         }
@@ -57,7 +58,7 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
             setRowData(props.data);
         }
 
-        if(advance !== 'none')
+        if(advance !== Direction.none)
         {
             const currentIndex = columns.findIndex(c => {
                 if(!c || c.type !== 'data')
@@ -73,7 +74,7 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
             }
 
             let nextField: Column<TModel>|undefined;
-            const searchIncrement = advance === 'forward' ? 1 : -1;
+            const searchIncrement = advance === Direction.forward ? 1 : -1;
             for(let i=currentIndex+searchIncrement; i < columns.length && i >= 0; i+= searchIncrement)
             {
                 const c = columns[i];
@@ -99,7 +100,7 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
     };
 
     const classes: string[] = [];
-    if(rowData.dirty) classes.push('modified');
+    if(hasChanged(rowData)) classes.push('modified');
     if(editingContext.editField) classes.push('edit-row');
 
     return (

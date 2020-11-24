@@ -7,15 +7,18 @@ import './grid.css';
 import {Header} from './header';
 import {
     Column,
+    GridEditMode,
     IDataResult,
     IDataState,
+    IEditField,
     IFieldFilter,
     IPagination,
     IRowData,
     ISortColumn,
-    GridEditMode, IEditField
+    SyncAction
 } from './types';
 import {Row} from "./rowData";
+import {hasChanged} from "./util";
 
 interface IGridProps<TModel extends object>
 {
@@ -69,7 +72,7 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
                 data: d.data.map((m,i) =>
                                  {
                                      const result: IRowData = {
-                                         dirty: false,
+                                         syncAction: SyncAction.unchanged,
                                          model: m,
                                          rowId: i+1,
                                      };
@@ -93,9 +96,9 @@ export const Grid = <TModel extends object>(props: IGridProps<TModel> & PropsWit
          {
              throw new Error(`unable to find row with id=${rowData.rowId}`);
          }
-         existingRow.dirty = rowData.dirty;
+         existingRow.syncAction = rowData.syncAction;
          existingRow.model = rowData.model;
-         setNeedsSave(needsSave||rowData.dirty);
+         setNeedsSave(needsSave||hasChanged(rowData));
 
          return true; //success
     };

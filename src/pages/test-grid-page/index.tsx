@@ -1,7 +1,7 @@
 /* tslint:disable:max-line-length no-magic-numbers no-console jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
 import {FormEvent, useContext} from 'react';
-import {Column, Grid, GridContext, IDataResult, IFieldFilter, IPagination, ISortColumn} from "../../grid";
+import {Column, Grid, GridContext, GridEditMode, IDataResult, IFieldFilter, IPagination, ISortColumn} from "../../grid";
 import {getData as getMockData, IData as IMockData, update} from "./mock-data";
 import './styles.css';
 
@@ -16,7 +16,7 @@ const TestGrid: React.FunctionComponent = (): JSX.Element =>
                 sortDescLabel="(DESC)"
                 getDataAsync={getDataAsync}
                 editable={{
-                    editMode: "inline",
+                    editMode: GridEditMode.inline,
                     autoSave: true,
                     addModelAsync: (m) => new Promise<IMockData>(() => m),
                     updateModelAsync: (m) => updateDataAsync(m),
@@ -121,7 +121,7 @@ interface IToolbarProps
 
 const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
 {
-    const {setSort, filters, setFilters, resetPagination} = useContext(GridContext);
+    const {setSort, filters, setFilters, resetPagination, editingContext} = useContext(GridContext);
     if(!setSort||!setFilters||!resetPagination)
     {
         throw new Error('configuration error');
@@ -152,6 +152,7 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
     {
         currentFilter = filters[0].value;
     }
+    const canSave = editingContext?.needsSave || editingContext?.isSaving;
     return (
         <div>
             <h4>Product SKUs</h4>
@@ -175,6 +176,9 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
                     <option value="4">4</option>
                 </select>
             </label>
+            <button disabled={!canSave}>
+                Save
+            </button>
         </div>
     );
 

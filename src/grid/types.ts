@@ -39,7 +39,7 @@ export interface IEditorValues
 
 export type ColumnEditorType = IEditorText|IEditorNumber|IEditorDate|IEditorValues;
 
-export type GridEditMode = 'inline'|'row'|'external';
+export enum GridEditMode {inline = 'inline', row = 'row', external = 'external'}
 
 export interface IColumnGroup<TModel extends object>
 {
@@ -61,8 +61,10 @@ export interface IRowData
 {
     rowId: number;
     model: any;
-    dirty: boolean;
+    syncAction: SyncAction;
 }
+
+export enum SyncAction {unchanged = 'unchanged', added = 'added', updated = 'updated', deleted = 'deleted'}
 
 export interface IEditField
 {
@@ -74,7 +76,7 @@ export interface IAction<TModel extends object>
 {
     name: string;
     buttonContent: JSX.Element|string;
-    handler: (data: TModel, rowId: number, dirty: boolean) => void;
+    handler: (data: TModel, rowId: number, currentSyncAction: SyncAction) => void;
 }
 
 export type Column<TModel extends object> = IColumn<TModel>|IColumnGroup<TModel>|IActionColumn<TModel>;
@@ -109,4 +111,4 @@ export interface IDataState
     data: IRowData[];
 }
 
-export type Direction = 'forward'|'backward'|'none';
+export enum Direction {none = 'none', forward = 'forward', backward = 'backward'}
