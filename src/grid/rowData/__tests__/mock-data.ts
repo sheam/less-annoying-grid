@@ -7,6 +7,7 @@ export interface IData
     numVal: number;
     textVal: string;
     enumVal: string;
+    birthday: Date;
 }
 
 export const cols: Array<Column<IData>> = [
@@ -25,28 +26,37 @@ export const cols: Array<Column<IData>> = [
         name: 'Enum',
         field: 'enumVal',
     },
+    {
+        type: 'data',
+        name: 'Birthday',
+        field: 'birthday',
+    },
 ];
 
 export const data: IData[] = [
     {
         numVal: 1,
         textVal: 'one',
-        enumVal: 'a'
+        enumVal: 'a',
+        birthday: new Date('2020-01-01'),
     },
     {
         numVal: 2,
         textVal: 'two',
-        enumVal: 'b'
+        enumVal: 'b',
+        birthday: new Date('2000-01-01'),
     },
     {
         numVal: 3,
         textVal: 'three',
-        enumVal: 'c'
+        enumVal: 'c',
+        birthday: new Date('1990-01-01'),
     },
     {
         numVal: 4,
         textVal: 'four',
-        enumVal: 'd'
+        enumVal: 'd',
+        birthday: new Date('1980-01-01'),
     },
 ]
 
