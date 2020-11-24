@@ -13,15 +13,17 @@ import {
     ISortColumn,
     ISyncData,
     ISyncDataResult,
-    Setter,
+    SyncAction,
 } from '../../grid';
 import {
+    addData,
+    deleteData,
     getData as getMockData,
-    IData,
     IData as IMockData,
-    update,
+    updateData,
 } from './mock-data';
 import './styles.css';
+import { useGridContext } from '../../grid/context';
 
 const TestGrid: React.FunctionComponent = (): JSX.Element => {
     return (
@@ -41,6 +43,7 @@ const TestGrid: React.FunctionComponent = (): JSX.Element => {
                     toolbar: <ToolBar />,
                     emptyState: <i>no data</i>,
                     loadingState: <i>the data is loading</i>,
+                    savingState: <SyncProgress />,
                 }}
             </Grid>
         </div>
@@ -202,8 +205,25 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
     );
 };
 
+const SyncProgress: React.FunctionComponent<{}> = () => {
+    const { editingContext } = useGridContext();
+    const progress = editingContext?.syncProgress;
+    if (!progress) {
+        return null;
+    }
+    return (
+        <div>
+            <div>
+                Syncing {progress.current} of {progress.total} (
+                {Math.round((100 * progress.current) / progress.total)}%)
+            </div>
+            <small>{progress.message}</small>
+        </div>
+    );
+};
+
 function getDataAsync(
-    pagination: IPagination,
+    pagination: IPagination | null,
     sort: ISortColumn | null,
     filters: IFieldFilter[]
 ): Promise<IDataResult<IMockData>> {
@@ -217,9 +237,55 @@ function getDataAsync(
 
 function syncDataAsync(
     changes: Array<ISyncData<IMockData>>,
-    updateProgress: Setter<IProgress>
+    updateProgress: (
+        p: IProgress,
+        interimResults?: Array<ISyncDataResult<IMockData>>
+    ) => void
 ): Promise<Array<ISyncDataResult<IMockData>>> {
     return new Promise<Array<ISyncDataResult<IMockData>>>(resolve => {
-        resolve([]); //TODO
+        const results: Array<ISyncDataResult<IMockData>> = [];
+        let count = 0;
+        for (let change of changes) {
+            if (!change.model) {
+                throw new Error('change should never be null');
+            }
+
+            let resultModel: IMockData | null;
+            switch (change.syncAction) {
+                case SyncAction.updated:
+                    resultModel = updateData(change.model);
+                    break;
+                case SyncAction.added:
+                    resultModel = addData(change.model);
+                    break;
+                case SyncAction.deleted:
+                    deleteData(change.model);
+                    resultModel = null;
+                    break;
+                default:
+                    throw new Error(
+                        `Syncing ${change.syncAction} not supported. Item key=${change.model.key}`
+                    );
+            }
+
+            const syncResult: ISyncDataResult<IMockData> = {
+                model: resultModel,
+                syncAction: change.syncAction,
+                rowId: change.rowId,
+                success: true,
+            };
+            results.push(syncResult);
+
+            count++;
+            updateProgress(
+                {
+                    total: changes.length,
+                    current: count,
+                    message: `synced item with key ${change.model.key}`,
+                },
+                [syncResult]
+            );
+        }
+        resolve(results);
     });
 }

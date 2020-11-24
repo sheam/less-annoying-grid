@@ -32,7 +32,7 @@ interface IGridProps<TModel extends object> {
     sortDescLabel?: JSX.Element | string;
 
     getDataAsync: (
-        pagination: IPagination,
+        pagination: IPagination | null,
         sort: ISortColumn | null,
         filters: IFieldFilter[]
     ) => Promise<IDataResult<TModel>>;
@@ -45,7 +45,10 @@ interface IGridEditConfig<TModel extends object> {
     autoSave: boolean;
     syncChanges: (
         changes: Array<ISyncData<TModel>>,
-        updateProgress: Setter<IProgress>
+        updateProgress: (
+            p: IProgress,
+            interimResults?: Array<ISyncDataResult<TModel>>
+        ) => void
     ) => Promise<Array<ISyncDataResult<TModel>>>;
 }
 
@@ -160,8 +163,8 @@ function getGridContext<TModel extends object>(
     return context;
 }
 
-interface IGridState {
-    pagination: IPagination;
+export interface IGridState {
+    pagination: IPagination | null;
     setPagination: Setter<IPagination>;
     isEditing: boolean;
     setIsEditing: Setter<boolean>;
@@ -184,8 +187,8 @@ interface IGridState {
 function useGridState<TModel extends object>(
     props: IGridProps<TModel>
 ): IGridState {
-    const [pagination, setPagination] = useState<IPagination>(
-        getDefaultPagination(props.footer?.initialPageSize)
+    const [pagination, setPagination] = useState<IPagination | null>(
+        props.footer ? getDefaultPagination(props.footer.initialPageSize) : null
     );
     const [sort, setSort] = useState<ISortColumn | null>(null);
     const [filters, setFilters] = useState<IFieldFilter[]>([]);
@@ -224,7 +227,7 @@ function useGridState<TModel extends object>(
 function loadData<TModel extends object>(
     state: IGridState,
     getDataAsync: (
-        p: IPagination,
+        p: IPagination | null,
         s: ISortColumn | null,
         f: IFieldFilter[]
     ) => Promise<IDataResult<TModel>>
@@ -311,8 +314,6 @@ async function syncChanges<TModel extends object>(
         );
     }
 
-    const updateProgress = (p: IProgress) => {};
-
     const changes = state.dataState.data
         .filter(r => hasChanged(r))
         .map(r => {
@@ -329,13 +330,45 @@ async function syncChanges<TModel extends object>(
         message: 'starting sync',
     });
 
+    const applyUpdates = (
+        p: IProgress,
+        interim?: Array<ISyncDataResult<TModel>>
+    ) => _applySyncResults(state, p, interim);
+
     try {
-        const result = await props.editable.syncChanges(
-            changes,
-            updateProgress
-        );
-        return result;
+        return await props.editable.syncChanges(changes, applyUpdates);
     } finally {
         state.setSyncProgress(null);
+    }
+}
+
+export function _applySyncResults<TModel extends object>(
+    state: IGridState,
+    progress: IProgress,
+    interimResults: Array<ISyncDataResult<TModel>> | undefined
+): void {
+    state.setSyncProgress(progress);
+    if (interimResults) {
+        for (let r of interimResults) {
+            if (!r.success) {
+                continue;
+            }
+            const index = state.dataState.data.findIndex(
+                er => er.rowId === r.rowId
+            );
+            if (index < 0) {
+                throw new Error(
+                    'could not find existing row for the data being saved'
+                );
+            }
+            if (r.syncAction === SyncAction.deleted) {
+                state.dataState.data.splice(index, 1);
+            } else {
+                const existing = state.dataState.data[index];
+                existing.model = r.model;
+                existing.syncAction = SyncAction.unchanged;
+            }
+        }
+        //state.setDataState(state.dataState);
     }
 }

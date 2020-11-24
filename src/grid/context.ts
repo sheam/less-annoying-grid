@@ -13,7 +13,7 @@ import {
 } from './types';
 
 export interface IGridContext {
-    pagination?: IPagination;
+    pagination?: IPagination | null;
     setPagination?: Setter<IPagination>;
     resetPagination?: () => void;
 

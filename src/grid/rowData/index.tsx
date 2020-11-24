@@ -3,10 +3,14 @@ import * as React from 'react';
 import { IRowProps } from './types';
 import { RowReadOnly } from './row-readonly';
 import { RowInlineEdit } from './row-inline-edit';
-import { GridEditMode } from '../types';
+import { GridEditMode, SyncAction } from '../types';
 
 export const Row = <TModel extends object>(props: IRowProps<TModel>) => {
     const { editingContext } = useGridContext();
+    if (props.data.syncAction === SyncAction.deleted) {
+        return null;
+    }
+
     if (!editingContext) {
         return <RowReadOnly {...props} />;
     }

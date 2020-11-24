@@ -29,7 +29,7 @@ export function update(model: IData): IData {
 }
 
 export function getData(
-    pagination: IPagination,
+    pagination: IPagination | null,
     sort: ISortColumn | null,
     filters: IFieldFilter[]
 ): IDataResult<IData> {
@@ -65,11 +65,40 @@ export function getData(
         }
     }
 
-    const skip = (pagination.currentPage - 1) * pagination.pageSize;
+    if (pagination) {
+        const skip = (pagination.currentPage - 1) * pagination.pageSize;
+        return {
+            data: data.slice(skip, skip + pagination.pageSize),
+            totalCount: data.length,
+        };
+    }
     return {
-        data: data.slice(skip, skip + pagination.pageSize),
+        data,
         totalCount: data.length,
     };
+}
+
+export function updateData(model: IData): IData {
+    const index = _data.findIndex(x => x.key === model.key);
+    if (index < 0) {
+        throw new Error(`could not find data with key '${model.key}'`);
+    }
+    _data[index] = model;
+    return model;
+}
+
+export function addData(model: IData): IData {
+    model.key = _data.length + 1000;
+    _data.push(model);
+    return model;
+}
+
+export function deleteData(model: IData) {
+    const index = _data.findIndex(x => x.key === model.key);
+    if (index < 0) {
+        throw new Error(`could not find data with key '${model.key}'`);
+    }
+    _data.splice(index, 1);
 }
 
 const _data = generateData(1000);
