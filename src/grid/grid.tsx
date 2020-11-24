@@ -291,3 +291,7 @@ function getDefaultPagination(
 ): IPagination {
     return { currentPage: 1, pageSize: initialPageSize || 10 };
 }
+
+function syncChanges(state: IGridState) {
+    const changedRows = state.dataState.data.filter(r => hasChanged(r));
+}

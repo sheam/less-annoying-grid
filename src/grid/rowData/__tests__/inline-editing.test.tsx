@@ -1,7 +1,7 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
 import { mount, ReactWrapper, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import { GridEditMode, IRowData } from '../../types';
+import { GridEditMode, IRowData, SyncAction } from '../../types';
 import * as GridContext from '../../context';
 import { IGridContext } from '../../context';
 import { cols, data } from './mock-data';
@@ -25,7 +25,11 @@ function setGridContextData(gridContext: GridContext.IGridContext): void {
 
 it('renders a rows of readonly data', async () => {
     const model = data[0];
-    const rowData: IRowData = { rowId: 1, model, dirty: false };
+    const rowData: IRowData = {
+        rowId: 1,
+        model,
+        syncAction: SyncAction.unchanged,
+    };
     const c = mount(
         <table>
             <tbody>
@@ -57,7 +61,11 @@ it('renders a rows of inline edit data', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = { rowId: 1, model, dirty: false };
+    const rowData: IRowData = {
+        rowId: 1,
+        model,
+        syncAction: SyncAction.unchanged,
+    };
     const c = mount(
         <table>
             <tbody>
@@ -89,7 +97,11 @@ it('renders an editor in number col', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = { rowId: 1, model, dirty: false };
+    const rowData: IRowData = {
+        rowId: 1,
+        model,
+        syncAction: SyncAction.unchanged,
+    };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[0];
     if (
@@ -138,7 +150,11 @@ it('renders an editor in text col', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = { rowId: 1, model, dirty: false };
+    const rowData: IRowData = {
+        rowId: 1,
+        model,
+        syncAction: SyncAction.unchanged,
+    };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[1];
     if (
@@ -187,7 +203,11 @@ it('renders an editor in date col', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = { rowId: 1, model, dirty: false };
+    const rowData: IRowData = {
+        rowId: 1,
+        model,
+        syncAction: SyncAction.unchanged,
+    };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[3];
     if (
@@ -236,7 +256,11 @@ it('renders an editor with drop down values', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = { rowId: 1, model, dirty: false };
+    const rowData: IRowData = {
+        rowId: 1,
+        model,
+        syncAction: SyncAction.unchanged,
+    };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[3];
     if (
