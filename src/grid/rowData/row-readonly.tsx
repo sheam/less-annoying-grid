@@ -8,7 +8,7 @@ export const RowReadOnly = <TModel extends object>(props: IRowProps<TModel>) => 
     const uid = props.data.rowId;
 
     return (
-        <tr>
+        <tr data-test="data-row">
             {columns.map(c => {
                 if (c?.type === 'data') {
                     return <CellReadonly key={`td-${uid}-${c.name}`} column={c} data={props.data}/>;

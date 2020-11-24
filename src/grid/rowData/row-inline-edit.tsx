@@ -103,7 +103,7 @@ export const RowInlineEdit = <TModel extends object>(props: IRowProps<TModel>) =
     if(editingContext.editField) classes.push('edit-row');
 
     return (
-        <tr className={classes.join('-')}>
+        <tr className={classes.join('-')} data-test="data-row">
             {columns.map(c => {
                 if (c?.type === 'data') {
                     return <CellInlineEdit
