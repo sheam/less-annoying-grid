@@ -75,7 +75,7 @@ export const Grid = <TModel extends object>(
         c.type === 'group' ? c.subColumns : c
     ).length;
     const showLoading = state.isLoading && props.children?.loadingState;
-    const showSaving = state.isSaving && props.children?.savingState;
+    const showSaving = state.syncProgress && props.children?.savingState;
     const showSync = showLoading || showSaving;
 
     return (
@@ -149,7 +149,7 @@ function getGridContext<TModel extends object>(
         context.editingContext = {
             isEditing: state.isEditing,
             needsSave: state.needsSave,
-            isSaving: state.isSaving,
+            syncProgress: state.syncProgress,
             editField: state.editField,
             setEditField: ef => setCurrentEditField(ef, state),
             updateRow: rowData => updateRow(rowData, state),
@@ -173,8 +173,8 @@ interface IGridState {
     setFilters: Setter<IFieldFilter[]>;
     editField: IEditField | null;
     setEditField: Setter<IEditField | null>;
-    isSaving: boolean;
-    setIsSaving: Setter<boolean>;
+    syncProgress: IProgress | null;
+    setSyncProgress: Setter<IProgress | null>;
     needsSave: boolean;
     setNeedsSave: Setter<boolean>;
     isLoading: boolean;
@@ -190,7 +190,7 @@ function useGridState<TModel extends object>(
     const [sort, setSort] = useState<ISortColumn | null>(null);
     const [filters, setFilters] = useState<IFieldFilter[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
+    const [syncProgress, setSyncProgress] = useState<IProgress | null>(null);
     const [dataState, setDataState] = useState<IDataState>({
         totalCount: 0,
         data: [],
@@ -208,8 +208,8 @@ function useGridState<TModel extends object>(
         setFilters,
         isLoading,
         setIsLoading,
-        isSaving,
-        setIsSaving,
+        syncProgress,
+        setSyncProgress,
         dataState,
         setDataState,
         isEditing,
@@ -305,7 +305,7 @@ async function syncChanges<TModel extends object>(
             'attempt to call syncChanges when grid is not editable'
         );
     }
-    if (state.isSaving) {
+    if (state.syncProgress) {
         throw new Error(
             'attempt to call syncChanges when sync already in progress'
         );
@@ -313,7 +313,6 @@ async function syncChanges<TModel extends object>(
 
     const updateProgress = (p: IProgress) => {};
 
-    state.setIsSaving(true);
     const changes = state.dataState.data
         .filter(r => hasChanged(r))
         .map(r => {
@@ -324,6 +323,11 @@ async function syncChanges<TModel extends object>(
             };
             return result;
         });
+    state.setSyncProgress({
+        current: 0,
+        total: changes.length,
+        message: 'starting sync',
+    });
 
     try {
         const result = await props.editable.syncChanges(
@@ -332,6 +336,6 @@ async function syncChanges<TModel extends object>(
         );
         return result;
     } finally {
-        state.setIsSaving(false);
+        state.setSyncProgress(null);
     }
 }

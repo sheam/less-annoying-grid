@@ -297,7 +297,7 @@ it('disabled when needs saving', () => {
         setPagination: setPaginationMock,
         editingContext: {
             needsSave: true,
-            isSaving: false,
+            syncProgress: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
@@ -344,7 +344,7 @@ it('disabled when needs editing', () => {
         setPagination: setPaginationMock,
         editingContext: {
             needsSave: false,
-            isSaving: false,
+            syncProgress: null,
             updateRow: jest.fn(),
             editField: { rowId: 1, field: 'one' },
             setEditField: jest.fn(),

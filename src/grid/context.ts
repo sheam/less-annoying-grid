@@ -6,6 +6,7 @@ import {
     IEditField,
     IFieldFilter,
     IPagination,
+    IProgress,
     IRowData,
     ISortColumn,
     Setter,
@@ -35,7 +36,7 @@ interface IGridEditContext {
     isEditing: boolean;
 
     needsSave: boolean;
-    isSaving: boolean;
+    syncProgress: IProgress | null;
 
     editField: IEditField | null;
     setEditField: Setter<IEditField | null>;

@@ -173,7 +173,7 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
     if (filters && filters.length > 0) {
         currentFilter = filters[0].value;
     }
-    const canSave = editingContext?.needsSave || editingContext?.isSaving;
+    const canSave = editingContext?.needsSave || editingContext?.syncProgress;
     return (
         <div>
             <h4>Product SKUs</h4>

@@ -50,7 +50,7 @@ it('renders a rows of inline edit data', async () => {
         editingContext: {
             isEditing: false,
             needsSave: false,
-            isSaving: false,
+            syncProgress: null,
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
@@ -86,7 +86,7 @@ it('renders an editor in number col', async () => {
         editingContext: {
             isEditing: false,
             needsSave: false,
-            isSaving: false,
+            syncProgress: null,
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
@@ -139,7 +139,7 @@ it('renders an editor in text col', async () => {
         editingContext: {
             isEditing: false,
             needsSave: false,
-            isSaving: false,
+            syncProgress: null,
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
@@ -192,7 +192,7 @@ it('renders an editor in date col', async () => {
         editingContext: {
             isEditing: false,
             needsSave: false,
-            isSaving: false,
+            syncProgress: null,
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
@@ -245,7 +245,7 @@ it('renders an editor with drop down values', async () => {
         editingContext: {
             isEditing: false,
             needsSave: false,
-            isSaving: false,
+            syncProgress: null,
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),
