@@ -43,6 +43,7 @@ interface IGridEditContext {
 
     updateRow: (rowData: IRowData) => boolean;
     //deleteRow: (rowData: IRowData) => boolean;
+    sync: () => void;
 }
 
 export const GridContext = React.createContext<IGridContext>({});

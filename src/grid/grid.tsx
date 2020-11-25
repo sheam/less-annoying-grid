@@ -67,10 +67,14 @@ export const Grid = <TModel extends object>(
     const state = useGridState(props);
 
     useEffect(
-        () => loadData(state, props.getDataAsync),
+        () => loadDataEffect(state, props.getDataAsync),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [state.pagination, state.sort, state.filters, props]
     );
+    // useEffect(
+    //     () => syncDataEffect(state, props),
+    //     [state.saveRequested]
+    // );
 
     const context = getGridContext(props, state);
 
@@ -158,6 +162,7 @@ function getGridContext<TModel extends object>(
             updateRow: rowData => updateRow(rowData, state),
             editMode: props.editable.editMode,
             autoSave: props.editable.autoSave,
+            sync: () => state.setSaveRequested(true),
         };
     }
     return context;
@@ -182,6 +187,8 @@ export interface IGridState {
     setNeedsSave: Setter<boolean>;
     isLoading: boolean;
     setIsLoading: Setter<boolean>;
+    saveRequested: boolean;
+    setSaveRequested: Setter<boolean>;
 }
 
 function useGridState<TModel extends object>(
@@ -201,6 +208,7 @@ function useGridState<TModel extends object>(
     const [isEditing, setIsEditing] = useState(false);
     const [needsSave, setNeedsSave] = useState(false);
     const [editField, setEditField] = useState<IEditField | null>(null);
+    const [saveRequested, setSaveRequested] = useState<boolean>(false);
 
     return {
         pagination,
@@ -221,10 +229,27 @@ function useGridState<TModel extends object>(
         setNeedsSave,
         editField,
         setEditField,
+        saveRequested,
+        setSaveRequested,
     };
 }
 
-function loadData<TModel extends object>(
+function syncDataEffect<TModel extends object>(
+    state: IGridState,
+    props: IGridProps<TModel>
+) {
+    const sync = async () => {
+        const result = await syncChanges(state, props);
+        state.setNeedsSave(false);
+        return result;
+    };
+    if (state.saveRequested) {
+        state.setSaveRequested(false);
+        sync();
+    }
+}
+
+function loadDataEffect<TModel extends object>(
     state: IGridState,
     getDataAsync: (
         p: IPagination | null,
@@ -336,9 +361,12 @@ async function syncChanges<TModel extends object>(
     ) => _applySyncResults(state, p, interim);
 
     try {
-        return await props.editable.syncChanges(changes, applyUpdates);
+        const result = await props.editable.syncChanges(changes, applyUpdates);
+        // _applySyncResults()
+        return result;
     } finally {
         state.setSyncProgress(null);
+        console.log('done saving');
     }
 }
 
@@ -369,6 +397,6 @@ export function _applySyncResults<TModel extends object>(
                 existing.syncAction = SyncAction.unchanged;
             }
         }
-        //state.setDataState(state.dataState);
+        state.setDataState(state.dataState);
     }
 }

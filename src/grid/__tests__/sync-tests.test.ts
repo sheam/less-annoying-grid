@@ -1,16 +1,5 @@
 // @ts-ignore
-import {
-    IDataState,
-    IEditField,
-    IFieldFilter,
-    IPagination,
-    IProgress,
-    IRowData,
-    ISortColumn,
-    ISyncDataResult,
-    Setter,
-    SyncAction,
-} from '../types';
+import { IRowData, ISyncDataResult, SyncAction } from '../types';
 import { _applySyncResults, IGridState } from '../grid';
 
 interface IData {
@@ -33,7 +22,7 @@ function getDetaultState(): IGridState {
     const rowData: Array<IRowData> = data.map((m, i) => {
         return { model: m, syncAction: SyncAction.updated, rowId: i + 1 };
     });
-    const state: IGridState = {
+    return {
         pagination: null,
         setPagination: jest.fn(),
         isEditing: false,
@@ -53,7 +42,6 @@ function getDetaultState(): IGridState {
         isLoading: false,
         setIsLoading: jest.fn(),
     };
-    return state;
 }
 
 it('applies updates', () => {

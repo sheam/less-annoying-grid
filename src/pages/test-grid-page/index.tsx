@@ -33,6 +33,7 @@ const TestGrid: React.FunctionComponent = (): JSX.Element => {
                 sortAscLabel="(ASC)"
                 sortDescLabel="(DESC)"
                 getDataAsync={getDataAsync}
+                footer={{ initialPageSize: 10 }}
                 editable={{
                     editMode: GridEditMode.inline,
                     autoSave: true,
@@ -177,6 +178,15 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
         currentFilter = filters[0].value;
     }
     const canSave = editingContext?.needsSave || editingContext?.syncProgress;
+    const saveClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!canSave) {
+            throw new Error('save clicked when canSave is false');
+        }
+        if (!editingContext?.sync) {
+            throw new Error('save clicked when editing context is null');
+        }
+        await editingContext.sync();
+    };
     return (
         <div>
             <h4>Product SKUs</h4>
@@ -200,7 +210,14 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
                     <option value="4">4</option>
                 </select>
             </label>
-            <button disabled={!canSave}>Save</button>
+            <button
+                disabled={!canSave}
+                onClick={async e => {
+                    await saveClicked(e);
+                }}
+            >
+                Save
+            </button>
         </div>
     );
 };
@@ -286,6 +303,6 @@ function syncDataAsync(
                 [syncResult]
             );
         }
-        resolve(results);
+        setTimeout(() => resolve(results), 4000);
     });
 }
