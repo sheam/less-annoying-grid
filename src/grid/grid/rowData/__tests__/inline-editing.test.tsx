@@ -7,7 +7,7 @@ import { RowInlineEdit } from '../row-inline-edit';
 import { cloneData } from '../../util';
 import { GridEditMode, IRowData } from '../../types-grid';
 import { IGridContext } from '../../context';
-import { Column } from '../../../index';
+import { Column } from '../../..';
 import { SyncAction } from '../../types-sync';
 
 const getByTestId = (c: ReactWrapper | ShallowWrapper, name: string) =>
@@ -15,18 +15,20 @@ const getByTestId = (c: ReactWrapper | ShallowWrapper, name: string) =>
 const getCellAt = (c: ReactWrapper | ShallowWrapper, index: number) =>
     c.find(`[data-test="data-row"]`).find('td').at(index);
 
-function setGridContextData(gridContext: GridContext.IGridContext): void {
+function setGridContextData(
+    gridContext: GridContext.IGridContext<IData>
+): void {
     if (!gridContext.setPagination) {
         gridContext.setPagination = jest.fn(); // default implementation
     }
     jest.spyOn(GridContext, 'useGridContext').mockImplementation(
-        () => gridContext
+        () => gridContext as any
     );
 }
 
 it('renders a rows of readonly data', async () => {
     const model = data[0];
-    const rowData: IRowData = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -48,7 +50,7 @@ it('renders a rows of readonly data', async () => {
 });
 
 it('renders a rows of inline edit data', async () => {
-    const gridContext: IGridContext = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -66,7 +68,7 @@ it('renders a rows of inline edit data', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -88,7 +90,7 @@ it('renders a rows of inline edit data', async () => {
 });
 
 it('renders an editor in number col', async () => {
-    const gridContext: IGridContext = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -106,7 +108,7 @@ it('renders an editor in number col', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -145,7 +147,7 @@ it('renders an editor in number col', async () => {
 });
 
 it('renders an editor in text col', async () => {
-    const gridContext: IGridContext = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -163,7 +165,7 @@ it('renders an editor in text col', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -202,7 +204,7 @@ it('renders an editor in text col', async () => {
 });
 
 it('renders an editor in date col', async () => {
-    const gridContext: IGridContext = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -220,7 +222,7 @@ it('renders an editor in date col', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -259,7 +261,7 @@ it('renders an editor in date col', async () => {
 });
 
 it('renders an editor with drop down values', async () => {
-    const gridContext: IGridContext = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -277,7 +279,7 @@ it('renders an editor with drop down values', async () => {
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData: IRowData = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,

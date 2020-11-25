@@ -5,7 +5,7 @@ import { IGridState } from './state';
 import { createEditingContext, IGridEditContext } from './editing';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 
-export interface IGridContext {
+export interface IGridContext<TModel extends object> {
     pagination?: IPagination | null;
     setPagination?: Setter<IPagination>;
     resetPagination?: () => void;
@@ -19,17 +19,18 @@ export interface IGridContext {
     isLoading?: boolean;
     setIsLoading?: Setter<boolean>;
 
-    editingContext?: IGridEditContext | null;
+    editingContext?: IGridEditContext<TModel> | null;
 }
 
-export const GridContext = React.createContext<IGridContext>({});
+export const GridContext = React.createContext({});
 
-export const useGridContext = () => useContext<IGridContext>(GridContext);
+export const useGridContext = <TModel extends object>() =>
+    useContext<IGridContext<TModel>>(GridContext);
 
 export function createGridContext<TModel extends object>(
     props: IGridProps<TModel>,
-    state: IGridState
-): IGridContext {
+    state: IGridState<TModel>
+): IGridContext<TModel> {
     return {
         pagination: state.pagination,
         setPagination: state.setPagination,

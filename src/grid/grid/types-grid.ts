@@ -62,14 +62,14 @@ export interface IEditField {
     field: string;
 }
 
-export interface IDataState {
+export interface IDataState<TModel extends object> {
     totalCount: number;
-    data: IRowData[];
+    data: IRowData<TModel>[];
 }
 
-export interface IRowData {
+export interface IRowData<TModel extends object> {
     rowNumber: number;
     rowId: string;
-    model: any;
+    model: TModel;
     syncAction: SyncAction;
 }

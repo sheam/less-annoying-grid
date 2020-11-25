@@ -24,7 +24,6 @@ export type {
     IProgress,
     ISyncData,
     ISyncDataResult,
-    IGridContext,
     IFooterProps,
     Column,
 };

@@ -1,7 +1,6 @@
-/* tslint:disable:max-line-length no-magic-numbers no-console jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import { FormEvent, useContext } from 'react';
-import { GridContext } from '../../grid';
+import { FormEvent } from 'react';
+import { useGridContext } from '../../grid';
 import './styles.css';
 
 interface IToolbarProps {}
@@ -13,7 +12,7 @@ export const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
         setFilters,
         resetPagination,
         editingContext,
-    } = useContext(GridContext);
+    } = useGridContext();
     if (!setSort || !setFilters || !resetPagination) {
         throw new Error('configuration error');
     }

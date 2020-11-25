@@ -5,7 +5,7 @@ import { ActionButton } from './action-button';
 
 interface IActionCellProps<TModel extends object> {
     column: IActionColumn<TModel>;
-    rowData: IRowData;
+    rowData: IRowData<TModel>;
 }
 
 export const ActionCell = <TModel extends object>({

@@ -15,7 +15,7 @@ import {
 } from './types-sync';
 
 export function syncDataEffect<TModel extends object>(
-    state: IGridState,
+    state: IGridState<TModel>,
     props: IGridProps<TModel>
 ) {
     const sync = async () => {
@@ -30,7 +30,7 @@ export function syncDataEffect<TModel extends object>(
 }
 
 export function loadDataEffect<TModel extends object>(
-    state: IGridState,
+    state: IGridState<TModel>,
     getDataAsync: (
         p: IPagination | null,
         s: ISortColumn | null,
@@ -43,10 +43,10 @@ export function loadDataEffect<TModel extends object>(
             state.sort,
             state.filters
         );
-        const newState: IDataState = {
+        const newState: IDataState<TModel> = {
             totalCount: d.totalCount,
             data: d.data.map((m, i) => {
-                const result: IRowData = {
+                const result: IRowData<TModel> = {
                     syncAction: SyncAction.unchanged,
                     model: m,
                     rowNumber: i + 1,
@@ -66,7 +66,7 @@ export function loadDataEffect<TModel extends object>(
 }
 
 export async function syncChanges<TModel extends object>(
-    state: IGridState,
+    state: IGridState<TModel>,
     props: IGridProps<TModel>
 ): Promise<ISyncDataResult<TModel>[]> {
     if (!props.editable) {
@@ -112,7 +112,7 @@ export async function syncChanges<TModel extends object>(
 }
 
 export function _applySyncResults<TModel extends object>(
-    state: IGridState,
+    state: IGridState<TModel>,
     progress: IProgress | null,
     results: Array<ISyncDataResult<TModel>> | undefined
 ): void {
@@ -133,6 +133,9 @@ export function _applySyncResults<TModel extends object>(
             if (r.syncAction === SyncAction.deleted) {
                 state.dataState.data.splice(index, 1);
             } else {
+                if (!r.model) {
+                    throw new Error('result model should not be null');
+                }
                 state.dataState.data[index] = {
                     model: r.model,
                     syncAction: SyncAction.unchanged,

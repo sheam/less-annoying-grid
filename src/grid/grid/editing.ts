@@ -3,7 +3,7 @@ import { hasChanged, uuid } from './util';
 import { IGridState } from './state';
 import { IProgress, SyncAction } from './types-sync';
 
-export interface IGridEditContext {
+export interface IGridEditContext<TModel extends object> {
     editMode: GridEditMode;
     autoSave: boolean;
 
@@ -15,17 +15,17 @@ export interface IGridEditContext {
     editField: IEditField | null;
     setEditField: (field: string | null, rowNumber: number | null) => void;
 
-    updateRow: (rowData: IRowData) => boolean;
-    addRow: (model: any) => boolean;
-    deleteRow: (rowData: IRowData) => boolean;
+    updateRow: (rowData: IRowData<TModel>) => boolean;
+    addRow: (model: TModel) => boolean;
+    deleteRow: (rowData: IRowData<TModel>) => boolean;
 
     sync: () => void;
 }
 
 export function createEditingContext<TModel extends object>(
-    state: IGridState,
+    state: IGridState<TModel>,
     props: IGridProps<TModel>
-): IGridEditContext | null {
+): IGridEditContext<TModel> | null {
     if (!props.editable) {
         return null;
     }
@@ -45,11 +45,11 @@ export function createEditingContext<TModel extends object>(
     };
 }
 
-const setCurrentEditField = (
+function setCurrentEditField<TModel extends object>(
     field: string | null,
     rowNumber: number | null,
-    state: IGridState
-) => {
+    state: IGridState<TModel>
+) {
     if (field && rowNumber) {
         const row = state.dataState.data.find(r => r.rowNumber === rowNumber);
         if (row) {
@@ -63,11 +63,11 @@ const setCurrentEditField = (
         state.setEditField(null);
         state.setIsEditing(false);
     }
-};
+}
 
 function updateRow<TModel extends object>(
-    rowData: IRowData,
-    state: IGridState,
+    rowData: IRowData<TModel>,
+    state: IGridState<TModel>,
     props: IGridProps<TModel>
 ): boolean {
     const data = state.dataState.data;
@@ -91,7 +91,7 @@ function updateRow<TModel extends object>(
 
 function addRow<TModel extends object>(
     model: TModel,
-    state: IGridState,
+    state: IGridState<TModel>,
     props: IGridProps<TModel>
 ): boolean {
     const data = state.dataState.data;
@@ -119,8 +119,8 @@ function addRow<TModel extends object>(
 }
 
 function deleteRow<TModel extends object>(
-    rowData: IRowData,
-    state: IGridState,
+    rowData: IRowData<TModel>,
+    state: IGridState<TModel>,
     props: IGridProps<TModel>
 ): boolean {
     const data = state.dataState.data;

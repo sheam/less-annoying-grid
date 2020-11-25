@@ -39,7 +39,7 @@ export function getNewSyncAction(
     );
 }
 
-export const hasChanged = (rowData: IRowData) =>
+export const hasChanged = <TModel extends object>(rowData: IRowData<TModel>) =>
     rowData.syncAction !== SyncAction.unchanged;
 
 //stealing from interwebs until next ES release which is supposed to have UID module

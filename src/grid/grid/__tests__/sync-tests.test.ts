@@ -17,9 +17,9 @@ function getData(): IData[] {
     ];
 }
 
-function getDefaultState(): IGridState {
+function getDefaultState(): IGridState<IData> {
     const data = getData();
-    const rowData: Array<IRowData> = data.map((m, i) => {
+    const rowData: Array<IRowData<IData>> = data.map((m, i) => {
         return {
             model: m,
             syncAction: SyncAction.updated,
@@ -54,7 +54,7 @@ function getDefaultState(): IGridState {
 it('applies updates', () => {
     const state = getDefaultState();
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
-        (r: IRowData) => {
+        (r: IRowData<IData>) => {
             return {
                 rowId: r.rowId,
                 model: r.model,
@@ -82,7 +82,7 @@ it('applies adds', () => {
     state.dataState.data[1].syncAction = SyncAction.added;
 
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
-        (r: IRowData) => {
+        (r: IRowData<IData>) => {
             return {
                 rowId: r.rowId,
                 model: r.model,
@@ -109,7 +109,7 @@ it('applies delete', () => {
     state.dataState.data[1].syncAction = SyncAction.deleted;
 
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
-        (r: IRowData) => {
+        (r: IRowData<IData>) => {
             return {
                 rowId: r.rowId,
                 model: r.model,

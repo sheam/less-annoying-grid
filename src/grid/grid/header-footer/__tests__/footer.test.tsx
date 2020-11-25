@@ -15,7 +15,7 @@ const jumpButtonValue = (c: ShallowWrapper, index: number) =>
     jumpButton(c, index).props().value;
 const jumpButtonDisabled = (c: ShallowWrapper, index: number) =>
     jumpButton(c, index).props().disabled;
-function setGridContextData(gridContext: GridContext.IGridContext): void {
+function setGridContextData(gridContext: GridContext.IGridContext<any>): void {
     if (!gridContext.setPagination) {
         gridContext.setPagination = jest.fn(); // default implementation
     }

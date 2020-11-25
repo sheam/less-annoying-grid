@@ -18,7 +18,7 @@ const headerCell = (c: ShallowWrapper, index: number) =>
     getByTestId(c, 'header').at(index);
 const groupCell = (c: ShallowWrapper, index: number) =>
     getByTestId(c, 'group').at(index);
-function setGridContextData(gridContext: GridContext.IGridContext): void {
+function setGridContextData(gridContext: GridContext.IGridContext<any>): void {
     jest.spyOn(GridContext, 'useGridContext').mockImplementation(
         () => gridContext
     );

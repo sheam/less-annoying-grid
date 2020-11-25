@@ -6,7 +6,7 @@ import { SyncAction } from '../types-sync';
 
 interface IActionButtonProps<TModel extends object> {
     action: Action<TModel>;
-    rowData: IRowData;
+    rowData: IRowData<TModel>;
 }
 
 export const ActionButton = <TModel extends object>({
@@ -26,8 +26,8 @@ export const ActionButton = <TModel extends object>({
 
 function getHandler<TModel extends object>(
     action: Action<TModel>,
-    rowData: IRowData,
-    context: IGridContext
+    rowData: IRowData<TModel>,
+    context: IGridContext<TModel>
 ) {
     return () => {
         switch (action.type) {
@@ -61,6 +61,11 @@ function getHandler<TModel extends object>(
                 );
                 if (changes) {
                     for (let change of changes) {
+                        if (!change.model) {
+                            throw new Error(
+                                'the changed model must not be null'
+                            );
+                        }
                         switch (change.syncAction) {
                             case SyncAction.deleted:
                                 context.editingContext?.deleteRow(rowData);

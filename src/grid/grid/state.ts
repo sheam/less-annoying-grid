@@ -3,13 +3,13 @@ import { IDataState, IEditField, IGridProps, Setter } from './types-grid';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 import { IProgress } from './types-sync';
 
-export interface IGridState {
+export interface IGridState<TModel extends object> {
     pagination: IPagination | null;
     setPagination: Setter<IPagination>;
     isEditing: boolean;
     setIsEditing: Setter<boolean>;
-    dataState: IDataState;
-    setDataState: Setter<IDataState>;
+    dataState: IDataState<TModel>;
+    setDataState: Setter<IDataState<TModel>>;
     sort: ISortColumn | null;
     setSort: Setter<ISortColumn | null>;
     filters: IFieldFilter[];
@@ -28,7 +28,7 @@ export interface IGridState {
 
 export function useGridState<TModel extends object>(
     props: IGridProps<TModel>
-): IGridState {
+): IGridState<TModel> {
     const initialPagination = props.footer?.initialPageSize
         ? { pageSize: props.footer?.initialPageSize, currentPage: 1 }
         : null;
@@ -39,7 +39,7 @@ export function useGridState<TModel extends object>(
     const [filters, setFilters] = useState<IFieldFilter[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [syncProgress, setSyncProgress] = useState<IProgress | null>(null);
-    const [dataState, setDataState] = useState<IDataState>({
+    const [dataState, setDataState] = useState<IDataState<TModel>>({
         totalCount: 0,
         data: [],
     });
