@@ -1,4 +1,4 @@
-import { Column, IColumn } from '../columns/column-types';
+import { Column, IDataColumn } from '../columns/column-types';
 import { IRowData } from '../grid/types';
 
 export interface IRowProps<TModel extends object> {
@@ -7,6 +7,6 @@ export interface IRowProps<TModel extends object> {
 }
 
 export interface ICellProps<TModel extends object> {
-    column: IColumn<TModel>;
+    column: IDataColumn<TModel>;
     data: IRowData;
 }

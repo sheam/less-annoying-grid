@@ -3,7 +3,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import * as GridContext from '../../grid/context';
 import { Header } from '../header';
-import { Column, IColumn } from '../../columns/column-types';
+import { Column, IDataColumn } from '../../columns/column-types';
 import { ISortColumn } from '../../grid/types';
 
 interface IDataRow {
@@ -100,7 +100,7 @@ it('renders grouped header', () => {
 });
 
 it('renders sort ASC', () => {
-    const cols: Array<IColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -138,7 +138,7 @@ it('renders sort ASC', () => {
 });
 
 it('renders sort ASC custom', () => {
-    const cols: Array<IColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -176,7 +176,7 @@ it('renders sort ASC custom', () => {
 });
 
 it('renders sort DESC', () => {
-    const cols: Array<IColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -214,7 +214,7 @@ it('renders sort DESC', () => {
 });
 
 it('non-sortable header clicked -> no sorting', () => {
-    const cols: Array<IColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -250,7 +250,7 @@ it('non-sortable header clicked -> no sorting', () => {
 });
 
 it('no sort to sort -> ASC', () => {
-    const cols: Array<IColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -287,7 +287,7 @@ it('no sort to sort -> ASC', () => {
 });
 
 it('ASC sort col clicked -> DESC', () => {
-    const cols: Array<IColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -327,7 +327,7 @@ it('ASC sort col clicked -> DESC', () => {
 });
 
 it('DESC sort col clicked -> no sorting', () => {
-    const cols: Array<IColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',

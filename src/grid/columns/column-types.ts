@@ -1,6 +1,6 @@
 import { ISyncData, SyncAction } from '../grid/sync';
 
-export interface IColumn<TModel extends object> {
+export interface IDataColumn<TModel extends object> {
     type: 'data';
     name: string;
     field?: string;
@@ -14,7 +14,7 @@ interface IColumnGroup<TModel extends object> {
     type: 'group';
     name: string;
     hidden?: boolean;
-    subColumns?: Array<IColumn<TModel>>;
+    subColumns?: Array<IDataColumn<TModel>>;
 }
 
 export interface IActionColumn<TModel extends object> {
@@ -25,12 +25,12 @@ export interface IActionColumn<TModel extends object> {
 }
 
 export type Column<TModel extends object> =
-    | IColumn<TModel>
+    | IDataColumn<TModel>
     | IColumnGroup<TModel>
     | IActionColumn<TModel>;
 
 export type ActionOrDataCol<TModel extends object> =
-    | IColumn<TModel>
+    | IDataColumn<TModel>
     | IActionColumn<TModel>;
 
 export interface IActionEdit {

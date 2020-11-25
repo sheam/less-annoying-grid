@@ -5,7 +5,7 @@ import {
     ActionOrDataCol,
     Column,
     IActionColumn,
-    IColumn,
+    IDataColumn,
 } from '../columns/column-types';
 import { ISortColumn } from '../grid/types';
 
@@ -43,7 +43,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
     };
 
     const getHeaderCell = (
-        c: IColumn<TModel> | IActionColumn<TModel>
+        c: IDataColumn<TModel> | IActionColumn<TModel>
     ): JSX.Element => {
         if (c.type === 'action') {
             return (
@@ -65,7 +65,9 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
         );
     };
 
-    const getSortLabel = (c: IColumn<TModel>): JSX.Element | string | null => {
+    const getSortLabel = (
+        c: IDataColumn<TModel>
+    ): JSX.Element | string | null => {
         if (sort?.field !== c.field || !sort?.direction) {
             return null;
         }
@@ -86,7 +88,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
         return null;
     };
 
-    const headerClicked = (c: IColumn<TModel>): void => {
+    const headerClicked = (c: IDataColumn<TModel>): void => {
         if (!c.sortable || !c.field || !setSort) {
             return;
         }
