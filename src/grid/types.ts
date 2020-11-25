@@ -164,3 +164,44 @@ export interface IProgress {
     total: number;
     message?: string;
 }
+
+export interface IFooterProps {
+    pageSizeOptions?: number[];
+    initialPageSize?: number;
+    numPageJumpButtons?: number;
+
+    firstLabel?: string;
+    lastLabel?: string;
+    nextLabel?: string;
+    prevLabel?: string;
+    itemsName?: string;
+}
+
+export interface IGridProps<TModel extends object> {
+    columns: Array<Column<TModel>>;
+    footer?: IFooterProps;
+
+    sortAscLabel?: JSX.Element | string;
+    sortDescLabel?: JSX.Element | string;
+
+    getDataAsync: (
+        pagination: IPagination | null,
+        sort: ISortColumn | null,
+        filters: IFieldFilter[]
+    ) => Promise<IDataResult<TModel>>;
+
+    editable?: IGridEditConfig<TModel>;
+}
+
+export interface IGridEditConfig<TModel extends object> {
+    editMode: GridEditMode;
+    autoSave: boolean;
+    addToBottom?: boolean;
+    syncChanges: (
+        changes: Array<ISyncData<TModel>>,
+        updateProgress: (
+            p: IProgress,
+            interimResults?: Array<ISyncDataResult<TModel>>
+        ) => void
+    ) => Promise<Array<ISyncDataResult<TModel>>>;
+}

@@ -2,8 +2,8 @@
 import { mount, ReactWrapper, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { Column, GridEditMode, IRowData, SyncAction } from '../../types';
-import * as GridContext from '../../context';
-import { IGridContext } from '../../context';
+import * as GridContext from '../../state/context';
+import { IGridContext } from '../../state/context';
 import { RowReadOnly } from '../row-readonly';
 import { RowInlineEdit } from '../row-inline-edit';
 import { cloneData } from '../../util';

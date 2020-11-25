@@ -1,6 +1,6 @@
 import { Action, IActionColumn, IRowData, SyncAction } from '../types';
 import * as React from 'react';
-import { IGridContext, useGridContext } from '../context';
+import { IGridContext, useGridContext } from '../state/context';
 
 interface IActionCellProps<TModel extends object> {
     column: IActionColumn<TModel>;

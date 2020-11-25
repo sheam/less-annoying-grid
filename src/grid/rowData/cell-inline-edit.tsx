@@ -1,5 +1,5 @@
 import { Direction } from '../types';
-import { FieldEditor } from '../field-editor';
+import { FieldEditor } from './field-editor';
 import { cloneData } from '../util';
 import * as React from 'react';
 import { ICellProps } from './types';

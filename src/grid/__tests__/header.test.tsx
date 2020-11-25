@@ -1,7 +1,7 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import * as GridContext from '../context';
+import * as GridContext from '../state/context';
 import { Header } from '../header';
 import { Column, IColumn, ISortColumn } from '../types';
 

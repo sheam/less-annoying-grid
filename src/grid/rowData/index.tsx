@@ -1,4 +1,4 @@
-import { useGridContext } from '../context';
+import { useGridContext } from '../state/context';
 import * as React from 'react';
 import { IRowProps } from './types';
 import { RowReadOnly } from './row-readonly';

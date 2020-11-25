@@ -2,9 +2,9 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
-import * as GridContext from '../context';
-import { Footer, IFooterProps } from '../footer';
-import { GridEditMode, IPagination } from '../types';
+import * as GridContext from '../state/context';
+import { Footer } from '../footer';
+import { GridEditMode, IFooterProps, IPagination } from '../types';
 
 const getByTestId = (c: ShallowWrapper, name: string) =>
     c.find(`[data-test="${name}"]`);

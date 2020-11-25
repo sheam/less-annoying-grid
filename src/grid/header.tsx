@@ -1,6 +1,6 @@
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import { useGridContext } from './context';
+import { useGridContext } from './state/context';
 import { Column, IActionColumn, IColumn, ISortColumn } from './types';
 
 export interface IHeaderProps<TModel extends object> {

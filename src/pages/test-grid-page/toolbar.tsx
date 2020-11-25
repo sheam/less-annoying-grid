@@ -23,7 +23,7 @@ import {
     updateData,
 } from './mock-data';
 import './styles.css';
-import { useGridContext } from '../../grid/context';
+import { useGridContext } from '../../grid/state/context';
 
 // tslint:disable-next-line:no-empty-interface
 interface IToolbarProps {}

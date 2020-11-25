@@ -21,7 +21,7 @@ import {
     updateData,
 } from './mock-data';
 import './styles.css';
-import { useGridContext } from '../../grid/context';
+import { useGridContext } from '../../grid/state/context';
 import { ToolBar } from './toolbar';
 
 const TestGrid: React.FunctionComponent = (): JSX.Element => {

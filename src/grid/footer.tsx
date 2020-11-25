@@ -1,23 +1,12 @@
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import { useGridContext } from './context';
+import { useGridContext } from './state/context';
+import { IFooterProps } from './types';
 
 interface IInternalFooterProps {
     totalCount: number;
     numColumns: number;
     config?: IFooterProps;
-}
-
-export interface IFooterProps {
-    pageSizeOptions?: number[];
-    initialPageSize?: number;
-    numPageJumpButtons?: number;
-
-    firstLabel?: string;
-    lastLabel?: string;
-    nextLabel?: string;
-    prevLabel?: string;
-    itemsName?: string;
 }
 
 export const Footer: (props: IInternalFooterProps) => JSX.Element = (

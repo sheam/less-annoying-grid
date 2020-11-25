@@ -1,7 +1,7 @@
 // @ts-ignore
 import { IRowData, ISyncDataResult, SyncAction } from '../types';
-import { _applySyncResults, IGridState } from '../grid';
-
+import { IGridState } from '../state/state';
+import { _applySyncResults } from '../state/grid-io';
 interface IData {
     key: number;
     firstName: string;
@@ -63,6 +63,7 @@ it('applies updates', () => {
             };
         }
     );
+
     _applySyncResults(
         state,
         { current: results.length, total: results.length },
