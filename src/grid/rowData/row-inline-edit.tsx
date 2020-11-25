@@ -151,7 +151,7 @@ export const RowInlineEdit = <TModel extends object>(
                         <ActionCell
                             key={`td-${uid}-${c.name}`}
                             column={c}
-                            data={props.data}
+                            rowData={props.data}
                         />
                     );
                 }

@@ -291,16 +291,16 @@ function updateRow<TModel extends object>(
     state: IGridState,
     props: IGridProps<TModel>
 ): boolean {
-    const existingRow = state.dataState.data.find(
-        r => r.rowNumber === rowData.rowNumber
-    );
+    const data = state.dataState.data;
+    const existingRow = data.find(r => r.rowNumber === rowData.rowNumber);
     if (!existingRow) {
         throw new Error(`unable to find row with id=${rowData.rowNumber}`);
     }
     existingRow.syncAction = rowData.syncAction;
     existingRow.model = rowData.model;
-    state.setNeedsSave(state.needsSave || hasChanged(rowData));
 
+    data.forEach((r, i) => (r.rowNumber = i + 1));
+    state.setNeedsSave(state.needsSave || hasChanged(rowData));
     state.setDataState(state.dataState);
 
     if (props.editable?.autoSave) {
@@ -330,7 +330,7 @@ function addRow<TModel extends object>(
     }
 
     data.forEach((r, i) => (r.rowNumber = i + 1));
-    state.setDataState({ data, totalCount: data.length });
+    state.setDataState({ data, totalCount: state.dataState.totalCount + 1 });
 
     if (props.editable?.autoSave) {
         state.setSaveRequested(true);
@@ -351,10 +351,15 @@ function deleteRow<TModel extends object>(
     }
     existingRow.syncAction = SyncAction.deleted;
     existingRow.model = rowData.model;
-    state.setNeedsSave(state.needsSave || hasChanged(rowData));
+    existingRow.rowNumber = -1;
 
-    data.forEach((r, i) => (r.rowNumber = i + 1));
-    state.setDataState({ data, totalCount: data.length });
+    //renumber non-deleted
+    data.filter(r => r.syncAction !== SyncAction.deleted).forEach(
+        (r, i) => (r.rowNumber = i + 1)
+    );
+
+    state.setDataState({ data, totalCount: state.dataState.totalCount - 1 });
+    state.setNeedsSave(state.needsSave || hasChanged(rowData));
 
     if (props.editable?.autoSave) {
         state.setSaveRequested(true);
@@ -409,7 +414,7 @@ async function syncChanges<TModel extends object>(
         .map(r => {
             const result: ISyncData<TModel> = {
                 model: r.model,
-                rowNumber: r.rowNumber,
+                rowId: r.rowId,
                 syncAction: r.syncAction,
             };
             return result;
@@ -427,11 +432,7 @@ async function syncChanges<TModel extends object>(
 
     try {
         const result = await props.editable.syncChanges(changes, applyUpdates);
-        _applySyncResults(
-            state,
-            { current: changes.length, total: changes.length },
-            result
-        );
+        _applySyncResults(state, null, result);
         return result;
     } finally {
         state.setSyncProgress(null);
@@ -441,22 +442,22 @@ async function syncChanges<TModel extends object>(
 
 export function _applySyncResults<TModel extends object>(
     state: IGridState,
-    progress: IProgress,
+    progress: IProgress | null,
     results: Array<ISyncDataResult<TModel>> | undefined
 ): void {
-    state.setSyncProgress(progress);
+    if (progress) {
+        state.setSyncProgress(progress);
+    }
+    const data = state.dataState.data;
     if (results) {
         for (let r of results) {
             if (!r.success) {
                 continue;
             }
-            const index = state.dataState.data.findIndex(
-                er => er.rowNumber === r.rowNumber
-            );
+            const index = data.findIndex(er => er.rowId === r.rowId);
             if (index < 0) {
-                throw new Error(
-                    'could not find existing row for the data being saved'
-                );
+                //we may have already updated this one.
+                continue;
             }
             if (r.syncAction === SyncAction.deleted) {
                 state.dataState.data.splice(index, 1);
@@ -464,7 +465,7 @@ export function _applySyncResults<TModel extends object>(
                 state.dataState.data[index] = {
                     model: r.model,
                     syncAction: SyncAction.unchanged,
-                    rowNumber: r.rowNumber,
+                    rowNumber: data[index].rowNumber,
                     rowId: uuid(),
                 };
             }

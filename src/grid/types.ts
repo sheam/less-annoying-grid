@@ -87,7 +87,9 @@ export interface IActionDelete<TModel extends object> {
     type: 'delete';
     name?: string;
     buttonContent?: JSX.Element | string;
-    confirm?: (model: TModel) => boolean;
+    confirm?:
+        | boolean
+        | ((model: TModel, currentSyncAction: SyncAction) => Promise<boolean>);
 }
 
 export interface IActionCustom<TModel extends object> {
@@ -96,9 +98,9 @@ export interface IActionCustom<TModel extends object> {
     buttonContent?: JSX.Element | string;
     handler: (
         data: TModel,
-        rowId: number,
+        rowId: string,
         currentSyncAction: SyncAction
-    ) => TModel;
+    ) => Array<ISyncData<TModel>> | null;
 }
 
 export type Action<TModel extends object> =
@@ -147,7 +149,7 @@ export type Setter<TVal> = (v: TVal) => void;
 
 export interface ISyncData<TModel extends object> {
     model: TModel | null;
-    rowNumber: number;
+    rowId: string;
     syncAction: SyncAction;
 }
 

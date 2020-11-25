@@ -56,7 +56,7 @@ it('applies updates', () => {
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
         (r: IRowData) => {
             return {
-                rowNumber: r.rowNumber,
+                rowId: r.rowId,
                 model: r.model,
                 syncAction: r.syncAction,
                 success: true,
@@ -83,7 +83,7 @@ it('applies adds', () => {
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
         (r: IRowData) => {
             return {
-                rowNumber: r.rowNumber,
+                rowId: r.rowId,
                 model: r.model,
                 syncAction: r.syncAction,
                 success: true,
@@ -110,7 +110,7 @@ it('applies delete', () => {
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
         (r: IRowData) => {
             return {
-                rowNumber: r.rowNumber,
+                rowId: r.rowId,
                 model: r.model,
                 syncAction: r.syncAction,
                 success: true,

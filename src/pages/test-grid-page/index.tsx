@@ -136,10 +136,15 @@ const cols: Array<Column<IMockData>> = [
             {
                 type: 'delete',
                 buttonContent: 'DEL',
-                confirm: (m: IMockData) =>
-                    window.confirm(
-                        `are you sure you want to delete Key=${m.key}`
-                    ),
+                confirm: (m, _) => {
+                    return new Promise<boolean>(resolve => {
+                        resolve(
+                            window.confirm(
+                                `Are you sure you would like to delete the row with Key=${m.key}`
+                            )
+                        );
+                    });
+                },
             },
         ],
     },
@@ -181,7 +186,7 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
         currentFilter = filters[0].value;
     }
     const canSave = editingContext?.needsSave || editingContext?.syncProgress;
-    const saveClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const saveClicked = async (_: React.MouseEvent<HTMLButtonElement>) => {
         if (!canSave) {
             throw new Error('save clicked when canSave is false');
         }
@@ -190,7 +195,7 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
         }
         await editingContext.sync();
     };
-    const addRowClicked = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const addRowClicked = (_: React.MouseEvent<HTMLButtonElement>) => {
         editingContext?.addRow({});
     };
     return (
@@ -301,7 +306,7 @@ function syncDataAsync(
             const syncResult: ISyncDataResult<IMockData> = {
                 model: resultModel,
                 syncAction: change.syncAction,
-                rowNumber: change.rowNumber,
+                rowId: change.rowId,
                 success: true,
             };
             results.push(syncResult);
