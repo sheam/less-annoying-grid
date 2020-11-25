@@ -304,6 +304,7 @@ it('disabled when needs saving', () => {
             isEditing: false,
             editField: null,
             autoSave: false,
+            sync: jest.fn(),
         },
     });
 
@@ -351,6 +352,7 @@ it('disabled when needs editing', () => {
             editMode: GridEditMode.inline,
             isEditing: true,
             autoSave: false,
+            sync: jest.fn(),
         },
     });
 

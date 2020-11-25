@@ -17,7 +17,7 @@ export const ActionCell = <TModel extends object>({
                     className={`action-${a.name}`}
                     key={`action-${a.name}`}
                     onClick={() =>
-                        a.handler(data.model, data.rowId, data.syncAction)
+                        a.handler(data.model, data.rowNumber, data.syncAction)
                     }
                 >
                     {a.buttonContent}

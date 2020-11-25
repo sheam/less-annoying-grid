@@ -26,7 +26,8 @@ function setGridContextData(gridContext: GridContext.IGridContext): void {
 it('renders a rows of readonly data', async () => {
     const model = data[0];
     const rowData: IRowData = {
-        rowId: 1,
+        rowNumber: 1,
+        uid: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -56,13 +57,15 @@ it('renders a rows of inline edit data', async () => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
+            sync: jest.fn(),
         },
     };
     setGridContextData(gridContext);
 
     const model = data[0];
     const rowData: IRowData = {
-        rowId: 1,
+        rowNumber: 1,
+        uid: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -92,13 +95,15 @@ it('renders an editor in number col', async () => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
+            sync: jest.fn(),
         },
     };
     setGridContextData(gridContext);
 
     const model = data[0];
     const rowData: IRowData = {
-        rowId: 1,
+        rowNumber: 1,
+        uid: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -115,7 +120,7 @@ it('renders an editor in number col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowId,
+            rowId: rowData.rowNumber,
         };
     }
     const c = mount(
@@ -145,13 +150,15 @@ it('renders an editor in text col', async () => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
+            sync: jest.fn(),
         },
     };
     setGridContextData(gridContext);
 
     const model = data[0];
     const rowData: IRowData = {
-        rowId: 1,
+        rowNumber: 1,
+        uid: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -168,7 +175,7 @@ it('renders an editor in text col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowId,
+            rowId: rowData.rowNumber,
         };
     }
     const c = mount(
@@ -198,13 +205,15 @@ it('renders an editor in date col', async () => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
+            sync: jest.fn(),
         },
     };
     setGridContextData(gridContext);
 
     const model = data[0];
     const rowData: IRowData = {
-        rowId: 1,
+        rowNumber: 1,
+        uid: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -221,7 +230,7 @@ it('renders an editor in date col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowId,
+            rowId: rowData.rowNumber,
         };
     }
     const c = mount(
@@ -251,13 +260,15 @@ it('renders an editor with drop down values', async () => {
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
+            sync: jest.fn(),
         },
     };
     setGridContextData(gridContext);
 
     const model = data[0];
     const rowData: IRowData = {
-        rowId: 1,
+        rowNumber: 1,
+        uid: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -281,7 +292,7 @@ it('renders an editor with drop down values', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowId,
+            rowId: rowData.rowNumber,
         };
     }
     const c = mount(

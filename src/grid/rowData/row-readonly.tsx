@@ -8,7 +8,7 @@ export const RowReadOnly = <TModel extends object>(
     const columns = props.columns.flatMap(c =>
         c.type === 'group' ? c.subColumns : c
     );
-    const uid = props.data.rowId;
+    const uid = props.data.rowNumber;
 
     return (
         <tr data-test="data-row">

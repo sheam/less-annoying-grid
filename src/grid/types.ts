@@ -59,7 +59,8 @@ export interface IActionColumn<TModel extends object> {
 }
 
 export interface IRowData {
-    rowId: number;
+    rowNumber: number;
+    uid: string;
     model: any;
     syncAction: SyncAction;
 }

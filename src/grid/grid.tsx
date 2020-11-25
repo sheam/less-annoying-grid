@@ -22,7 +22,7 @@ import {
     SyncAction,
 } from './types';
 import { Row } from './rowData';
-import { hasChanged } from './util';
+import { hasChanged, uuid } from './util';
 
 interface IGridProps<TModel extends object> {
     columns: Array<Column<TModel>>;
@@ -71,10 +71,7 @@ export const Grid = <TModel extends object>(
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [state.pagination, state.sort, state.filters, props]
     );
-    // useEffect(
-    //     () => syncDataEffect(state, props),
-    //     [state.saveRequested]
-    // );
+    useEffect(() => syncDataEffect(state, props), [state.saveRequested]);
 
     const context = getGridContext(props, state);
 
@@ -113,11 +110,7 @@ export const Grid = <TModel extends object>(
                                 </tr>
                             )}
                         {state.dataState.data.map(d => (
-                            <Row
-                                key={d.rowId}
-                                columns={props.columns}
-                                data={d}
-                            />
+                            <Row key={d.uid} columns={props.columns} data={d} />
                         ))}
                     </tbody>
 
@@ -159,7 +152,7 @@ function getGridContext<TModel extends object>(
             syncProgress: state.syncProgress,
             editField: state.editField,
             setEditField: ef => setCurrentEditField(ef, state),
-            updateRow: rowData => updateRow(rowData, state),
+            updateRow: rowData => updateRow(rowData, state, props),
             editMode: props.editable.editMode,
             autoSave: props.editable.autoSave,
             sync: () => state.setSaveRequested(true),
@@ -269,7 +262,8 @@ function loadDataEffect<TModel extends object>(
                 const result: IRowData = {
                     syncAction: SyncAction.unchanged,
                     model: m,
-                    rowId: i + 1,
+                    rowNumber: i + 1,
+                    uid: uuid(),
                 };
                 return result;
             }),
@@ -284,17 +278,25 @@ function loadDataEffect<TModel extends object>(
     fetch();
 }
 
-function updateRow(rowData: IRowData, state: IGridState): boolean {
+function updateRow<TModel extends object>(
+    rowData: IRowData,
+    state: IGridState,
+    props: IGridProps<TModel>
+): boolean {
     console.log('saving row');
     const existingRow = state.dataState.data.find(
-        r => r.rowId === rowData.rowId
+        r => r.rowNumber === rowData.rowNumber
     );
     if (!existingRow) {
-        throw new Error(`unable to find row with id=${rowData.rowId}`);
+        throw new Error(`unable to find row with id=${rowData.rowNumber}`);
     }
     existingRow.syncAction = rowData.syncAction;
     existingRow.model = rowData.model;
     state.setNeedsSave(state.needsSave || hasChanged(rowData));
+
+    if (props.editable?.autoSave) {
+        state.setSaveRequested(true);
+    }
 
     return true; //success
 }
@@ -304,7 +306,9 @@ const setCurrentEditField = (
     state: IGridState
 ) => {
     if (editField) {
-        const row = state.dataState.data.find(r => r.rowId === editField.rowId);
+        const row = state.dataState.data.find(
+            r => r.rowNumber === editField.rowId
+        );
         if (row) {
             state.setEditField(editField);
             state.setIsEditing(true);
@@ -344,7 +348,7 @@ async function syncChanges<TModel extends object>(
         .map(r => {
             const result: ISyncData<TModel> = {
                 model: r.model,
-                rowId: r.rowId,
+                rowId: r.rowNumber,
                 syncAction: r.syncAction,
             };
             return result;
@@ -373,16 +377,16 @@ async function syncChanges<TModel extends object>(
 export function _applySyncResults<TModel extends object>(
     state: IGridState,
     progress: IProgress,
-    interimResults: Array<ISyncDataResult<TModel>> | undefined
+    results: Array<ISyncDataResult<TModel>> | undefined
 ): void {
     state.setSyncProgress(progress);
-    if (interimResults) {
-        for (let r of interimResults) {
+    if (results) {
+        for (let r of results) {
             if (!r.success) {
                 continue;
             }
             const index = state.dataState.data.findIndex(
-                er => er.rowId === r.rowId
+                er => er.rowNumber === r.rowId
             );
             if (index < 0) {
                 throw new Error(
@@ -392,9 +396,12 @@ export function _applySyncResults<TModel extends object>(
             if (r.syncAction === SyncAction.deleted) {
                 state.dataState.data.splice(index, 1);
             } else {
-                const existing = state.dataState.data[index];
-                existing.model = r.model;
-                existing.syncAction = SyncAction.unchanged;
+                state.dataState.data[index] = {
+                    model: r.model,
+                    syncAction: SyncAction.unchanged,
+                    rowNumber: r.rowId,
+                    uid: uuid(),
+                };
             }
         }
         state.setDataState(state.dataState);

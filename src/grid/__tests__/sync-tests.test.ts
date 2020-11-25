@@ -20,7 +20,12 @@ function getData(): IData[] {
 function getDetaultState(): IGridState {
     const data = getData();
     const rowData: Array<IRowData> = data.map((m, i) => {
-        return { model: m, syncAction: SyncAction.updated, rowId: i + 1 };
+        return {
+            model: m,
+            syncAction: SyncAction.updated,
+            rowNumber: i + 1,
+            uid: '123',
+        };
     });
     return {
         pagination: null,
@@ -41,6 +46,8 @@ function getDetaultState(): IGridState {
         setNeedsSave: jest.fn(),
         isLoading: false,
         setIsLoading: jest.fn(),
+        saveRequested: false,
+        setSaveRequested: jest.fn(),
     };
 }
 
@@ -49,7 +56,7 @@ it('applies updates', () => {
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
         (r: IRowData) => {
             return {
-                rowId: r.rowId,
+                rowId: r.rowNumber,
                 model: r.model,
                 syncAction: r.syncAction,
                 success: true,
@@ -76,7 +83,7 @@ it('applies adds', () => {
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
         (r: IRowData) => {
             return {
-                rowId: r.rowId,
+                rowId: r.rowNumber,
                 model: r.model,
                 syncAction: r.syncAction,
                 success: true,
@@ -103,7 +110,7 @@ it('applies delete', () => {
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
         (r: IRowData) => {
             return {
-                rowId: r.rowId,
+                rowId: r.rowNumber,
                 model: r.model,
                 syncAction: r.syncAction,
                 success: true,

@@ -303,6 +303,6 @@ function syncDataAsync(
                 [syncResult]
             );
         }
-        setTimeout(() => resolve(results), 4000);
+        setTimeout(() => resolve(results), 1000);
     });
 }

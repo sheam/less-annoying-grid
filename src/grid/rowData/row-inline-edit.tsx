@@ -22,12 +22,15 @@ export const RowInlineEdit = <TModel extends object>(
     const columns = props.columns.flatMap(c =>
         c.type === 'group' ? c.subColumns : c
     );
-    const uid = props.data.rowId;
+    const uid = props.data.rowNumber;
 
     const startEditing = (field: string) => {
         console.log(`editing ${field}`);
 
-        editingContext.setEditField({ rowId: props.data.rowId, field: field });
+        editingContext.setEditField({
+            rowId: props.data.rowNumber,
+            field: field,
+        });
         setRowData(cloneData(props.data));
     };
 
@@ -42,7 +45,8 @@ export const RowInlineEdit = <TModel extends object>(
             ? SyncAction.updated
             : SyncAction.unchanged;
         setRowData({
-            rowId: props.data.rowId,
+            rowNumber: props.data.rowNumber,
+            uid: props.data.uid,
             model,
             syncAction: getNewSyncAction(props.data.syncAction, newSyncAction),
         });
@@ -137,7 +141,7 @@ export const RowInlineEdit = <TModel extends object>(
                             isEditing={
                                 editingContext?.editField?.field === c.field &&
                                 editingContext?.editField?.rowId ===
-                                    props.data.rowId
+                                    props.data.rowNumber
                             }
                             startEditing={startEditing}
                             doneEditing={doneEditing}
