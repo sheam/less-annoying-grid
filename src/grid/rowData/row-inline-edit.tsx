@@ -27,10 +27,7 @@ export const RowInlineEdit = <TModel extends object>(
     const startEditing = (field: string) => {
         console.log(`editing ${field}`);
 
-        editingContext.setEditField({
-            rowId: props.data.rowNumber,
-            field: field,
-        });
+        editingContext.setEditField(field, props.data.rowNumber);
         setRowData(cloneData(props.data));
     };
 
@@ -46,7 +43,7 @@ export const RowInlineEdit = <TModel extends object>(
             : SyncAction.unchanged;
         setRowData({
             rowNumber: props.data.rowNumber,
-            uid: props.data.uid,
+            rowId: props.data.rowId,
             model,
             syncAction: getNewSyncAction(props.data.syncAction, newSyncAction),
         });
@@ -63,7 +60,7 @@ export const RowInlineEdit = <TModel extends object>(
 
         const wasEditingField = editingContext.editField;
 
-        editingContext.setEditField(null);
+        editingContext.setEditField(null, null);
 
         if (commitChanges && hasChanged(rowData)) {
             editingContext.updateRow(rowData);
@@ -116,10 +113,10 @@ export const RowInlineEdit = <TModel extends object>(
                     }
                 }
                 if (nextField && nextField.type === 'data' && nextField.field) {
-                    editingContext.setEditField({
-                        field: nextField.field,
-                        rowId: wasEditingField?.rowId + searchIncrement,
-                    });
+                    editingContext.setEditField(
+                        nextField.field,
+                        props.data.rowNumber + searchIncrement
+                    );
                 }
             }
         }
@@ -141,7 +138,7 @@ export const RowInlineEdit = <TModel extends object>(
                             isEditing={
                                 editingContext?.editField?.field === c.field &&
                                 editingContext?.editField?.rowId ===
-                                    props.data.rowNumber
+                                    props.data.rowId
                             }
                             startEditing={startEditing}
                             doneEditing={doneEditing}

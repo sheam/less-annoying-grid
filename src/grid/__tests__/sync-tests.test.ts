@@ -24,7 +24,7 @@ function getDetaultState(): IGridState {
             model: m,
             syncAction: SyncAction.updated,
             rowNumber: i + 1,
-            uid: '123',
+            rowId: '123',
         };
     });
     return {

@@ -60,7 +60,7 @@ export interface IActionColumn<TModel extends object> {
 
 export interface IRowData {
     rowNumber: number;
-    uid: string;
+    rowId: string;
     model: any;
     syncAction: SyncAction;
 }
@@ -73,7 +73,7 @@ export enum SyncAction {
 }
 
 export interface IEditField {
-    rowId: number;
+    rowId: string;
     field: string;
 }
 

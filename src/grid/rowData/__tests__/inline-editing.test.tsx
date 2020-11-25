@@ -27,7 +27,7 @@ it('renders a rows of readonly data', async () => {
     const model = data[0];
     const rowData: IRowData = {
         rowNumber: 1,
-        uid: `uid-1`,
+        rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -65,7 +65,7 @@ it('renders a rows of inline edit data', async () => {
     const model = data[0];
     const rowData: IRowData = {
         rowNumber: 1,
-        uid: `uid-1`,
+        rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -103,7 +103,7 @@ it('renders an editor in number col', async () => {
     const model = data[0];
     const rowData: IRowData = {
         rowNumber: 1,
-        uid: `uid-1`,
+        rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -120,7 +120,7 @@ it('renders an editor in number col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowNumber,
+            rowNum: rowData.rowNumber,
         };
     }
     const c = mount(
@@ -158,7 +158,7 @@ it('renders an editor in text col', async () => {
     const model = data[0];
     const rowData: IRowData = {
         rowNumber: 1,
-        uid: `uid-1`,
+        rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -175,7 +175,7 @@ it('renders an editor in text col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowNumber,
+            rowNum: rowData.rowNumber,
         };
     }
     const c = mount(
@@ -213,7 +213,7 @@ it('renders an editor in date col', async () => {
     const model = data[0];
     const rowData: IRowData = {
         rowNumber: 1,
-        uid: `uid-1`,
+        rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -230,7 +230,7 @@ it('renders an editor in date col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowNumber,
+            rowNum: rowData.rowNumber,
         };
     }
     const c = mount(
@@ -268,7 +268,7 @@ it('renders an editor with drop down values', async () => {
     const model = data[0];
     const rowData: IRowData = {
         rowNumber: 1,
-        uid: `uid-1`,
+        rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
     };
@@ -292,7 +292,7 @@ it('renders an editor with drop down values', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowNumber,
+            rowNum: rowData.rowNumber,
         };
     }
     const c = mount(

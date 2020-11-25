@@ -347,7 +347,7 @@ it('disabled when needs editing', () => {
             needsSave: false,
             syncProgress: null,
             updateRow: jest.fn(),
-            editField: { rowId: 1, field: 'one' },
+            editField: { rowNum: 1, field: 'one' },
             setEditField: jest.fn(),
             editMode: GridEditMode.inline,
             isEditing: true,

@@ -112,7 +112,11 @@ export const Grid = <TModel extends object>(
                                 </tr>
                             )}
                         {state.dataState.data.map(d => (
-                            <Row key={d.uid} columns={props.columns} data={d} />
+                            <Row
+                                key={d.rowId}
+                                columns={props.columns}
+                                data={d}
+                            />
                         ))}
                     </tbody>
 
@@ -153,7 +157,7 @@ function getGridContext<TModel extends object>(
             needsSave: state.needsSave,
             syncProgress: state.syncProgress,
             editField: state.editField,
-            setEditField: ef => setCurrentEditField(ef, state),
+            setEditField: (f, rn) => setCurrentEditField(f, rn, state),
             updateRow: rowData => updateRow(rowData, state, props),
             addRow: model => addRow(model, state, props),
             deleteRow: rowData => deleteRow(rowData, state, props),
@@ -267,7 +271,7 @@ function loadDataEffect<TModel extends object>(
                     syncAction: SyncAction.unchanged,
                     model: m,
                     rowNumber: i + 1,
-                    uid: uuid(),
+                    rowId: uuid(),
                 };
                 return result;
             }),
@@ -313,7 +317,7 @@ function addRow<TModel extends object>(
 ): boolean {
     const data = state.dataState.data;
     const newRow = {
-        uid: uuid(),
+        rowId: uuid(),
         model,
         syncAction: SyncAction.added,
         rowNumber: -1,
@@ -360,15 +364,14 @@ function deleteRow<TModel extends object>(
 }
 
 const setCurrentEditField = (
-    editField: IEditField | null,
+    field: string | null,
+    rowNumber: number | null,
     state: IGridState
 ) => {
-    if (editField) {
-        const row = state.dataState.data.find(
-            r => r.rowNumber === editField.rowId
-        );
+    if (field && rowNumber) {
+        const row = state.dataState.data.find(r => r.rowNumber === rowNumber);
         if (row) {
-            state.setEditField(editField);
+            state.setEditField({ rowId: row.rowId, field });
             state.setIsEditing(true);
         } else {
             state.setEditField(null);
@@ -462,7 +465,7 @@ export function _applySyncResults<TModel extends object>(
                     model: r.model,
                     syncAction: SyncAction.unchanged,
                     rowNumber: r.rowNumber,
-                    uid: uuid(),
+                    rowId: uuid(),
                 };
             }
         }

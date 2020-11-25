@@ -39,7 +39,7 @@ interface IGridEditContext {
     syncProgress: IProgress | null;
 
     editField: IEditField | null;
-    setEditField: Setter<IEditField | null>;
+    setEditField: (field: string | null, rowNumber: number | null) => void;
 
     updateRow: (rowData: IRowData) => boolean;
     addRow: (model: any) => boolean;
