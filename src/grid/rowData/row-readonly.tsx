@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ActionCell } from './cell-action';
-import { ICellProps, IRowProps } from './types';
+import { IRowProps } from './types';
+import { CellReadonly } from './cell-readonly';
 
 export const RowReadOnly = <TModel extends object>(
     props: IRowProps<TModel>
@@ -34,17 +35,5 @@ export const RowReadOnly = <TModel extends object>(
                 throw new Error('unexpected cell type');
             })}
         </tr>
-    );
-};
-
-export const CellReadonly = <TModel extends object>({
-    column: { field, hidden, renderDisplay },
-    data,
-}: ICellProps<TModel>) => {
-    return (
-        <td hidden={hidden}>
-            {renderDisplay && renderDisplay(data.model)}
-            {!renderDisplay && field && (data.model as any)[field].toString()}
-        </td>
     );
 };

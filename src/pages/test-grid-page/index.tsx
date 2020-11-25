@@ -1,4 +1,3 @@
-/* tslint:disable:max-line-length no-magic-numbers no-console jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
 import {
     Column,
@@ -21,7 +20,7 @@ import {
     updateData,
 } from './mock-data';
 import './styles.css';
-import { useGridContext } from '../../grid/state/context';
+import { useGridContext } from '../../grid';
 import { ToolBar } from './toolbar';
 
 const TestGrid: React.FunctionComponent = (): JSX.Element => {

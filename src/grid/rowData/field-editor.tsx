@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ChangeEvent, KeyboardEvent } from 'react';
-import { ColumnEditorType, Direction } from '../types';
+import { ColumnEditorType } from '../columns/column-types';
+import { Direction } from '../grid/types';
 
 interface IFieldEditorProps {
     model: any;

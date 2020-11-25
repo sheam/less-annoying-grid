@@ -1,4 +1,5 @@
-import { Column, IColumn, IRowData } from '../types';
+import { Column, IColumn } from '../columns/column-types';
+import { IRowData } from '../grid/types';
 
 export interface IRowProps<TModel extends object> {
     columns: Column<TModel>[];

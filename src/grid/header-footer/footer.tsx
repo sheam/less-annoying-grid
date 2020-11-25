@@ -1,7 +1,17 @@
-/* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import { useGridContext } from './state/context';
-import { IFooterProps } from './types';
+import { useGridContext } from '../grid/context';
+
+export interface IFooterProps {
+    pageSizeOptions?: number[];
+    initialPageSize?: number;
+    numPageJumpButtons?: number;
+
+    firstLabel?: string;
+    lastLabel?: string;
+    nextLabel?: string;
+    prevLabel?: string;
+    itemsName?: string;
+}
 
 interface IInternalFooterProps {
     totalCount: number;

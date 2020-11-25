@@ -1,16 +1,14 @@
-/* tslint:disable:jsx-no-multiline-js */
-import * as React from 'react';
 import { useState } from 'react';
 import {
     IDataState,
     IEditField,
     IFieldFilter,
+    IGridProps,
     IPagination,
-    IProgress,
     ISortColumn,
     Setter,
-} from '../types';
-import { IGridProps } from '../types';
+} from './types';
+import { IProgress } from './sync';
 
 export interface IGridState {
     pagination: IPagination | null;

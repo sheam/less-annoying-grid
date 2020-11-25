@@ -4,7 +4,7 @@ import {
     IPagination,
     ISortColumn,
 } from '../../grid';
-import { cloneData } from '../../grid/util';
+import { cloneData } from '../../grid/grid/util';
 
 export interface IData {
     num: number;

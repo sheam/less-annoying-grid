@@ -1,11 +1,13 @@
-import { useGridContext } from '../state/context';
+import { useGridContext } from '../grid/context';
 import * as React from 'react';
 import { useState } from 'react';
-import { cloneData, getNewSyncAction, hasChanged } from '../util';
-import { Column, Direction, SyncAction } from '../types';
+import { cloneData, getNewSyncAction, hasChanged } from '../grid/util';
 import { IRowProps } from './types';
 import { CellInlineEdit } from './cell-inline-edit';
 import { ActionCell } from './cell-action';
+import { SyncAction } from '../grid/sync';
+import { Direction } from '../grid/types';
+import { Column } from '../columns/column-types';
 
 export const RowInlineEdit = <TModel extends object>(
     props: IRowProps<TModel>

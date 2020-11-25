@@ -1,9 +1,10 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import * as GridContext from '../state/context';
+import * as GridContext from '../../grid/context';
 import { Header } from '../header';
-import { Column, IColumn, ISortColumn } from '../types';
+import { Column, IColumn } from '../../columns/column-types';
+import { ISortColumn } from '../../grid/types';
 
 interface IDataRow {
     col1: string;

@@ -1,8 +1,8 @@
-import { Direction } from '../types';
 import { FieldEditor } from './field-editor';
-import { cloneData } from '../util';
+import { cloneData } from '../grid/util';
 import * as React from 'react';
 import { ICellProps } from './types';
+import { Direction } from '../grid/types';
 
 interface ICellInlineEditProps<TModel extends object> {
     isEditing: boolean;

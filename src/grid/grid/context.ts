@@ -1,4 +1,3 @@
-/* tslint:disable:interface-over-type-literal */
 import * as React from 'react';
 import { useContext } from 'react';
 import {
@@ -7,9 +6,9 @@ import {
     IPagination,
     ISortColumn,
     Setter,
-} from '../types';
+} from './types';
 import { IGridState } from './state';
-import { createEditingContext, IGridEditContext } from './grid-io';
+import { createEditingContext, IGridEditContext } from './editing';
 
 export interface IGridContext {
     pagination?: IPagination | null;

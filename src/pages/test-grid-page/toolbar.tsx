@@ -1,31 +1,9 @@
 /* tslint:disable:max-line-length no-magic-numbers no-console jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
 import { FormEvent, useContext } from 'react';
-import {
-    Column,
-    Grid,
-    GridContext,
-    GridEditMode,
-    IDataResult,
-    IFieldFilter,
-    IPagination,
-    IProgress,
-    ISortColumn,
-    ISyncData,
-    ISyncDataResult,
-    SyncAction,
-} from '../../grid';
-import {
-    addData,
-    deleteData,
-    getData as getMockData,
-    IData as IMockData,
-    updateData,
-} from './mock-data';
+import { GridContext } from '../../grid';
 import './styles.css';
-import { useGridContext } from '../../grid/state/context';
 
-// tslint:disable-next-line:no-empty-interface
 interface IToolbarProps {}
 
 export const ToolBar: React.FunctionComponent<IToolbarProps> = () => {

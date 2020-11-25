@@ -1,7 +1,13 @@
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import { useGridContext } from './state/context';
-import { Column, IActionColumn, IColumn, ISortColumn } from './types';
+import { useGridContext } from '../grid/context';
+import {
+    ActionOrDataCol,
+    Column,
+    IActionColumn,
+    IColumn,
+} from '../columns/column-types';
+import { ISortColumn } from '../grid/types';
 
 export interface IHeaderProps<TModel extends object> {
     columns: Array<Column<TModel>>;
@@ -10,10 +16,6 @@ export interface IHeaderProps<TModel extends object> {
     sortAscLabel?: JSX.Element | string;
     sortDescLabel?: JSX.Element | string;
 }
-
-type ActionOrDataCol<TModel extends object> =
-    | IColumn<TModel>
-    | IActionColumn<TModel>;
 
 export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
     const { sort, setSort } = useGridContext();

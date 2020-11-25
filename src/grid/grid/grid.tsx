@@ -1,13 +1,13 @@
 /* tslint:disable:jsx-no-multiline-js */
 import * as React from 'react';
 import { PropsWithChildren, useEffect } from 'react';
-import { createGridContext, GridContext } from './state/context';
-import { Footer } from './footer';
-import { Header } from './header';
+import { createGridContext, GridContext } from './context';
+import { Footer } from '../header-footer/footer';
+import { Header } from '../header-footer/header';
+import { Row } from '../rowData';
+import { useGridState } from './state';
+import { loadDataEffect, syncDataEffect } from './sync';
 import { IGridProps } from './types';
-import { Row } from './rowData';
-import { useGridState } from './state/state';
-import { loadDataEffect, syncDataEffect } from './state/grid-io';
 
 interface IChildren {
     children?: {

@@ -1,4 +1,5 @@
-import { IRowData, SyncAction } from './types';
+import { SyncAction } from './sync';
+import { IRowData } from './types';
 
 export function cloneData<TModel>(model: TModel): TModel {
     return JSON.parse(JSON.stringify(model));

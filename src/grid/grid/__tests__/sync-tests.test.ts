@@ -1,7 +1,6 @@
-// @ts-ignore
-import { IRowData, ISyncDataResult, SyncAction } from '../types';
-import { IGridState } from '../state/state';
-import { _applySyncResults } from '../state/grid-io';
+import { IRowData } from '../types';
+import { IGridState } from '../state';
+import { _applySyncResults, ISyncDataResult, SyncAction } from '../sync';
 interface IData {
     key: number;
     firstName: string;
@@ -17,7 +16,7 @@ function getData(): IData[] {
     ];
 }
 
-function getDetaultState(): IGridState {
+function getDefaultState(): IGridState {
     const data = getData();
     const rowData: Array<IRowData> = data.map((m, i) => {
         return {
@@ -52,7 +51,7 @@ function getDetaultState(): IGridState {
 }
 
 it('applies updates', () => {
-    const state = getDetaultState();
+    const state = getDefaultState();
     const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
         (r: IRowData) => {
             return {
@@ -77,7 +76,7 @@ it('applies updates', () => {
 });
 
 it('applies adds', () => {
-    const state = getDetaultState();
+    const state = getDefaultState();
     state.dataState.data[0].syncAction = SyncAction.added;
     state.dataState.data[1].syncAction = SyncAction.added;
 
@@ -104,7 +103,7 @@ it('applies adds', () => {
 });
 
 it('applies delete', () => {
-    const state = getDetaultState();
+    const state = getDefaultState();
     const deletedKey = state.dataState.data[1].model.key;
     state.dataState.data[1].syncAction = SyncAction.deleted;
 
