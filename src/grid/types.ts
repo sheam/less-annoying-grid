@@ -128,7 +128,7 @@ export type Setter<TVal> = (v: TVal) => void;
 
 export interface ISyncData<TModel extends object> {
     model: TModel | null;
-    rowId: number;
+    rowNumber: number;
     syncAction: SyncAction;
 }
 

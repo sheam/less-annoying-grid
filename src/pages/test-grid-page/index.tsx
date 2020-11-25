@@ -288,7 +288,7 @@ function syncDataAsync(
             const syncResult: ISyncDataResult<IMockData> = {
                 model: resultModel,
                 syncAction: change.syncAction,
-                rowId: change.rowId,
+                rowNumber: change.rowNumber,
                 success: true,
             };
             results.push(syncResult);

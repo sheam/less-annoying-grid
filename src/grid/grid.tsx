@@ -348,7 +348,7 @@ async function syncChanges<TModel extends object>(
         .map(r => {
             const result: ISyncData<TModel> = {
                 model: r.model,
-                rowId: r.rowNumber,
+                rowNumber: r.rowNumber,
                 syncAction: r.syncAction,
             };
             return result;
@@ -386,7 +386,7 @@ export function _applySyncResults<TModel extends object>(
                 continue;
             }
             const index = state.dataState.data.findIndex(
-                er => er.rowNumber === r.rowId
+                er => er.rowNumber === r.rowNumber
             );
             if (index < 0) {
                 throw new Error(
@@ -399,7 +399,7 @@ export function _applySyncResults<TModel extends object>(
                 state.dataState.data[index] = {
                     model: r.model,
                     syncAction: SyncAction.unchanged,
-                    rowNumber: r.rowId,
+                    rowNumber: r.rowNumber,
                     uid: uuid(),
                 };
             }
