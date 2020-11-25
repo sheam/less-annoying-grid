@@ -36,7 +36,7 @@ const TestGrid: React.FunctionComponent = (): JSX.Element => {
                 footer={{ initialPageSize: 10 }}
                 editable={{
                     editMode: GridEditMode.inline,
-                    autoSave: true,
+                    autoSave: false,
                     syncChanges: syncDataAsync,
                 }}
             >
@@ -187,6 +187,9 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
         }
         await editingContext.sync();
     };
+    const addRowClicked = (e: React.MouseEvent<HTMLButtonElement>) => {
+        editingContext?.addRow({});
+    };
     return (
         <div>
             <h4>Product SKUs</h4>
@@ -217,6 +220,13 @@ const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
                 }}
             >
                 Save
+            </button>
+            <button
+                onClick={async e => {
+                    await addRowClicked(e);
+                }}
+            >
+                Add
             </button>
         </div>
     );

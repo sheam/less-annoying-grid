@@ -43,6 +43,7 @@ interface IGridProps<TModel extends object> {
 interface IGridEditConfig<TModel extends object> {
     editMode: GridEditMode;
     autoSave: boolean;
+    addToBottom?: boolean;
     syncChanges: (
         changes: Array<ISyncData<TModel>>,
         updateProgress: (
@@ -71,6 +72,7 @@ export const Grid = <TModel extends object>(
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [state.pagination, state.sort, state.filters, props]
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => syncDataEffect(state, props), [state.saveRequested]);
 
     const context = getGridContext(props, state);
@@ -153,6 +155,8 @@ function getGridContext<TModel extends object>(
             editField: state.editField,
             setEditField: ef => setCurrentEditField(ef, state),
             updateRow: rowData => updateRow(rowData, state, props),
+            addRow: model => addRow(model, state, props),
+            deleteRow: rowData => deleteRow(rowData, state, props),
             editMode: props.editable.editMode,
             autoSave: props.editable.autoSave,
             sync: () => state.setSaveRequested(true),
@@ -283,7 +287,6 @@ function updateRow<TModel extends object>(
     state: IGridState,
     props: IGridProps<TModel>
 ): boolean {
-    console.log('saving row');
     const existingRow = state.dataState.data.find(
         r => r.rowNumber === rowData.rowNumber
     );
@@ -291,6 +294,62 @@ function updateRow<TModel extends object>(
         throw new Error(`unable to find row with id=${rowData.rowNumber}`);
     }
     existingRow.syncAction = rowData.syncAction;
+    existingRow.model = rowData.model;
+    state.setNeedsSave(state.needsSave || hasChanged(rowData));
+
+    state.setDataState(state.dataState);
+
+    if (props.editable?.autoSave) {
+        state.setSaveRequested(true);
+    }
+
+    return true; //success
+}
+
+function addRow<TModel extends object>(
+    model: TModel,
+    state: IGridState,
+    props: IGridProps<TModel>
+): boolean {
+    const data = state.dataState.data;
+
+    const newRow = {
+        uid: uuid(),
+        model,
+        syncAction: SyncAction.added,
+        rowNumber: -1,
+    };
+
+    if (props.editable?.addToBottom) {
+        data.push(newRow);
+    } else {
+        data.unshift(newRow);
+    }
+
+    //renumber
+    data.forEach((r, i) => (r.rowNumber = i + 1));
+
+    state.setDataState({ data, totalCount: data.length });
+
+    if (props.editable?.autoSave) {
+        state.setSaveRequested(true);
+    }
+
+    return true; //success
+}
+
+function deleteRow<TModel extends object>(
+    rowData: IRowData,
+    state: IGridState,
+    props: IGridProps<TModel>
+): boolean {
+    const existingRow = state.dataState.data.find(
+        r => r.rowNumber === rowData.rowNumber
+    );
+    if (!existingRow) {
+        throw new Error(`unable to find row with id=${rowData.rowNumber}`);
+    }
+    existingRow.syncAction = SyncAction.deleted;
     existingRow.model = rowData.model;
     state.setNeedsSave(state.needsSave || hasChanged(rowData));
 
@@ -366,7 +425,11 @@ async function syncChanges<TModel extends object>(
 
     try {
         const result = await props.editable.syncChanges(changes, applyUpdates);
-        // _applySyncResults()
+        _applySyncResults(
+            state,
+            { current: changes.length, total: changes.length },
+            result
+        );
         return result;
     } finally {
         state.setSyncProgress(null);

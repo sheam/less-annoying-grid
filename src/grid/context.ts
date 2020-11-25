@@ -42,7 +42,9 @@ interface IGridEditContext {
     setEditField: Setter<IEditField | null>;
 
     updateRow: (rowData: IRowData) => boolean;
-    //deleteRow: (rowData: IRowData) => boolean;
+    addRow: (model: any) => boolean;
+    deleteRow: (rowData: IRowData) => boolean;
+
     sync: () => void;
 }
 

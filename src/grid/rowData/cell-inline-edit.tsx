@@ -47,7 +47,7 @@ export const CellInlineEdit = <TModel extends object>({
                 {renderDisplay && renderDisplay(data.model)}
                 {!renderDisplay &&
                     field &&
-                    (data.model as any)[field].toString()}
+                    (data.model as any)[field]?.toString()}
             </td>
         );
     }
