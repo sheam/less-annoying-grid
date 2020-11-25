@@ -312,7 +312,6 @@ function addRow<TModel extends object>(
     props: IGridProps<TModel>
 ): boolean {
     const data = state.dataState.data;
-
     const newRow = {
         uid: uuid(),
         model,
@@ -326,9 +325,7 @@ function addRow<TModel extends object>(
         data.unshift(newRow);
     }
 
-    //renumber
     data.forEach((r, i) => (r.rowNumber = i + 1));
-
     state.setDataState({ data, totalCount: data.length });
 
     if (props.editable?.autoSave) {
@@ -343,15 +340,17 @@ function deleteRow<TModel extends object>(
     state: IGridState,
     props: IGridProps<TModel>
 ): boolean {
-    const existingRow = state.dataState.data.find(
-        r => r.rowNumber === rowData.rowNumber
-    );
+    const data = state.dataState.data;
+    const existingRow = data.find(r => r.rowNumber === rowData.rowNumber);
     if (!existingRow) {
         throw new Error(`unable to find row with id=${rowData.rowNumber}`);
     }
     existingRow.syncAction = SyncAction.deleted;
     existingRow.model = rowData.model;
     state.setNeedsSave(state.needsSave || hasChanged(rowData));
+
+    data.forEach((r, i) => (r.rowNumber = i + 1));
+    state.setDataState({ data, totalCount: data.length });
 
     if (props.editable?.autoSave) {
         state.setSaveRequested(true);
