@@ -55,7 +55,7 @@ export interface IActionColumn<TModel extends object> {
     type: 'action';
     name: string;
     hidden?: boolean;
-    actions: Array<IAction<TModel>>;
+    actions: Array<Action<TModel>>;
 }
 
 export interface IRowData {
@@ -77,15 +77,34 @@ export interface IEditField {
     field: string;
 }
 
-export interface IAction<TModel extends object> {
-    name: string;
-    buttonContent: JSX.Element | string;
+export interface IActionEdit {
+    type: 'edit';
+    name?: string;
+    buttonContent?: JSX.Element | string;
+}
+
+export interface IActionDelete<TModel extends object> {
+    type: 'delete';
+    name?: string;
+    buttonContent?: JSX.Element | string;
+    confirm?: (model: TModel) => boolean;
+}
+
+export interface IActionCustom<TModel extends object> {
+    type: 'custom';
+    name?: string;
+    buttonContent?: JSX.Element | string;
     handler: (
         data: TModel,
         rowId: number,
         currentSyncAction: SyncAction
-    ) => void;
+    ) => TModel;
 }
+
+export type Action<TModel extends object> =
+    | IActionEdit
+    | IActionDelete<TModel>
+    | IActionCustom<TModel>;
 
 export type Column<TModel extends object> =
     | IColumn<TModel>

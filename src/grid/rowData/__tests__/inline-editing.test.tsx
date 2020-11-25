@@ -1,10 +1,9 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
 import { mount, ReactWrapper, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import { GridEditMode, IRowData, SyncAction } from '../../types';
+import { Column, GridEditMode, IRowData, SyncAction } from '../../types';
 import * as GridContext from '../../context';
 import { IGridContext } from '../../context';
-import { cols, data } from './mock-data';
 import { RowReadOnly } from '../row-readonly';
 import { RowInlineEdit } from '../row-inline-edit';
 import { cloneData } from '../../util';
@@ -58,6 +57,8 @@ it('renders a rows of inline edit data', async () => {
             editMode: GridEditMode.inline,
             autoSave: false,
             sync: jest.fn(),
+            deleteRow: jest.fn(),
+            addRow: jest.fn(),
         },
     };
     setGridContextData(gridContext);
@@ -96,6 +97,8 @@ it('renders an editor in number col', async () => {
             editMode: GridEditMode.inline,
             autoSave: false,
             sync: jest.fn(),
+            deleteRow: jest.fn(),
+            addRow: jest.fn(),
         },
     };
     setGridContextData(gridContext);
@@ -120,7 +123,7 @@ it('renders an editor in number col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowNum: rowData.rowNumber,
+            rowId: rowData.rowId,
         };
     }
     const c = mount(
@@ -151,6 +154,8 @@ it('renders an editor in text col', async () => {
             editMode: GridEditMode.inline,
             autoSave: false,
             sync: jest.fn(),
+            deleteRow: jest.fn(),
+            addRow: jest.fn(),
         },
     };
     setGridContextData(gridContext);
@@ -175,7 +180,7 @@ it('renders an editor in text col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowNum: rowData.rowNumber,
+            rowId: rowData.rowId,
         };
     }
     const c = mount(
@@ -206,6 +211,8 @@ it('renders an editor in date col', async () => {
             editMode: GridEditMode.inline,
             autoSave: false,
             sync: jest.fn(),
+            deleteRow: jest.fn(),
+            addRow: jest.fn(),
         },
     };
     setGridContextData(gridContext);
@@ -230,7 +237,7 @@ it('renders an editor in date col', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowNum: rowData.rowNumber,
+            rowId: rowData.rowId,
         };
     }
     const c = mount(
@@ -261,6 +268,8 @@ it('renders an editor with drop down values', async () => {
             editMode: GridEditMode.inline,
             autoSave: false,
             sync: jest.fn(),
+            deleteRow: jest.fn(),
+            addRow: jest.fn(),
         },
     };
     setGridContextData(gridContext);
@@ -292,7 +301,7 @@ it('renders an editor with drop down values', async () => {
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowNum: rowData.rowNumber,
+            rowId: rowData.rowId,
         };
     }
     const c = mount(
@@ -310,3 +319,60 @@ it('renders an editor with drop down values', async () => {
     expect(cell.find('select')).toHaveLength(1);
     expect(cell.find('option')).toHaveLength(4);
 });
+
+interface IData {
+    numVal: number;
+    textVal: string;
+    enumVal: string;
+    birthday: Date;
+}
+
+const cols: Array<Column<IData>> = [
+    {
+        type: 'data',
+        name: 'Number',
+        field: 'numVal',
+    },
+    {
+        type: 'data',
+        name: 'Text',
+        field: 'textVal',
+    },
+    {
+        type: 'data',
+        name: 'Enum',
+        field: 'enumVal',
+    },
+    {
+        type: 'data',
+        name: 'Birthday',
+        field: 'birthday',
+    },
+];
+
+const data: IData[] = [
+    {
+        numVal: 1,
+        textVal: 'one',
+        enumVal: 'a',
+        birthday: new Date('2020-01-01'),
+    },
+    {
+        numVal: 2,
+        textVal: 'two',
+        enumVal: 'b',
+        birthday: new Date('2000-01-01'),
+    },
+    {
+        numVal: 3,
+        textVal: 'three',
+        enumVal: 'c',
+        birthday: new Date('1990-01-01'),
+    },
+    {
+        numVal: 4,
+        textVal: 'four',
+        enumVal: 'd',
+        birthday: new Date('1980-01-01'),
+    },
+];

@@ -129,17 +129,20 @@ const cols: Array<Column<IMockData>> = [
             }),
         },
     },
-    // {
-    //     type: 'action',
-    //     name: 'actions',
-    //     actions: [
-    //         {
-    //             name: 'delete',
-    //             buttonContent: 'DEL',
-    //             handler: ((data, uid, dirty) => )
-    //         }
-    //     ]
-    // }
+    {
+        type: 'action',
+        name: 'actions',
+        actions: [
+            {
+                type: 'delete',
+                buttonContent: 'DEL',
+                confirm: (m: IMockData) =>
+                    window.confirm(
+                        `are you sure you want to delete Key=${m.key}`
+                    ),
+            },
+        ],
+    },
 ];
 
 // tslint:disable-next-line:no-empty-interface
