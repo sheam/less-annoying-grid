@@ -1,14 +1,7 @@
 import { useState } from 'react';
-import {
-    IDataState,
-    IEditField,
-    IFieldFilter,
-    IGridProps,
-    IPagination,
-    ISortColumn,
-    Setter,
-} from './types';
-import { IProgress } from './sync';
+import { IDataState, IEditField, IGridProps, Setter } from './types-grid';
+import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
+import { IProgress } from './types-sync';
 
 export interface IGridState {
     pagination: IPagination | null;

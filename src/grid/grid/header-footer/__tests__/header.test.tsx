@@ -1,10 +1,10 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import * as GridContext from '../../grid/context';
+import * as GridContext from '../../context';
 import { Header } from '../header';
-import { Column, IDataColumn } from '../../columns/column-types';
-import { ISortColumn } from '../../grid/types';
+import { Column, IDataColumn } from '../../columns/types';
+import { ISortColumn } from '../../types-pagination';
 
 interface IDataRow {
     col1: string;

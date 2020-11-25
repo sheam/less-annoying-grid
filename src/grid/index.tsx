@@ -1,15 +1,20 @@
-import { Column } from './columns/column-types';
-import { IFooterProps } from './header-footer/footer';
+import { Column } from './grid/columns/types';
+import { IFooterProps } from './grid/header-footer/footer';
 import { GridContext, IGridContext, useGridContext } from './grid/context';
 import { Grid } from './grid/grid';
-import { IProgress, ISyncData, ISyncDataResult, SyncAction } from './grid/sync';
+import { GridEditMode } from './grid/types-grid';
 import {
     IDataResult,
     IFieldFilter,
     IPagination,
     ISortColumn,
-    GridEditMode,
-} from './grid/types';
+} from './grid/types-pagination';
+import {
+    IProgress,
+    ISyncData,
+    ISyncDataResult,
+    SyncAction,
+} from './grid/types-sync';
 
 export type {
     IDataResult,

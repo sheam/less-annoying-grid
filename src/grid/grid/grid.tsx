@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { PropsWithChildren, useEffect } from 'react';
 import { createGridContext, GridContext } from './context';
-import { Footer } from '../header-footer/footer';
-import { Header } from '../header-footer/header';
-import { Row } from '../rowData';
+import { Footer } from './header-footer/footer';
+import { Header } from './header-footer/header';
+import { Row } from './rowData';
 import { useGridState } from './state';
 import { loadDataEffect, syncDataEffect } from './sync';
-import { IGridProps } from './types';
+import { IGridProps } from './types-grid';
 
 interface IChildren {
     children?: {

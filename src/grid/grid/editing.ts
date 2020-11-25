@@ -1,7 +1,7 @@
-import { GridEditMode, IEditField, IGridProps, IRowData } from './types';
+import { GridEditMode, IEditField, IGridProps, IRowData } from './types-grid';
 import { hasChanged, uuid } from './util';
 import { IGridState } from './state';
-import { IProgress, SyncAction } from './sync';
+import { IProgress, SyncAction } from './types-sync';
 
 export interface IGridEditContext {
     editMode: GridEditMode;

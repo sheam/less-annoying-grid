@@ -1,14 +1,14 @@
 /* tslint:disable:no-magic-numbers max-line-length jsx-no-lambda no-empty */
 import { mount, ReactWrapper, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import * as GridContext from '../../grid/context';
+import * as GridContext from '../../context';
 import { RowReadOnly } from '../row-readonly';
 import { RowInlineEdit } from '../row-inline-edit';
-import { cloneData } from '../../grid/util';
-import { GridEditMode, IRowData } from '../../grid/types';
-import { SyncAction } from '../../grid/sync';
-import { IGridContext } from '../../grid/context';
-import { Column } from '../../index';
+import { cloneData } from '../../util';
+import { GridEditMode, IRowData } from '../../types-grid';
+import { IGridContext } from '../../context';
+import { Column } from '../../../index';
+import { SyncAction } from '../../types-sync';
 
 const getByTestId = (c: ReactWrapper | ShallowWrapper, name: string) =>
     c.find(`[data-test="${name}"]`);

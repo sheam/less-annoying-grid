@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { IRowData } from '../grid/types';
-import { IActionColumn } from '../columns/column-types';
+import { IRowData } from '../types-grid';
+import { IActionColumn } from '../columns/types';
 import { ActionButton } from './action-button';
 
 interface IActionCellProps<TModel extends object> {

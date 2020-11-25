@@ -1,39 +1,18 @@
-import {
-    IDataResult,
-    IDataState,
-    IFieldFilter,
-    IGridProps,
-    IPagination,
-    IRowData,
-    ISortColumn,
-} from './types';
+import { IDataState, IGridProps, IRowData } from './types-grid';
 import { hasChanged, uuid } from './util';
 import { IGridState } from './state';
-
-export enum SyncAction {
-    unchanged = 'unchanged',
-    added = 'added',
-    updated = 'updated',
-    deleted = 'deleted',
-}
-
-export interface ISyncData<TModel extends object> {
-    model: TModel | null;
-    rowId: string;
-    syncAction: SyncAction;
-}
-
-export interface ISyncDataResult<TModel extends object>
-    extends ISyncData<TModel> {
-    success: boolean;
-    error?: string;
-}
-
-export interface IProgress {
-    current: number;
-    total: number;
-    message?: string;
-}
+import {
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+} from './types-pagination';
+import {
+    IProgress,
+    ISyncData,
+    ISyncDataResult,
+    SyncAction,
+} from './types-sync';
 
 export function syncDataEffect<TModel extends object>(
     state: IGridState,

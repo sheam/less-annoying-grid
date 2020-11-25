@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { IGridContext, useGridContext } from '../grid/context';
-import { IRowData } from '../grid/types';
-import { Action } from '../columns/column-types';
-import { SyncAction } from '../grid/sync';
+import { IGridContext, useGridContext } from '../context';
+import { IRowData } from '../types-grid';
+import { Action } from '../columns/types';
+import { SyncAction } from '../types-sync';
 
 interface IActionButtonProps<TModel extends object> {
     action: Action<TModel>;

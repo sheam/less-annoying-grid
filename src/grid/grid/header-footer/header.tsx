@@ -1,20 +1,21 @@
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
-import { useGridContext } from '../grid/context';
+import { useGridContext } from '../context';
 import {
     ActionOrDataCol,
     Column,
     IActionColumn,
     IDataColumn,
-} from '../columns/column-types';
-import { ISortColumn } from '../grid/types';
+} from '../columns/types';
+import { ISortColumn } from '../types-pagination';
+import { ElementOrString } from '../types-grid';
 
 export interface IHeaderProps<TModel extends object> {
     columns: Array<Column<TModel>>;
     toolbar?: JSX.Element;
 
-    sortAscLabel?: JSX.Element | string;
-    sortDescLabel?: JSX.Element | string;
+    sortAscLabel?: ElementOrString;
+    sortDescLabel?: ElementOrString;
 }
 
 export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
@@ -65,9 +66,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
         );
     };
 
-    const getSortLabel = (
-        c: IDataColumn<TModel>
-    ): JSX.Element | string | null => {
+    const getSortLabel = (c: IDataColumn<TModel>): ElementOrString | null => {
         if (sort?.field !== c.field || !sort?.direction) {
             return null;
         }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGridContext } from '../grid/context';
+import { useGridContext } from '../context';
 
 export interface IFooterProps {
     pageSizeOptions?: number[];

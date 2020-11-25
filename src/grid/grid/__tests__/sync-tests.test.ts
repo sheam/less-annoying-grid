@@ -1,6 +1,7 @@
-import { IRowData } from '../types';
+import { IRowData } from '../types-grid';
 import { IGridState } from '../state';
-import { _applySyncResults, ISyncDataResult, SyncAction } from '../sync';
+import { _applySyncResults } from '../sync';
+import { ISyncDataResult, SyncAction } from '../types-sync';
 interface IData {
     key: number;
     firstName: string;

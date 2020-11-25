@@ -1,4 +1,5 @@
-import { ISyncData, SyncAction } from '../grid/sync';
+import { ElementOrString } from '../types-grid';
+import { ISyncData, SyncAction } from '../types-sync';
 
 export interface IDataColumn<TModel extends object> {
     type: 'data';
@@ -7,7 +8,13 @@ export interface IDataColumn<TModel extends object> {
     hidden?: boolean;
     sortable?: boolean;
     editable?: ColumnEditorType;
-    renderDisplay?: (model: TModel) => JSX.Element | string;
+    renderDisplay?: (model: TModel) => ElementOrString;
+}
+
+interface IDisplayColumn<TModel extends object> {
+    type: 'display';
+    name: string;
+    renderDisplay: (model: TModel) => ElementOrString;
 }
 
 interface IColumnGroup<TModel extends object> {
@@ -36,13 +43,13 @@ export type ActionOrDataCol<TModel extends object> =
 export interface IActionEdit {
     type: 'edit';
     name?: string;
-    buttonContent?: JSX.Element | string;
+    buttonContent?: ElementOrString;
 }
 
 export interface IActionDelete<TModel extends object> {
     type: 'delete';
     name?: string;
-    buttonContent?: JSX.Element | string;
+    buttonContent?: ElementOrString;
     confirm?:
         | boolean
         | ((model: TModel, currentSyncAction: SyncAction) => Promise<boolean>);
@@ -51,7 +58,7 @@ export interface IActionDelete<TModel extends object> {
 interface IActionCustom<TModel extends object> {
     type: 'custom';
     name?: string;
-    buttonContent?: JSX.Element | string;
+    buttonContent?: ElementOrString;
     handler: (
         data: TModel,
         rowId: string,

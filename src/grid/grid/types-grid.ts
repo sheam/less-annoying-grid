@@ -1,8 +1,17 @@
-import { Column } from '../columns/column-types';
-import { IFooterProps } from '../header-footer/footer';
-import { IProgress, ISyncData, ISyncDataResult, SyncAction } from './sync';
-
-export type Setter<TVal> = (v: TVal) => void;
+import { Column } from './columns/types';
+import { IFooterProps } from './header-footer/footer';
+import {
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+} from './types-pagination';
+import {
+    IProgress,
+    ISyncData,
+    ISyncDataResult,
+    SyncAction,
+} from './types-sync';
 
 export enum GridEditMode {
     inline = 'inline',
@@ -10,12 +19,21 @@ export enum GridEditMode {
     external = 'external',
 }
 
+export type Setter<TVal> = (v: TVal) => void;
+export type ElementOrString = JSX.Element | string;
+
+export enum Direction {
+    none = 'none',
+    forward = 'forward',
+    backward = 'backward',
+}
+
 export interface IGridProps<TModel extends object> {
     columns: Array<Column<TModel>>;
     footer?: IFooterProps;
 
-    sortAscLabel?: JSX.Element | string;
-    sortDescLabel?: JSX.Element | string;
+    sortAscLabel?: ElementOrString;
+    sortDescLabel?: ElementOrString;
 
     getDataAsync: (
         pagination: IPagination | null,
@@ -39,10 +57,9 @@ export interface IGridEditConfig<TModel extends object> {
     ) => Promise<Array<ISyncDataResult<TModel>>>;
 }
 
-export enum Direction {
-    none = 'none',
-    forward = 'forward',
-    backward = 'backward',
+export interface IEditField {
+    rowId: string;
+    field: string;
 }
 
 export interface IDataState {
@@ -55,30 +72,4 @@ export interface IRowData {
     rowId: string;
     model: any;
     syncAction: SyncAction;
-}
-
-export interface IEditField {
-    rowId: string;
-    field: string;
-}
-
-export interface IFieldFilter {
-    field: string;
-    value: string;
-    operator: 'eq' | 'ne' | 'gt' | 'ge' | 'lt' | 'le' | 'contains';
-}
-
-export interface ISortColumn {
-    field: string;
-    direction: 'ASC' | 'DESC';
-}
-
-export interface IPagination {
-    currentPage: number;
-    pageSize: number;
-}
-
-export interface IDataResult<TModel extends object> {
-    totalCount: number;
-    data: TModel[];
 }

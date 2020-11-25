@@ -1,10 +1,10 @@
-import { useGridContext } from '../grid/context';
+import { useGridContext } from '../context';
 import * as React from 'react';
 import { IRowProps } from './types';
 import { RowReadOnly } from './row-readonly';
 import { RowInlineEdit } from './row-inline-edit';
-import { SyncAction } from '../grid/sync';
-import { GridEditMode } from '../grid/types';
+import { GridEditMode } from '../types-grid';
+import { SyncAction } from '../types-sync';
 
 export const Row = <TModel extends object>(props: IRowProps<TModel>) => {
     const { editingContext } = useGridContext();

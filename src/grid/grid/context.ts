@@ -1,14 +1,9 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import {
-    IFieldFilter,
-    IGridProps,
-    IPagination,
-    ISortColumn,
-    Setter,
-} from './types';
+import { IGridProps, Setter } from './types-grid';
 import { IGridState } from './state';
 import { createEditingContext, IGridEditContext } from './editing';
+import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 
 export interface IGridContext {
     pagination?: IPagination | null;

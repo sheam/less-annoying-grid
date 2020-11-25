@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ChangeEvent, KeyboardEvent } from 'react';
-import { ColumnEditorType } from '../columns/column-types';
-import { Direction } from '../grid/types';
+import { ColumnEditorType } from '../columns/types';
+import { Direction } from '../types-grid';
 
 interface IFieldEditorProps {
     model: any;
