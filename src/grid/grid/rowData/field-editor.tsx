@@ -2,33 +2,33 @@ import * as React from 'react';
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { ColumnEditorType } from '../columns/types';
 import { Direction } from '../types-grid';
+import { useRowContext } from './row-context';
+import { cloneData } from '../util';
 
 interface IFieldEditorProps {
-    model: any;
     field: string;
     editorType: ColumnEditorType;
-    editComplete: (commitChanges: boolean, advance: Direction) => void;
-    onChange: (model: any) => void;
 }
 
 export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
-    model,
     field,
     editorType,
-    editComplete,
-    onChange,
 }) => {
+    const context = useRowContext();
+    const model = cloneData(context.model);
+
     const inputType =
         editorType.type === 'values' ? editorType.subType : editorType.type;
+
     const changeHandler = (
         e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
     ) => {
         (model as any)[field] = coerceValueType(e.target.value, inputType);
-        onChange(model);
+        context.onChange(model);
     };
 
     const focusLost = () => {
-        editComplete(true, Direction.none);
+        context.doneEditing(true, Direction.none);
     };
 
     const detectSpecialKeys = (
@@ -36,15 +36,15 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
     ) => {
         if (e.key === 'Escape') {
             e.preventDefault();
-            editComplete(false, Direction.none);
+            context.doneEditing(false, Direction.none);
         }
         if (e.key === 'Enter') {
             e.preventDefault();
-            editComplete(true, Direction.none);
+            context.doneEditing(true, Direction.none);
         }
         if (e.key === 'Tab') {
             e.preventDefault();
-            editComplete(
+            context.doneEditing(
                 true,
                 e.shiftKey ? Direction.backward : Direction.forward
             );

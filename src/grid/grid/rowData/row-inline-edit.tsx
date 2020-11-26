@@ -5,10 +5,11 @@ import { cloneData, getNewSyncAction, hasChanged } from '../util';
 import { IRowProps } from './types';
 import { CellInlineEdit } from './cell-inline-edit';
 import { ActionCell } from './cell-action';
-import { Column } from '../columns/types';
+import { Column } from '../..';
 import { Direction } from '../types-grid';
 import { SyncAction } from '../types-sync';
 import { CellReadonly } from './cell-readonly';
+import { IRowContext, RowContext } from './row-context';
 
 export const RowInlineEdit = <TModel extends object>(
     props: IRowProps<TModel>
@@ -125,51 +126,58 @@ export const RowInlineEdit = <TModel extends object>(
     if (hasChanged(rowData)) classes.push('modified');
     if (editingContext.editField) classes.push('edit-row');
 
-    return (
-        <tr className={classes.join(' ')} data-test="data-row">
-            {columns.map(c => {
-                if (!c) {
-                    throw new Error('column should not be null');
-                }
+    const rowEditContext: IRowContext = {
+        model: rowData.model,
+        doneEditing,
+        onChange,
+    };
 
-                if (c.type === 'data' && c.editable) {
-                    return (
-                        <CellInlineEdit
-                            key={`td-${uid}-${c.name}`}
-                            column={c}
-                            data={rowData}
-                            isEditing={
-                                editingContext?.editField?.field === c.field &&
-                                editingContext?.editField?.rowId ===
-                                    props.data.rowId
-                            }
-                            startEditing={startEditing}
-                            doneEditing={doneEditing}
-                            onChange={onChange}
-                        />
-                    );
-                }
-                if (c.type === 'display' || c.type === 'data') {
-                    return (
-                        <CellReadonly
-                            key={`td-${uid}-${c.name}`}
-                            data={rowData}
-                            column={c}
-                        />
-                    );
-                }
-                if (c.type === 'action') {
-                    return (
-                        <ActionCell
-                            key={`td-${uid}-${c.name}`}
-                            column={c}
-                            rowData={props.data}
-                        />
-                    );
-                }
-                throw new Error(`unexpected cell type`);
-            })}
-        </tr>
+    return (
+        <RowContext.Provider value={rowEditContext}>
+            <tr className={classes.join(' ')} data-test="data-row">
+                {columns.map(c => {
+                    if (!c) {
+                        throw new Error('column should not be null');
+                    }
+
+                    if (c.type === 'data' && c.editable) {
+                        return (
+                            <CellInlineEdit
+                                key={`td-${uid}-${c.name}`}
+                                column={c}
+                                data={rowData}
+                                isEditing={
+                                    editingContext?.editField?.field ===
+                                        c.field &&
+                                    editingContext?.editField?.rowId ===
+                                        props.data.rowId
+                                }
+                                startEditing={startEditing}
+                            />
+                        );
+                    }
+                    if (c.type === 'display' || c.type === 'data') {
+                        return (
+                            <CellReadonly
+                                key={`td-${uid}-${c.name}`}
+                                data={rowData}
+                                column={c}
+                            />
+                        );
+                    }
+                    if (c.type === 'action') {
+                        return (
+                            <ActionCell
+                                key={`td-${uid}-${c.name}`}
+                                column={c}
+                                rowData={props.data}
+                            />
+                        );
+                    }
+                    throw new Error(`unexpected cell type`);
+                })}
+            </tr>
+        </RowContext.Provider>
     );
 };
 

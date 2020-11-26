@@ -1,15 +1,12 @@
 import { FieldEditor } from './field-editor';
-import { cloneData } from '../util';
 import * as React from 'react';
-import { Direction, IRowData } from '../types-grid';
+import { IRowData } from '../types-grid';
 import { ValidationError } from './validation-error';
 import { IDataColumn } from '../columns/types';
 
 interface ICellInlineEditProps<TModel extends object> {
     isEditing: boolean;
     startEditing: (field: string) => void;
-    onChange: (model: TModel) => void;
-    doneEditing: (commitChanges: boolean, advance: Direction) => void;
     column: IDataColumn<TModel>;
     data: IRowData<TModel>;
 }
@@ -19,8 +16,6 @@ export const CellInlineEdit = <TModel extends object>({
     data,
     isEditing,
     startEditing,
-    onChange,
-    doneEditing,
 }: ICellInlineEditProps<TModel>) => {
     if (!field) {
         throw new Error('field not provided to editable cell');
@@ -34,13 +29,7 @@ export const CellInlineEdit = <TModel extends object>({
         }
         return (
             <td hidden={hidden}>
-                <FieldEditor
-                    model={cloneData(data.model)}
-                    field={field}
-                    editorType={editable}
-                    onChange={onChange}
-                    editComplete={doneEditing}
-                />
+                <FieldEditor field={field} editorType={editable} />
                 <ValidationError
                     field={field}
                     validationErrors={data.validationErrors}
