@@ -49,6 +49,7 @@ export const RowInlineEdit = <TModel extends object>(
             rowNumber: props.data.rowNumber,
             rowId: props.data.rowId,
             model,
+            validationErrors: rowData.validationErrors,
             syncAction: getNewSyncAction(props.data.syncAction, newSyncAction),
         });
     };
