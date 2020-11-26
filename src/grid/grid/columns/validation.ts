@@ -1,11 +1,33 @@
 import { IValidationError } from '../types-grid';
 import { fdate } from '../util';
+import { Column, IDataColumn } from './types';
 
 export type Validator = (val: any) => ErrorMessage;
 export type AggregateValidator = (
     model: any,
     field: string
 ) => IValidationError[];
+
+export function validateModel<TModel extends object>(
+    model: any,
+    columns: Array<Column<TModel>>
+): IValidationError[] {
+    const result = new Array<IValidationError>();
+    const dataColumns = columns.filter(
+        c => c.type === 'data' && c.validator
+    ) as IDataColumn<TModel>[];
+    for (let c of dataColumns) {
+        if (!c.validator) {
+            continue;
+        }
+        const errors = c.validator(model, c.field);
+        if (errors?.length > 0) {
+            result.push(...errors);
+        }
+    }
+
+    return result;
+}
 
 export function validator(...validators: Validator[]): AggregateValidator {
     return (model: any, field: string) => {

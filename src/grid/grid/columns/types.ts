@@ -5,7 +5,7 @@ import { AggregateValidator } from './validation';
 export interface IDataColumn<TModel extends object> {
     type: 'data';
     name: string;
-    field?: string;
+    field: string;
     hidden?: boolean;
     sortable?: boolean;
     editable?: ColumnEditorType;

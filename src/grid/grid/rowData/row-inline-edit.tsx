@@ -52,10 +52,6 @@ export const RowInlineEdit = <TModel extends object>(
     };
 
     const doneEditing = (commitChanges: boolean, advance: Direction) => {
-        console.log(
-            `    done editing ${editingContext.editField?.field}: syncAction=${rowData.syncAction} commit=${commitChanges}`
-        );
-
         if (!editingContext.editField) {
             throw new Error('doneEditing called but now editField in context');
         }
