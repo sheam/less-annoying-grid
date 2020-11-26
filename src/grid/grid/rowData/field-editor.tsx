@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { ChangeEvent, KeyboardEvent } from 'react';
-import { ColumnEditorType } from '../columns/types';
+import { ColumnEditorTypeBuiltIn } from '../columns/types';
 import { Direction } from '../types-grid';
 import { useRowContext } from './row-context';
 import { cloneData } from '../util';
 
 interface IFieldEditorProps {
     field: string;
-    editorType: ColumnEditorType;
+    editorType: ColumnEditorTypeBuiltIn;
 }
 
 export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({

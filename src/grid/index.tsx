@@ -1,6 +1,6 @@
 import { Column } from './grid/columns/types';
 import { IFooterProps } from './grid/header-footer/footer';
-import { GridContext, IGridContext, useGridContext } from './grid/context';
+import { GridContext, useGridContext } from './grid/context';
 import { Grid } from './grid/grid';
 import { GridEditMode } from './grid/types-grid';
 import {

@@ -108,7 +108,7 @@ function generateData(n: number) {
         const rowNum = i + 1;
         result.push({
             num: 100 + i,
-            one: `${rowNum}-1`,
+            one: `n-${rowNum}`,
             two: `${rowNum}-2`,
             threeA: `${rowNum}-3a`,
             threeB: `${rowNum}-3b`,

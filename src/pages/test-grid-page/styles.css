@@ -1,7 +1,10 @@
 div.container {
-  width: 90%;
-  margin-top: 100px;
-  margin-left: auto;
-  margin-right: auto;
+    width: 90%;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.custom-editor-example input {
+    width: 5rem;
 }
 /*# sourceMappingURL=styles.css.map */

@@ -101,8 +101,20 @@ interface IEditorValues {
     values: { text: string; value: any }[];
 }
 
-export type ColumnEditorType =
+interface IEditorCustom {
+    type: 'custom';
+    editor: JSX.Element;
+}
+
+export type ColumnEditorTypeBuiltIn =
     | IEditorText
     | IEditorNumber
     | IEditorDate
     | IEditorValues;
+
+export type ColumnEditorType =
+    | IEditorText
+    | IEditorNumber
+    | IEditorDate
+    | IEditorValues
+    | IEditorCustom;

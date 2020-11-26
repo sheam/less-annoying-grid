@@ -2,7 +2,7 @@ import { FieldEditor } from './field-editor';
 import * as React from 'react';
 import { IRowData } from '../types-grid';
 import { ValidationError } from './validation-error';
-import { IDataColumn } from '../columns/types';
+import { ColumnEditorType, IDataColumn } from '../columns/types';
 
 interface ICellInlineEditProps<TModel extends object> {
     isEditing: boolean;
@@ -27,9 +27,10 @@ export const CellInlineEdit = <TModel extends object>({
                 `column for field ${field} is being edited, but has not defined editor`
             );
         }
+
         return (
             <td hidden={hidden}>
-                <FieldEditor field={field} editorType={editable} />
+                {getEditorElement(editable, field)}
                 <ValidationError
                     field={field}
                     validationErrors={data.validationErrors}
@@ -52,3 +53,13 @@ export const CellInlineEdit = <TModel extends object>({
         );
     }
 };
+
+function getEditorElement(
+    editor: ColumnEditorType,
+    field: string
+): JSX.Element {
+    if (editor.type === 'custom') {
+        return editor.editor;
+    }
+    return <FieldEditor field={field} editorType={editor} />;
+}

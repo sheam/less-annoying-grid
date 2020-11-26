@@ -22,6 +22,7 @@ import {
 import './styles.css';
 import { useGridContext, validate } from '../../grid';
 import { ToolBar } from './toolbar';
+import { CustomEditorExample } from './custom-editor-example';
 
 const TestGrid: React.FunctionComponent = (): JSX.Element => {
     return (
@@ -74,7 +75,10 @@ const cols: Array<Column<IMockData>> = [
         field: 'one',
         type: 'data',
         defaultValue: () => `n-${Math.round(Math.random() * 1000)}`,
-        editable: { type: 'text', maxLength: 4 },
+        editable: {
+            type: 'custom',
+            editor: <CustomEditorExample field={'one'} />,
+        },
         validator: validate.validator(
             validate.minLen(3),
             validate.maxLen(6),
