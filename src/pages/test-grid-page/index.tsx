@@ -20,7 +20,7 @@ import {
     updateData,
 } from './mock-data';
 import './styles.css';
-import { useGridContext } from '../../grid';
+import { useGridContext, validate } from '../../grid';
 import { ToolBar } from './toolbar';
 
 const TestGrid: React.FunctionComponent = (): JSX.Element => {
@@ -62,6 +62,11 @@ const cols: Array<Column<IMockData>> = [
         field: 'num',
         type: 'data',
         editable: { type: 'number', min: 0, max: 100, step: 5 },
+        validator: validate.validator(
+            validate.min(10),
+            validate.max(90),
+            validate.required()
+        ),
     },
     {
         name: 'Col 1',
@@ -126,6 +131,11 @@ const cols: Array<Column<IMockData>> = [
                 return { text: n.toString(), value: n };
             }),
         },
+    },
+    {
+        name: 'Display (3B)',
+        type: 'display',
+        renderDisplay: m => <u>{m.threeB}</u>,
     },
     {
         type: 'action',

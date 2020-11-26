@@ -1,5 +1,6 @@
 import { ElementOrString } from '../types-grid';
 import { ISyncData, SyncAction } from '../types-sync';
+import { AggregateValidator } from './validation';
 
 export interface IDataColumn<TModel extends object> {
     type: 'data';
@@ -9,6 +10,7 @@ export interface IDataColumn<TModel extends object> {
     sortable?: boolean;
     editable?: ColumnEditorType;
     renderDisplay?: (model: TModel) => ElementOrString;
+    validator?: AggregateValidator;
 }
 
 interface IDisplayColumn<TModel extends object> {
@@ -34,6 +36,7 @@ export interface IActionColumn<TModel extends object> {
 export type Column<TModel extends object> =
     | IDataColumn<TModel>
     | IColumnGroup<TModel>
+    | IDisplayColumn<TModel>
     | IActionColumn<TModel>;
 
 export type ActionOrDataCol<TModel extends object> =

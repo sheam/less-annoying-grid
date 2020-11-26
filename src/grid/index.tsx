@@ -15,6 +15,7 @@ import {
     ISyncDataResult,
     SyncAction,
 } from './grid/types-sync';
+import * as validate from './grid/columns/validation';
 
 export type {
     IDataResult,
@@ -28,4 +29,11 @@ export type {
     Column,
 };
 
-export { GridEditMode, SyncAction, GridContext, Grid, useGridContext };
+export {
+    GridEditMode,
+    SyncAction,
+    GridContext,
+    Grid,
+    useGridContext,
+    validate,
+};

@@ -50,3 +50,17 @@ export function uuid(): string {
         return v.toString(16);
     });
 }
+
+export function fdate(date: Date): string {
+    if (!date) {
+        return '';
+    }
+
+    const pad = (n: number) => (n < 10 ? `0${n}` : n.toString());
+
+    const d = pad(date.getDate());
+    const m = pad(date.getMonth() + 1);
+    const y = pad(date.getFullYear());
+
+    return `${y}-${m}-${d}`;
+}

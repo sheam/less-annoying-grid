@@ -23,10 +23,11 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
 
     const getGroupHeaderCell = (c: Column<TModel>): JSX.Element => {
         if (c.type !== 'group' || !c.subColumns) {
+            const hide = c.type !== 'display' && c.hidden;
             return (
                 <th
                     key={`no-group-${c.name}`}
-                    hidden={c.hidden}
+                    hidden={hide}
                     data-test="group"
                 />
             );
