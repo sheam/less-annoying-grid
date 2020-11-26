@@ -63,6 +63,7 @@ it('renders a rows of inline edit data', async () => {
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
+            validationErrors: false,
         },
     };
     setGridContextData(gridContext);
@@ -103,6 +104,7 @@ it('renders an editor in number col', async () => {
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
+            validationErrors: false,
         },
     };
     setGridContextData(gridContext);
@@ -160,6 +162,7 @@ it('renders an editor in text col', async () => {
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
+            validationErrors: false,
         },
     };
     setGridContextData(gridContext);
@@ -217,6 +220,7 @@ it('renders an editor in date col', async () => {
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
+            validationErrors: false,
         },
     };
     setGridContextData(gridContext);
@@ -274,6 +278,7 @@ it('renders an editor with drop down values', async () => {
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
+            validationErrors: false,
         },
     };
     setGridContextData(gridContext);

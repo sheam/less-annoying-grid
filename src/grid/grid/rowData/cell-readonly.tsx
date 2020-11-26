@@ -1,14 +1,34 @@
-import { ICellProps } from './types';
 import * as React from 'react';
+import { ValidationError } from './validation-error';
+import { Column } from '../..';
+import { IRowData } from '../types-grid';
+
+interface ICellProps<TModel extends object> {
+    column: Column<TModel>;
+    data: IRowData<TModel>;
+}
 
 export const CellReadonly = <TModel extends object>({
-    column: { field, hidden, renderDisplay },
+    column,
     data,
 }: ICellProps<TModel>) => {
-    return (
-        <td hidden={hidden}>
-            {renderDisplay && renderDisplay(data.model)}
-            {!renderDisplay && field && (data.model as any)[field].toString()}
-        </td>
-    );
+    const c = column;
+
+    if (c.type === 'data') {
+        return (
+            <td hidden={c.hidden}>
+                {c.renderDisplay && c.renderDisplay(data.model)}
+                {!c.renderDisplay && (data.model as any)[c.field]?.toString()}
+                <ValidationError
+                    field={c.field}
+                    validationErrors={data.validationErrors}
+                />
+            </td>
+        );
+    }
+    if (c.type === 'display') {
+        return <td>{c.renderDisplay(data.model)}</td>;
+    }
+
+    throw new Error(`Unexpected type for CellReadonly: '${c.type}'`);
 };

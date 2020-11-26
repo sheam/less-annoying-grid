@@ -308,6 +308,7 @@ it('disabled when needs saving', () => {
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
+            validationErrors: false,
         },
     });
 
@@ -358,6 +359,7 @@ it('disabled when needs editing', () => {
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
+            validationErrors: false,
         },
     });
 

@@ -37,7 +37,9 @@ export const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
     if (filters && filters.length > 0) {
         currentFilter = filters[0].value;
     }
-    const canSave = editingContext?.needsSave || editingContext?.syncProgress;
+    const canSave =
+        (editingContext?.needsSave || editingContext?.syncProgress) &&
+        !editingContext?.validationErrors;
     const saveClicked = async (_: React.MouseEvent<HTMLButtonElement>) => {
         if (!canSave) {
             throw new Error('save clicked when canSave is false');

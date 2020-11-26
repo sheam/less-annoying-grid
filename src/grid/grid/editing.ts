@@ -2,6 +2,9 @@ import { GridEditMode, IEditField, IGridProps, IRowData } from './types-grid';
 import { hasChanged, uuid } from './util';
 import { IGridState } from './state';
 import { IProgress, SyncAction } from './types-sync';
+import { Column } from './columns/types';
+import { validateModel } from './columns/validation';
+import { IData } from '../../pages/test-grid-page/mock-data';
 
 export interface IGridEditContext<TModel extends object> {
     editMode: GridEditMode;
@@ -11,6 +14,7 @@ export interface IGridEditContext<TModel extends object> {
 
     needsSave: boolean;
     syncProgress: IProgress | null;
+    validationErrors: boolean;
 
     editField: IEditField | null;
     setEditField: (field: string | null, rowNumber: number | null) => void;
@@ -42,6 +46,7 @@ export function createEditingContext<TModel extends object>(
         editMode: props.editable.editMode,
         autoSave: props.editable.autoSave,
         sync: () => state.setSaveRequested(true),
+        validationErrors: state.validationErrors,
     };
 }
 
@@ -70,17 +75,28 @@ function updateRow<TModel extends object>(
     state: IGridState<TModel>,
     props: IGridProps<TModel>
 ): boolean {
+    if (!hasChanged(rowData)) {
+        return true;
+    }
+
     const data = state.dataState.data;
-    const existingRow = data.find(r => r.rowNumber === rowData.rowNumber);
-    if (!existingRow) {
+    const index = data.findIndex(r => r.rowNumber === rowData.rowNumber);
+    if (index < 0) {
         throw new Error(`unable to find row with id=${rowData.rowNumber}`);
     }
-    existingRow.syncAction = rowData.syncAction;
-    existingRow.model = rowData.model;
+    const existingRow = data[index];
 
+    const newRow: IRowData<TModel> = {
+        model: rowData.model,
+        rowId: rowData.rowId,
+        syncAction: rowData.syncAction,
+        rowNumber: existingRow.rowNumber,
+    };
+    data[index] = newRow;
     data.forEach((r, i) => (r.rowNumber = i + 1));
-    state.setNeedsSave(state.needsSave || hasChanged(rowData));
-    state.setDataState(state.dataState);
+    setValidation(newRow, props.columns, state);
+    state.setNeedsSave(state.needsSave);
+    state.setDataState({ totalCount: state.dataState.totalCount, data });
 
     if (props.editable?.autoSave) {
         state.setSaveRequested(true);
@@ -109,6 +125,8 @@ function addRow<TModel extends object>(
     }
 
     data.forEach((r, i) => (r.rowNumber = i + 1));
+    state.setNeedsSave(true);
+    setValidation(newRow, props.columns, state);
     state.setDataState({ data, totalCount: state.dataState.totalCount + 1 });
 
     if (props.editable?.autoSave) {
@@ -145,4 +163,18 @@ function deleteRow<TModel extends object>(
     }
 
     return true; //success
+}
+
+function setValidation<TModel extends object>(
+    rowData: IRowData<TModel>,
+    columns: Array<Column<TModel>>,
+    state: IGridState<TModel>
+): void {
+    rowData.validationErrors = null;
+
+    const errors = validateModel(rowData.model, columns);
+    if (errors?.length > 0) {
+        rowData.validationErrors = errors;
+        state.setValidationErrors(true);
+    }
 }

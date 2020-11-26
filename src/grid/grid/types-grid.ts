@@ -72,7 +72,7 @@ export interface IRowData<TModel extends object> {
     rowId: string;
     model: TModel;
     syncAction: SyncAction;
-    validationError?: IValidationError[];
+    validationErrors?: IValidationError[] | null;
 }
 
 export interface IValidationError {

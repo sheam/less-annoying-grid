@@ -68,13 +68,18 @@ export const Grid = <TModel extends object>(
                                     </td>
                                 </tr>
                             )}
-                        {state.dataState.data.map(d => (
-                            <Row
-                                key={d.rowId}
-                                columns={props.columns}
-                                data={d}
-                            />
-                        ))}
+                        {state.dataState.data.map(d => {
+                            const key = `${d.rowId}-${d.syncAction}-${
+                                d.validationErrors?.length || 0
+                            }`;
+                            return (
+                                <Row
+                                    key={key}
+                                    columns={props.columns}
+                                    data={d}
+                                />
+                            );
+                        })}
                     </tbody>
 
                     {state.pagination && (

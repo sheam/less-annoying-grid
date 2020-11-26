@@ -8,6 +8,7 @@ import { ActionCell } from './cell-action';
 import { Column } from '../columns/types';
 import { Direction } from '../types-grid';
 import { SyncAction } from '../types-sync';
+import { CellReadonly } from './cell-readonly';
 
 export const RowInlineEdit = <TModel extends object>(
     props: IRowProps<TModel>
@@ -127,7 +128,11 @@ export const RowInlineEdit = <TModel extends object>(
     return (
         <tr className={classes.join(' ')} data-test="data-row">
             {columns.map(c => {
-                if (c?.type === 'data') {
+                if (!c) {
+                    throw new Error('column should not be null');
+                }
+
+                if (c.type === 'data' && c.editable) {
                     return (
                         <CellInlineEdit
                             key={`td-${uid}-${c.name}`}
@@ -144,7 +149,16 @@ export const RowInlineEdit = <TModel extends object>(
                         />
                     );
                 }
-                if (c?.type === 'action') {
+                if (c.type === 'display' || c.type === 'data') {
+                    return (
+                        <CellReadonly
+                            key={`td-${uid}-${c.name}`}
+                            data={rowData}
+                            column={c}
+                        />
+                    );
+                }
+                if (c.type === 'action') {
                     return (
                         <ActionCell
                             key={`td-${uid}-${c.name}`}
@@ -153,7 +167,7 @@ export const RowInlineEdit = <TModel extends object>(
                         />
                     );
                 }
-                throw new Error('unexpected cell type');
+                throw new Error(`unexpected cell type`);
             })}
         </tr>
     );

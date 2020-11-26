@@ -1,14 +1,9 @@
-/* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 import * as React from 'react';
 import { useGridContext } from '../context';
-import {
-    ActionOrDataCol,
-    Column,
-    IActionColumn,
-    IDataColumn,
-} from '../columns/types';
+import { Column, NonGroupColumn } from '../columns/types';
 import { ISortColumn } from '../types-pagination';
 import { ElementOrString } from '../types-grid';
+import { getNonGroupColumns } from '../util';
 
 export interface IHeaderProps<TModel extends object> {
     columns: Array<Column<TModel>>;
@@ -35,7 +30,10 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
 
         return (
             <th
-                colSpan={c.subColumns.filter(s => !s.hidden).length}
+                colSpan={
+                    c.subColumns.filter(s => s.type === 'display' || !s.hidden)
+                        .length
+                }
                 key={`group-${c.name}`}
                 data-test="group"
             >
@@ -44,9 +42,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
         );
     };
 
-    const getHeaderCell = (
-        c: IDataColumn<TModel> | IActionColumn<TModel>
-    ): JSX.Element => {
+    const getHeaderCell = (c: NonGroupColumn<TModel>): JSX.Element => {
         if (c.type === 'action') {
             return (
                 <th key={c.name} hidden={c.hidden} data-test="header">
@@ -60,6 +56,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
                 hidden={c.hidden}
                 onClick={() => headerClicked(c)}
                 data-test="header"
+                title={c.type === 'data' ? c.field : undefined}
             >
                 <span>{c.name}</span>
                 {getSortLabel(c)}
@@ -67,8 +64,10 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
         );
     };
 
-    const getSortLabel = (c: IDataColumn<TModel>): ElementOrString | null => {
-        if (sort?.field !== c.field || !sort?.direction) {
+    const getSortLabel = (
+        c: NonGroupColumn<TModel>
+    ): ElementOrString | null => {
+        if (c.type !== 'data' || sort?.field !== c.field || !sort?.direction) {
             return null;
         }
         if (sort.direction === 'ASC') {
@@ -88,8 +87,8 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
         return null;
     };
 
-    const headerClicked = (c: IDataColumn<TModel>): void => {
-        if (!c.sortable || !c.field || !setSort) {
+    const headerClicked = (c: NonGroupColumn<TModel>): void => {
+        if (c.type !== 'data' || !setSort) {
             return;
         }
 
@@ -110,9 +109,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
 
     const hasGroups = !!columns.find(c => c.type === 'group');
     // @ts-ignore
-    const allCols: ActionOrDataCol<TModel>[] = columns
-        .flatMap(c => (c.type === 'group' ? c.subColumns : c))
-        .filter(c => c?.type === 'action' || c?.type === 'data');
+    const allCols = getNonGroupColumns(columns);
     return (
         <thead>
             {props.toolbar && (

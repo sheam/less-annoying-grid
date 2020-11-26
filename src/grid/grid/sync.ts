@@ -23,7 +23,7 @@ export function syncDataEffect<TModel extends object>(
         state.setNeedsSave(false);
         return result;
     };
-    if (state.saveRequested) {
+    if (state.saveRequested && !state.validationErrors) {
         state.setSaveRequested(false);
         sync();
     }
@@ -56,6 +56,7 @@ export function loadDataEffect<TModel extends object>(
             }),
         };
         state.setDataState(newState);
+        state.setValidationErrors(false);
         state.setIsLoading(false);
     };
 

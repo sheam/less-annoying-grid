@@ -16,14 +16,8 @@ export interface IDataColumn<TModel extends object> {
 interface IDisplayColumn<TModel extends object> {
     type: 'display';
     name: string;
-    renderDisplay: (model: TModel) => ElementOrString;
-}
-
-interface IColumnGroup<TModel extends object> {
-    type: 'group';
-    name: string;
     hidden?: boolean;
-    subColumns?: Array<IDataColumn<TModel>>;
+    renderDisplay: (model: TModel) => ElementOrString;
 }
 
 export interface IActionColumn<TModel extends object> {
@@ -33,14 +27,22 @@ export interface IActionColumn<TModel extends object> {
     actions: Array<Action<TModel>>;
 }
 
+interface IColumnGroup<TModel extends object> {
+    type: 'group';
+    name: string;
+    hidden?: boolean;
+    subColumns?: Array<NonGroupColumn<TModel>>;
+}
+
 export type Column<TModel extends object> =
     | IDataColumn<TModel>
     | IColumnGroup<TModel>
     | IDisplayColumn<TModel>
     | IActionColumn<TModel>;
 
-export type ActionOrDataCol<TModel extends object> =
+export type NonGroupColumn<TModel extends object> =
     | IDataColumn<TModel>
+    | IDisplayColumn<TModel>
     | IActionColumn<TModel>;
 
 export interface IActionEdit {

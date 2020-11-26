@@ -48,6 +48,8 @@ function getDefaultState(): IGridState<IData> {
         setIsLoading: jest.fn(),
         saveRequested: false,
         setSaveRequested: jest.fn(),
+        setValidationErrors: jest.fn(),
+        validationErrors: false,
     };
 }
 

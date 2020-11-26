@@ -24,6 +24,8 @@ export interface IGridState<TModel extends object> {
     setIsLoading: Setter<boolean>;
     saveRequested: boolean;
     setSaveRequested: Setter<boolean>;
+    validationErrors: boolean;
+    setValidationErrors: Setter<boolean>;
 }
 
 export function useGridState<TModel extends object>(
@@ -44,9 +46,10 @@ export function useGridState<TModel extends object>(
         data: [],
     });
     const [isEditing, setIsEditing] = useState(false);
-    const [needsSave, setNeedsSave] = useState(false);
     const [editField, setEditField] = useState<IEditField | null>(null);
     const [saveRequested, setSaveRequested] = useState<boolean>(false);
+    const [needsSave, setNeedsSave] = useState(false);
+    const [validationErrors, setValidationErrors] = useState(false);
 
     return {
         pagination,
@@ -69,5 +72,7 @@ export function useGridState<TModel extends object>(
         setEditField,
         saveRequested,
         setSaveRequested,
+        validationErrors,
+        setValidationErrors,
     };
 }

@@ -1,5 +1,6 @@
 import { IRowData } from './types-grid';
 import { SyncAction } from './types-sync';
+import { Column, NonGroupColumn } from './columns/types';
 
 export function cloneData<TModel>(model: TModel): TModel {
     return JSON.parse(JSON.stringify(model));
@@ -49,6 +50,27 @@ export function uuid(): string {
             v = c === 'x' ? r : (r & 0x3) | 0x8; // eslint-disable-line
         return v.toString(16);
     });
+}
+
+export function getNonGroupColumns<TModel extends object>(
+    columns: Array<Column<TModel>>
+): Array<NonGroupColumn<TModel>> {
+    if (!columns) {
+        throw new Error('columns parameter must not be null or undefined');
+    }
+
+    const result = columns.flatMap(c => {
+        if (c === undefined) {
+            throw new Error('cant be null');
+        }
+        if (c.type === 'group') {
+            return c.subColumns;
+        }
+        return c;
+    });
+
+    // @ts-ignore
+    return result as NonGroupColumn<TModel>;
 }
 
 export function fdate(date: Date): string {

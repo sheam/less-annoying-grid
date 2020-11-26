@@ -14,7 +14,7 @@ export const RowReadOnly = <TModel extends object>(
     return (
         <tr data-test="data-row">
             {columns.map(c => {
-                if (c?.type === 'data') {
+                if (c?.type === 'data' || c?.type === 'display') {
                     return (
                         <CellReadonly
                             key={`td-${uid}-${c.name}`}
