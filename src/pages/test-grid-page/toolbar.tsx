@@ -50,7 +50,7 @@ export const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
         await editingContext.sync();
     };
     const addRowClicked = (_: React.MouseEvent<HTMLButtonElement>) => {
-        editingContext?.addRow({});
+        editingContext?.addRow();
     };
     return (
         <div>

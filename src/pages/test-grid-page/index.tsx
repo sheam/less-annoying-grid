@@ -62,6 +62,7 @@ const cols: Array<Column<IMockData>> = [
         field: 'num',
         type: 'data',
         editable: { type: 'number', min: 0, max: 100, step: 5 },
+        defaultValue: 50,
         validator: validate.validator(
             validate.min(10),
             validate.max(90),
@@ -72,7 +73,13 @@ const cols: Array<Column<IMockData>> = [
         name: 'Col 1',
         field: 'one',
         type: 'data',
+        defaultValue: () => `n-${Math.round(Math.random() * 1000)}`,
         editable: { type: 'text', maxLength: 4 },
+        validator: validate.validator(
+            validate.minLen(3),
+            validate.maxLen(6),
+            validate.required()
+        ),
     },
     {
         name: 'Group 1',

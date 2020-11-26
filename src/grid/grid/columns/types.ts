@@ -11,6 +11,7 @@ export interface IDataColumn<TModel extends object> {
     editable?: ColumnEditorType;
     renderDisplay?: (model: TModel) => ElementOrString;
     validator?: AggregateValidator;
+    defaultValue?: any | (() => any);
 }
 
 interface IDisplayColumn<TModel extends object> {

@@ -4,7 +4,6 @@ import { IGridState } from './state';
 import { IProgress, SyncAction } from './types-sync';
 import { Column } from './columns/types';
 import { validateModel } from './columns/validation';
-import { IData } from '../../pages/test-grid-page/mock-data';
 
 export interface IGridEditContext<TModel extends object> {
     editMode: GridEditMode;
@@ -20,7 +19,7 @@ export interface IGridEditContext<TModel extends object> {
     setEditField: (field: string | null, rowNumber: number | null) => void;
 
     updateRow: (rowData: IRowData<TModel>) => boolean;
-    addRow: (model: TModel) => boolean;
+    addRow: (model?: TModel) => IRowData<TModel>;
     deleteRow: (rowData: IRowData<TModel>) => boolean;
 
     sync: () => void;
@@ -41,7 +40,8 @@ export function createEditingContext<TModel extends object>(
         editField: state.editField,
         setEditField: (f, rn) => setCurrentEditField(f, rn, state),
         updateRow: rowData => updateRow(rowData, state, props),
-        addRow: model => addRow(model, state, props),
+        addRow: (model?: TModel) =>
+            addRow(model || createNewRow(props.columns), state, props),
         deleteRow: rowData => deleteRow(rowData, state, props),
         editMode: props.editable.editMode,
         autoSave: props.editable.autoSave,
@@ -109,7 +109,7 @@ function addRow<TModel extends object>(
     model: TModel,
     state: IGridState<TModel>,
     props: IGridProps<TModel>
-): boolean {
+): IRowData<TModel> {
     const data = state.dataState.data;
     const newRow = {
         rowId: uuid(),
@@ -133,7 +133,7 @@ function addRow<TModel extends object>(
         state.setSaveRequested(true);
     }
 
-    return true; //success
+    return newRow; //success
 }
 
 function deleteRow<TModel extends object>(
@@ -177,4 +177,22 @@ function setValidation<TModel extends object>(
         rowData.validationErrors = errors;
         state.setValidationErrors(true);
     }
+}
+
+function createNewRow<TModel extends object>(
+    columns: Array<Column<TModel>>
+): TModel {
+    const model: any = {};
+
+    columns.forEach(c => {
+        if (c.type === 'data' && c.defaultValue !== undefined) {
+            const val =
+                typeof c.defaultValue === 'function'
+                    ? c.defaultValue()
+                    : c.defaultValue;
+            model[c.field] = val;
+        }
+    });
+
+    return model as TModel;
 }

@@ -13,7 +13,7 @@ export const ActionButton = <TModel extends object>({
     action,
     rowData,
 }: IActionButtonProps<TModel>) => {
-    const context = useGridContext();
+    const context = useGridContext<TModel>();
     const name = action.name || action.type;
     const content = action.buttonContent || <>{name}</>;
     const handler = getHandler(action, rowData, context);
