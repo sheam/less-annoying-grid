@@ -99,7 +99,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
 
     const headerClicked = (c: NonGroupColumn<TModel>): void =>
     {
-        if (c.type !== 'data' || !setSort)
+        if (c.type !== 'data' || !setSort || !c.sortable)
         {
             return;
         }
