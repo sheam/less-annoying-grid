@@ -55,7 +55,7 @@ const TestGrid: React.FunctionComponent = (): JSX.Element => {
 
 export default TestGrid;
 
-function detailTemplate(m: IMockData): JSX.Element {
+function detailTemplate(m: IMockData): JSX.Element    {
     return (
         <div>
             <div>
