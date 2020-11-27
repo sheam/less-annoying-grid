@@ -2,16 +2,16 @@ import { IValidationError } from '../types-grid';
 import { fdate } from '../util';
 import { Column, IDataColumn } from './types';
 
-export type Validator = (val : any) => ErrorMessage;
+export type Validator = (val: any) => ErrorMessage;
 export type AggregateValidator = (
-    model : any,
-    field : string
+    model: any,
+    field: string
 ) => IValidationError[];
 
 export function validateModel<TModel extends object>(
-    model : any,
-    columns : Array<Column<TModel>>
-) : IValidationError[]
+    model: any,
+    columns: Array<Column<TModel>>
+): IValidationError[]
 {
     const result = new Array<IValidationError>();
     const dataColumns = columns.filter(
@@ -33,9 +33,9 @@ export function validateModel<TModel extends object>(
     return result;
 }
 
-export function validator(...validators : Validator[]) : AggregateValidator
+export function validator(...validators: Validator[]): AggregateValidator
 {
-    return (model : any, field : string) =>
+    return (model: any, field: string) =>
     {
         const val = model[field];
         const errors = validateValue(val, ...validators);
@@ -46,7 +46,7 @@ export function validator(...validators : Validator[]) : AggregateValidator
     };
 }
 
-function validateValue(val : any, ...validators : Validator[]) : string[]
+function validateValue(val: any, ...validators: Validator[]): string[]
 {
     const result = new Array<string>();
     for (let validator of validators)
@@ -60,13 +60,13 @@ function validateValue(val : any, ...validators : Validator[]) : string[]
     return result;
 }
 
-export function min(min : number) : Validator
+export function min(min: number): Validator
 {
     if (!hasValue(min))
     {
         throw new Error('a min value must be provided for min validator');
     }
-    return (num : number) : ErrorMessage =>
+    return (num: number): ErrorMessage =>
     {
         if (!hasValue(num))
         {
@@ -80,13 +80,13 @@ export function min(min : number) : Validator
     };
 }
 
-export function max(max : number) : Validator
+export function max(max: number): Validator
 {
     if (!hasValue(max))
     {
         throw new Error('a max value must be provided for max validator');
     }
-    return (num : number) : ErrorMessage =>
+    return (num: number): ErrorMessage =>
     {
         if (!hasValue(num))
         {
@@ -100,9 +100,9 @@ export function max(max : number) : Validator
     };
 }
 
-export function required() : Validator
+export function required(): Validator
 {
-    return (val : any) : ErrorMessage =>
+    return (val: any): ErrorMessage =>
     {
         if (hasValue(val))
         {
@@ -112,7 +112,7 @@ export function required() : Validator
     };
 }
 
-export function before(maxDate : Date) : Validator
+export function before(maxDate: Date): Validator
 {
     if (!hasValue(maxDate))
     {
@@ -120,7 +120,7 @@ export function before(maxDate : Date) : Validator
             'a maxDate value must be provided for before validator'
         );
     }
-    return (date : Date) : ErrorMessage =>
+    return (date: Date): ErrorMessage =>
     {
         if (!hasValue(date))
         {
@@ -134,13 +134,13 @@ export function before(maxDate : Date) : Validator
     };
 }
 
-export function after(minDate : Date) : Validator
+export function after(minDate: Date): Validator
 {
     if (!hasValue(minDate))
     {
         throw new Error('a minDate value must be provided for after validator');
     }
-    return (date : Date) : ErrorMessage =>
+    return (date: Date): ErrorMessage =>
     {
         if (!hasValue(date))
         {
@@ -154,13 +154,13 @@ export function after(minDate : Date) : Validator
     };
 }
 
-export function maxLen(max : number) : Validator
+export function maxLen(max: number): Validator
 {
     if (!hasValue(max))
     {
         throw new Error('a max value must be provided for maxLen validator');
     }
-    return (text : string) : ErrorMessage =>
+    return (text: string): ErrorMessage =>
     {
         if (!hasValue(text))
         {
@@ -174,13 +174,13 @@ export function maxLen(max : number) : Validator
     };
 }
 
-export function minLen(min : number) : Validator
+export function minLen(min: number): Validator
 {
     if (!hasValue(min))
     {
         throw new Error('a min value must be provided for minLen validator');
     }
-    return (text : string) : ErrorMessage =>
+    return (text: string): ErrorMessage =>
     {
         if (!hasValue(text))
         {
@@ -194,7 +194,7 @@ export function minLen(min : number) : Validator
     };
 }
 
-function hasValue(v : any) : boolean
+function hasValue(v: any): boolean
 {
     return v !== null && v !== undefined;
 }

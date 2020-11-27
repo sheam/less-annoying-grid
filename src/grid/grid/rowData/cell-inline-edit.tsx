@@ -6,10 +6,10 @@ import { ColumnEditorType, IDataColumn } from '../columns/types';
 
 interface ICellInlineEditProps<TModel extends object>
 {
-    isEditing : boolean;
-    startEditing : (field : string) => void;
-    column : IDataColumn<TModel>;
-    data : IRowData<TModel>;
+    isEditing: boolean;
+    startEditing: (field: string) => void;
+    column: IDataColumn<TModel>;
+    data: IRowData<TModel>;
 }
 
 export const CellInlineEdit = <TModel extends object>({
@@ -17,7 +17,7 @@ export const CellInlineEdit = <TModel extends object>({
     data,
     isEditing,
     startEditing,
-} : ICellInlineEditProps<TModel>) =>
+}: ICellInlineEditProps<TModel>) =>
 {
     if (!field)
     {
@@ -61,9 +61,9 @@ export const CellInlineEdit = <TModel extends object>({
 };
 
 function getEditorElement(
-    editor : ColumnEditorType,
-    field : string
-) : JSX.Element
+    editor: ColumnEditorType,
+    field: string
+): JSX.Element
 {
     if (editor.type === 'custom')
     {

@@ -13,7 +13,7 @@ import { IRowContext, RowContext } from './row-context';
 import { RowDetailTemplateTriggerCell } from './detail-template';
 
 export const RowInlineEdit = <TModel extends object>(
-    props : IRowProps<TModel>
+    props: IRowProps<TModel>
 ) =>
 {
     const { editingContext, renderRowDetail } = useGridContext();
@@ -31,7 +31,7 @@ export const RowInlineEdit = <TModel extends object>(
     );
     const uid = props.data.rowNumber;
 
-    const startEditing = (field : string) =>
+    const startEditing = (field: string) =>
     {
         console.log(`editing ${field}`);
 
@@ -39,7 +39,7 @@ export const RowInlineEdit = <TModel extends object>(
         setRowData(cloneData(props.data));
     };
 
-    const onChange = (model : TModel) =>
+    const onChange = (model: TModel) =>
     {
         if (!editingContext.editField)
         {
@@ -61,7 +61,7 @@ export const RowInlineEdit = <TModel extends object>(
         });
     };
 
-    const doneEditing = (commitChanges : boolean, advance : Direction) =>
+    const doneEditing = (commitChanges: boolean, advance: Direction) =>
     {
         if (!editingContext.editField)
         {
@@ -98,7 +98,7 @@ export const RowInlineEdit = <TModel extends object>(
                 );
             }
 
-            let nextField : Column<TModel> | undefined;
+            let nextField: Column<TModel> | undefined;
             const searchIncrement = advance === Direction.forward ? 1 : -1;
             for (
                 let i = currentIndex + searchIncrement;
@@ -149,7 +149,7 @@ export const RowInlineEdit = <TModel extends object>(
     if (hasChanged(rowData)) classes.push('modified');
     if (editingContext.editField) classes.push('edit-row');
 
-    const rowEditContext : IRowContext = {
+    const rowEditContext: IRowContext = {
         model: rowData.model,
         doneEditing,
         onChange,
@@ -215,5 +215,5 @@ export const RowInlineEdit = <TModel extends object>(
     );
 };
 
-const colIsEditable = <TModel extends object>(c : Column<TModel> | undefined) =>
+const colIsEditable = <TModel extends object>(c: Column<TModel> | undefined) =>
     !(!c || c.type !== 'data' || c.hidden || !c.editable || !c.field);

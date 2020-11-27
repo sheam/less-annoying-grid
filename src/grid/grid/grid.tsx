@@ -12,16 +12,16 @@ import { getNonGroupColumns } from './util';
 
 interface IChildren
 {
-    children ?: {
-        toolbar ?: JSX.Element;
-        emptyState ?: JSX.Element;
-        loadingState ?: JSX.Element;
-        savingState ?: JSX.Element;
+    children?: {
+        toolbar?: JSX.Element;
+        emptyState?: JSX.Element;
+        loadingState?: JSX.Element;
+        savingState?: JSX.Element;
     };
 }
 
 export const Grid = <TModel extends object>(
-    props : IGridProps<TModel> & PropsWithChildren<IChildren>
+    props: IGridProps<TModel> & PropsWithChildren<IChildren>
 ) =>
 {
     const state = useGridState(props);

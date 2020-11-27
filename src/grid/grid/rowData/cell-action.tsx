@@ -5,14 +5,14 @@ import { ActionButton } from './action-button';
 
 interface IActionCellProps<TModel extends object>
 {
-    column : IActionColumn<TModel>;
-    rowData : IRowData<TModel>;
+    column: IActionColumn<TModel>;
+    rowData: IRowData<TModel>;
 }
 
 export const ActionCell = <TModel extends object>({
     column,
     rowData,
-} : IActionCellProps<TModel>) =>
+}: IActionCellProps<TModel>) =>
 {
     return (
         <td hidden={column.hidden}>

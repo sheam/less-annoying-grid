@@ -7,18 +7,18 @@ import { getNonGroupColumns } from '../util';
 
 export interface IHeaderProps<TModel extends object>
 {
-    columns : Array<Column<TModel>>;
-    toolbar ?: JSX.Element;
+    columns: Array<Column<TModel>>;
+    toolbar?: JSX.Element;
 
-    sortAscLabel ?: ElementOrString;
-    sortDescLabel ?: ElementOrString;
+    sortAscLabel?: ElementOrString;
+    sortDescLabel?: ElementOrString;
 }
 
-export const Header = <TModel extends object>(props : IHeaderProps<TModel>) =>
+export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
 {
     const { sort, setSort, renderRowDetail } = useGridContext();
 
-    const getGroupHeaderCell = (c : Column<TModel>) : JSX.Element =>
+    const getGroupHeaderCell = (c: Column<TModel>): JSX.Element =>
     {
         if (c.type !== 'group' || !c.subColumns)
         {
@@ -46,7 +46,7 @@ export const Header = <TModel extends object>(props : IHeaderProps<TModel>) =>
         );
     };
 
-    const getHeaderCell = (c : NonGroupColumn<TModel>) : JSX.Element =>
+    const getHeaderCell = (c: NonGroupColumn<TModel>): JSX.Element =>
     {
         if (c.type === 'action')
         {
@@ -71,8 +71,8 @@ export const Header = <TModel extends object>(props : IHeaderProps<TModel>) =>
     };
 
     const getSortLabel = (
-        c : NonGroupColumn<TModel>
-    ) : ElementOrString | null =>
+        c: NonGroupColumn<TModel>
+    ): ElementOrString | null =>
     {
         if (c.type !== 'data' || sort?.field !== c.field || !sort?.direction)
         {
@@ -97,14 +97,14 @@ export const Header = <TModel extends object>(props : IHeaderProps<TModel>) =>
         return null;
     };
 
-    const headerClicked = (c : NonGroupColumn<TModel>) : void =>
+    const headerClicked = (c: NonGroupColumn<TModel>): void =>
     {
         if (c.type !== 'data' || !setSort)
         {
             return;
         }
 
-        let sortCol : ISortColumn = { field: c.field, direction: 'ASC' };
+        let sortCol: ISortColumn = { field: c.field, direction: 'ASC' };
         if (sort?.field === c.field)
         {
             if (sort.direction === 'ASC')

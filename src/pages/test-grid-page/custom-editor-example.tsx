@@ -6,10 +6,10 @@ import { Direction } from '../../grid/grid/types-grid';
 
 interface ICustomEditorExampleProps
 {
-    field : string;
+    field: string;
 }
 
-export const CustomEditorExample : React.FunctionComponent<ICustomEditorExampleProps> = ({
+export const CustomEditorExample: React.FunctionComponent<ICustomEditorExampleProps> = ({
     field,
 }) =>
 {
@@ -17,7 +17,7 @@ export const CustomEditorExample : React.FunctionComponent<ICustomEditorExampleP
     const model = cloneData(context.model);
 
     const changeHandler = (
-        e : ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+        e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
     ) =>
     {
         model[field] = `n-${e.target.value}`;
@@ -30,7 +30,7 @@ export const CustomEditorExample : React.FunctionComponent<ICustomEditorExampleP
     };
 
     const detectSpecialKeys = (
-        e : KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
+        e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
     ) =>
     {
         if (e.key === 'Escape')

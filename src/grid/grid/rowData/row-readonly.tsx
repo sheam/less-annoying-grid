@@ -4,7 +4,7 @@ import { IRowProps } from './types';
 import { CellReadonly } from './cell-readonly';
 
 export const RowReadOnly = <TModel extends object>(
-    props : IRowProps<TModel>
+    props: IRowProps<TModel>
 ) =>
 {
     const columns = props.columns.flatMap(c =>

@@ -8,18 +8,18 @@ import { ISortColumn } from '../../types-pagination';
 
 interface IDataRow
 {
-    col1 : string;
-    col2 : string;
-    col3 : string;
+    col1: string;
+    col2: string;
+    col3: string;
 }
 
-const getByTestId = (c : ShallowWrapper, name : string) =>
+const getByTestId = (c: ShallowWrapper, name: string) =>
     c.find(`[data-test="${name}"]`);
-const headerCell = (c : ShallowWrapper, index : number) =>
+const headerCell = (c: ShallowWrapper, index: number) =>
     getByTestId(c, 'header').at(index);
-const groupCell = (c : ShallowWrapper, index : number) =>
+const groupCell = (c: ShallowWrapper, index: number) =>
     getByTestId(c, 'group').at(index);
-function setGridContextData(gridContext : GridContext.IGridContext<any>) : void
+function setGridContextData(gridContext: GridContext.IGridContext<any>): void
 {
     jest.spyOn(GridContext, 'useGridContext').mockImplementation(
         () => gridContext
@@ -28,7 +28,7 @@ function setGridContextData(gridContext : GridContext.IGridContext<any>) : void
 
 it('renders simple header', () =>
 {
-    const cols : Array<Column<IDataRow>> = [
+    const cols: Array<Column<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -54,7 +54,7 @@ it('renders simple header', () =>
 
 it('renders grouped header', () =>
 {
-    const cols : Array<Column<IDataRow>> = [
+    const cols: Array<Column<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -105,7 +105,7 @@ it('renders grouped header', () =>
 
 it('renders sort ASC', () =>
 {
-    const cols : Array<IDataColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -122,7 +122,7 @@ it('renders sort ASC', () =>
             type: 'data',
         },
     ];
-    const sort : ISortColumn = {
+    const sort: ISortColumn = {
         field: 'col2',
         direction: 'ASC',
     };
@@ -144,7 +144,7 @@ it('renders sort ASC', () =>
 
 it('renders sort ASC custom', () =>
 {
-    const cols : Array<IDataColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -161,7 +161,7 @@ it('renders sort ASC custom', () =>
             type: 'data',
         },
     ];
-    const sort : ISortColumn = {
+    const sort: ISortColumn = {
         field: 'col2',
         direction: 'ASC',
     };
@@ -183,7 +183,7 @@ it('renders sort ASC custom', () =>
 
 it('renders sort DESC', () =>
 {
-    const cols : Array<IDataColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -200,7 +200,7 @@ it('renders sort DESC', () =>
             type: 'data',
         },
     ];
-    const sort : ISortColumn = {
+    const sort: ISortColumn = {
         field: 'col2',
         direction: 'DESC',
     };
@@ -222,7 +222,7 @@ it('renders sort DESC', () =>
 
 it('non-sortable header clicked -> no sorting', () =>
 {
-    const cols : Array<IDataColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -259,7 +259,7 @@ it('non-sortable header clicked -> no sorting', () =>
 
 it('no sort to sort -> ASC', () =>
 {
-    const cols : Array<IDataColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -297,7 +297,7 @@ it('no sort to sort -> ASC', () =>
 
 it('ASC sort col clicked -> DESC', () =>
 {
-    const cols : Array<IDataColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -315,7 +315,7 @@ it('ASC sort col clicked -> DESC', () =>
             type: 'data',
         },
     ];
-    const sort : ISortColumn = {
+    const sort: ISortColumn = {
         field: 'col2',
         direction: 'ASC',
     };
@@ -338,7 +338,7 @@ it('ASC sort col clicked -> DESC', () =>
 
 it('DESC sort col clicked -> no sorting', () =>
 {
-    const cols : Array<IDataColumn<IDataRow>> = [
+    const cols: Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -356,7 +356,7 @@ it('DESC sort col clicked -> no sorting', () =>
             type: 'data',
         },
     ];
-    const sort : ISortColumn = {
+    const sort: ISortColumn = {
         field: 'col2',
         direction: 'DESC',
     };

@@ -1,25 +1,25 @@
 import
-    {
-        IDataResult,
-        IFieldFilter,
-        IPagination,
-        ISortColumn,
-    } from '../../grid';
+{
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+} from '../../grid';
 import { cloneData } from '../../grid/grid/util';
 
 export interface IData
 {
-    num : number;
-    one : string;
-    two : string;
-    threeA : string;
-    threeB : string;
-    four : number;
-    five : number;
-    key : number;
+    num: number;
+    one: string;
+    two: string;
+    threeA: string;
+    threeB: string;
+    four: number;
+    five: number;
+    key: number;
 }
 
-export function update(model : IData) : IData
+export function update(model: IData): IData
 {
     const index = _data.findIndex(m => m.key === model.key);
     if (index < 0)
@@ -33,14 +33,14 @@ export function update(model : IData) : IData
 }
 
 export function getData(
-    pagination : IPagination | null,
-    sort : ISortColumn | null,
-    filters : IFieldFilter[]
-) : IDataResult<IData>
+    pagination: IPagination | null,
+    sort: ISortColumn | null,
+    filters: IFieldFilter[]
+): IDataResult<IData>
 {
     console.log('getting data');
 
-    const compare = (a : IData, b : IData) : number =>
+    const compare = (a: IData, b: IData): number =>
     {
         if (!sort) return 0;
 
@@ -91,7 +91,7 @@ export function getData(
     };
 }
 
-export function updateData(model : IData) : IData
+export function updateData(model: IData): IData
 {
     const index = _data.findIndex(x => x.key === model.key);
     if (index < 0)
@@ -102,14 +102,14 @@ export function updateData(model : IData) : IData
     return model;
 }
 
-export function addData(model : IData) : IData
+export function addData(model: IData): IData
 {
     model.key = _data.length + 1000;
     _data.push(model);
     return model;
 }
 
-export function deleteData(model : IData)
+export function deleteData(model: IData)
 {
     const index = _data.findIndex(x => x.key === model.key);
     if (index < 0)
@@ -120,9 +120,9 @@ export function deleteData(model : IData)
 }
 
 const _data = generateData(1000);
-function generateData(n : number)
+function generateData(n: number)
 {
-    const result : IData[] = [];
+    const result: IData[] = [];
     for (let i = 0; i < n; i++)
     {
         const rowNum = i + 1;

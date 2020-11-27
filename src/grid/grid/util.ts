@@ -2,15 +2,15 @@ import { IRowData } from './types-grid';
 import { SyncAction } from './types-sync';
 import { Column, NonGroupColumn } from './columns/types';
 
-export function cloneData<TModel>(model : TModel) : TModel
+export function cloneData<TModel>(model: TModel): TModel
 {
     return JSON.parse(JSON.stringify(model));
 }
 
 export function getNewSyncAction(
-    current : SyncAction,
-    newAction : SyncAction
-) : SyncAction
+    current: SyncAction,
+    newAction: SyncAction
+): SyncAction
 {
     if (newAction === SyncAction.unchanged)
     {
@@ -49,11 +49,11 @@ export function getNewSyncAction(
     );
 }
 
-export const hasChanged = <TModel extends object>(rowData : IRowData<TModel>) =>
+export const hasChanged = <TModel extends object>(rowData: IRowData<TModel>) =>
     rowData.syncAction !== SyncAction.unchanged;
 
 //stealing from interwebs until next ES release which is supposed to have UID module
-export function uuid() : string
+export function uuid(): string
 {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c =>
     {
@@ -64,8 +64,8 @@ export function uuid() : string
 }
 
 export function getNonGroupColumns<TModel extends object>(
-    columns : Array<Column<TModel>>
-) : Array<NonGroupColumn<TModel>>
+    columns: Array<Column<TModel>>
+): Array<NonGroupColumn<TModel>>
 {
     if (!columns)
     {
@@ -89,14 +89,14 @@ export function getNonGroupColumns<TModel extends object>(
     return result as NonGroupColumn<TModel>;
 }
 
-export function fdate(date : Date) : string
+export function fdate(date: Date): string
 {
     if (!date)
     {
         return '';
     }
 
-    const pad = (n : number) => (n < 10 ? `0${n}` : n.toString());
+    const pad = (n: number) => (n < 10 ? `0${n}` : n.toString());
 
     const d = pad(date.getDate());
     const m = pad(date.getMonth() + 1);

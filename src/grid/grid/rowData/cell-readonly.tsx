@@ -5,14 +5,14 @@ import { IRowData } from '../types-grid';
 
 interface ICellProps<TModel extends object>
 {
-    column : Column<TModel>;
-    data : IRowData<TModel>;
+    column: Column<TModel>;
+    data: IRowData<TModel>;
 }
 
 export const CellReadonly = <TModel extends object>({
     column,
     data,
-} : ICellProps<TModel>) =>
+}: ICellProps<TModel>) =>
 {
     const c = column;
 

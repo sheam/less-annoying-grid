@@ -3,11 +3,11 @@ import { IValidationError } from '../types-grid';
 
 interface IValidationErrorProps
 {
-    field : string;
-    validationErrors : IValidationError[] | undefined | null;
+    field: string;
+    validationErrors: IValidationError[] | undefined | null;
 }
 
-export const ValidationError : React.FunctionComponent<IValidationErrorProps> = ({
+export const ValidationError: React.FunctionComponent<IValidationErrorProps> = ({
     field,
     validationErrors,
 }) =>

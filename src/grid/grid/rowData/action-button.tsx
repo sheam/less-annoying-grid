@@ -6,14 +6,14 @@ import { SyncAction } from '../types-sync';
 
 interface IActionButtonProps<TModel extends object>
 {
-    action : Action<TModel>;
-    rowData : IRowData<TModel>;
+    action: Action<TModel>;
+    rowData: IRowData<TModel>;
 }
 
 export const ActionButton = <TModel extends object>({
     action,
     rowData,
-} : IActionButtonProps<TModel>) =>
+}: IActionButtonProps<TModel>) =>
 {
     const context = useGridContext<TModel>();
     const name = action.name || action.type;
@@ -27,9 +27,9 @@ export const ActionButton = <TModel extends object>({
 };
 
 function getHandler<TModel extends object>(
-    action : Action<TModel>,
-    rowData : IRowData<TModel>,
-    context : IGridContext<TModel>
+    action: Action<TModel>,
+    rowData: IRowData<TModel>,
+    context: IGridContext<TModel>
 )
 {
     return () =>

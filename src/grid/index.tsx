@@ -4,19 +4,19 @@ import { GridContext, useGridContext } from './grid/context';
 import { Grid } from './grid/grid';
 import { GridEditMode } from './grid/types-grid';
 import
-    {
-        IDataResult,
-        IFieldFilter,
-        IPagination,
-        ISortColumn,
-    } from './grid/types-pagination';
+{
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+} from './grid/types-pagination';
 import
-    {
-        IProgress,
-        ISyncData,
-        ISyncDataResult,
-        SyncAction,
-    } from './grid/types-sync';
+{
+    IProgress,
+    ISyncData,
+    ISyncDataResult,
+    SyncAction,
+} from './grid/types-sync';
 import * as validate from './grid/columns/validation';
 
 export type {

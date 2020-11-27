@@ -8,7 +8,7 @@ import { SyncAction } from '../types-sync';
 import { RowDetailTemplate } from './detail-template';
 import { getNonGroupColumns } from '../util';
 
-export const Row = <TModel extends object>(props : IRowProps<TModel>) =>
+export const Row = <TModel extends object>(props: IRowProps<TModel>) =>
 {
     const { editingContext, renderRowDetail } = useGridContext();
     if (props.data.syncAction === SyncAction.deleted)
@@ -16,7 +16,7 @@ export const Row = <TModel extends object>(props : IRowProps<TModel>) =>
         return null;
     }
 
-    let row : JSX.Element | null = null;
+    let row: JSX.Element | null = null;
     if (!editingContext)
     {
         row = <RowReadOnly {...props} />;

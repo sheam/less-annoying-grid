@@ -3,26 +3,26 @@ import { useGridContext } from '../context';
 
 export interface IFooterProps
 {
-    pageSizeOptions ?: number[];
-    initialPageSize ?: number;
-    numPageJumpButtons ?: number;
+    pageSizeOptions?: number[];
+    initialPageSize?: number;
+    numPageJumpButtons?: number;
 
-    firstLabel ?: string;
-    lastLabel ?: string;
-    nextLabel ?: string;
-    prevLabel ?: string;
-    itemsName ?: string;
+    firstLabel?: string;
+    lastLabel?: string;
+    nextLabel?: string;
+    prevLabel?: string;
+    itemsName?: string;
 }
 
 interface IInternalFooterProps
 {
-    totalCount : number;
-    numColumns : number;
-    config ?: IFooterProps;
+    totalCount: number;
+    numColumns: number;
+    config?: IFooterProps;
 }
 
-export const Footer : (props : IInternalFooterProps) => JSX.Element = (
-    props : IInternalFooterProps
+export const Footer: (props: IInternalFooterProps) => JSX.Element = (
+    props: IInternalFooterProps
 ) =>
 {
     const { pagination, setPagination, editingContext } = useGridContext();
@@ -32,7 +32,7 @@ export const Footer : (props : IInternalFooterProps) => JSX.Element = (
         editingContext?.isEditing || editingContext?.needsSave
     );
 
-    const setPaginationDataSafe = (newCurrentPage : number, pageSize : number) =>
+    const setPaginationDataSafe = (newCurrentPage: number, pageSize: number) =>
         setPagination({
             currentPage: clamp(
                 newCurrentPage,
@@ -41,7 +41,7 @@ export const Footer : (props : IInternalFooterProps) => JSX.Element = (
             ),
             pageSize,
         });
-    const jumpToPage = (currentPage : number) =>
+    const jumpToPage = (currentPage: number) =>
         setPagination({ currentPage, pageSize: pagination.pageSize });
 
     const totalPages = getTotalPages(props.totalCount, pagination.pageSize);
@@ -135,7 +135,7 @@ export const Footer : (props : IInternalFooterProps) => JSX.Element = (
     );
 };
 
-function clamp(n : number, min : number, max : number) : number
+function clamp(n: number, min: number, max: number): number
 {
     if (n > max)
     {
@@ -149,12 +149,12 @@ function clamp(n : number, min : number, max : number) : number
 }
 
 function getPageJumpButtons(
-    currentPage : number,
-    totalPages : number,
-    setPage : (n : number) => void,
-    numJumpButtons : number | undefined,
-    disabled : boolean
-) : JSX.Element
+    currentPage: number,
+    totalPages: number,
+    setPage: (n: number) => void,
+    numJumpButtons: number | undefined,
+    disabled: boolean
+): JSX.Element
 {
     const defaultNumJumpButtons = 7;
     const two = 2;
@@ -216,7 +216,7 @@ function getPageJumpButtons(
     );
 }
 
-function getTotalPages(totalCount : number, pageSize : number) : number
+function getTotalPages(totalCount: number, pageSize: number): number
 {
     const pageCount = totalCount / pageSize;
     const pageCountInt = Math.floor(pageCount);
@@ -231,10 +231,10 @@ function getTotalPages(totalCount : number, pageSize : number) : number
 // tslint:disable-next-line:no-magic-numbers
 const defaultPageSizeOption = [5, 10, 20, 50, 100];
 function getPageSizeOptions(
-    pageSizes : number[] | undefined,
-    currentPageSize : number | undefined,
-    totalItemCount : number
-) : number[]
+    pageSizes: number[] | undefined,
+    currentPageSize: number | undefined,
+    totalItemCount: number
+): number[]
 {
     pageSizes = pageSizes || defaultPageSizeOption;
     pageSizes.push(currentPageSize || 10);

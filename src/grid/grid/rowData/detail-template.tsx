@@ -3,11 +3,11 @@ import { useGridContext } from '../context';
 
 interface IRowDetailTemplateProps
 {
-    show : boolean;
-    numColumns : number;
+    show: boolean;
+    numColumns: number;
 }
 
-export const RowDetailTemplate : React.FunctionComponent<IRowDetailTemplateProps> = ({
+export const RowDetailTemplate: React.FunctionComponent<IRowDetailTemplateProps> = ({
     show,
     numColumns,
     children,
@@ -22,11 +22,11 @@ export const RowDetailTemplate : React.FunctionComponent<IRowDetailTemplateProps
 
 interface IRowDetailTemplateTriggerCellProps
 {
-    rowId : string;
-    isShowing : boolean;
+    rowId: string;
+    isShowing: boolean;
 }
 
-export const RowDetailTemplateTriggerCell : React.FunctionComponent<IRowDetailTemplateTriggerCellProps> = ({
+export const RowDetailTemplateTriggerCell: React.FunctionComponent<IRowDetailTemplateTriggerCellProps> = ({
     rowId,
     isShowing,
 }) =>

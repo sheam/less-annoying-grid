@@ -7,15 +7,15 @@ import { Footer, IFooterProps } from '../footer';
 import { GridEditMode } from '../../types-grid';
 import { IPagination } from '../../types-pagination';
 
-const getByTestId = (c : ShallowWrapper, name : string) =>
+const getByTestId = (c: ShallowWrapper, name: string) =>
     c.find(`[data-test="${name}"]`);
-const jumpButton = (c : ShallowWrapper, index : number) =>
+const jumpButton = (c: ShallowWrapper, index: number) =>
     getByTestId(c, 'jump').at(index);
-const jumpButtonValue = (c : ShallowWrapper, index : number) =>
+const jumpButtonValue = (c: ShallowWrapper, index: number) =>
     jumpButton(c, index).props().value;
-const jumpButtonDisabled = (c : ShallowWrapper, index : number) =>
+const jumpButtonDisabled = (c: ShallowWrapper, index: number) =>
     jumpButton(c, index).props().disabled;
-function setGridContextData(gridContext : GridContext.IGridContext<any>) : void
+function setGridContextData(gridContext: GridContext.IGridContext<any>): void
 {
     if (!gridContext.setPagination)
     {
@@ -28,7 +28,7 @@ function setGridContextData(gridContext : GridContext.IGridContext<any>) : void
 
 it('renders a footer with pagination data', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
@@ -59,7 +59,7 @@ it('renders a footer with pagination data', () =>
 
 it('renders correct number of pages', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 5,
     };
@@ -76,7 +76,7 @@ it('renders correct number of pages', () =>
 
 it('renders a footer with big jump to end', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
@@ -100,7 +100,7 @@ it('renders a footer with big jump to end', () =>
 
 it('renders a footer with big jump to front', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 10,
         pageSize: 10,
     };
@@ -124,7 +124,7 @@ it('renders a footer with big jump to front', () =>
 
 it('next advances 1 page', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
@@ -148,7 +148,7 @@ it('next advances 1 page', () =>
 
 it('next does not advance past the end', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 10,
         pageSize: 10,
     };
@@ -171,7 +171,7 @@ it('next does not advance past the end', () =>
 
 it('prev goes 1 page back', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 5,
         pageSize: 10,
     };
@@ -194,7 +194,7 @@ it('prev goes 1 page back', () =>
 
 it('prev does not go back past 1', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
@@ -217,12 +217,12 @@ it('prev does not go back past 1', () =>
 
 it('page size options', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
     setGridContextData({ pagination });
-    const config : IFooterProps = {
+    const config: IFooterProps = {
         pageSizeOptions: [5, 10, 100, 1000], //should not render the 1000 because it doesn't make sense
     };
     const totalCount = 100;
@@ -263,11 +263,11 @@ it('page size options', () =>
 
 it('changing page size', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
-    const config : IFooterProps = {
+    const config: IFooterProps = {
         pageSizeOptions: [5, 10, 100, 1000], //should not render the 1000 because it doesn't make sense
     };
     const totalCount = 100;
@@ -296,11 +296,11 @@ it('changing page size', () =>
 
 it('disabled when needs saving', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
-    const config : IFooterProps = {
+    const config: IFooterProps = {
         pageSizeOptions: [5, 10, 100], //should not render the 1000 because it doesn't make sense
     };
     const totalCount = 100;
@@ -349,11 +349,11 @@ it('disabled when needs saving', () =>
 
 it('disabled when needs editing', () =>
 {
-    const pagination : IPagination = {
+    const pagination: IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
-    const config : IFooterProps = {
+    const config: IFooterProps = {
         pageSizeOptions: [5, 10, 100], //should not render the 1000 because it doesn't make sense
     };
     const totalCount = 100;

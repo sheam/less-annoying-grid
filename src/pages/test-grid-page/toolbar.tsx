@@ -5,7 +5,7 @@ import './styles.css';
 
 interface IToolbarProps { }
 
-export const ToolBar : React.FunctionComponent<IToolbarProps> = () =>
+export const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
 {
     const {
         setSort,
@@ -19,7 +19,7 @@ export const ToolBar : React.FunctionComponent<IToolbarProps> = () =>
         throw new Error('configuration error');
     }
 
-    const filterChanged = (e : FormEvent) : void =>
+    const filterChanged = (e: FormEvent): void =>
     {
         resetPagination();
         const val = (e.target as any).value.toString();
@@ -46,7 +46,7 @@ export const ToolBar : React.FunctionComponent<IToolbarProps> = () =>
     const canSave =
         (editingContext?.needsSave || editingContext?.syncProgress) &&
         !editingContext?.validationErrors;
-    const saveClicked = async (_ : React.MouseEvent<HTMLButtonElement>) =>
+    const saveClicked = async (_: React.MouseEvent<HTMLButtonElement>) =>
     {
         if (!canSave)
         {
@@ -58,7 +58,7 @@ export const ToolBar : React.FunctionComponent<IToolbarProps> = () =>
         }
         await editingContext.sync();
     };
-    const addRowClicked = (_ : React.MouseEvent<HTMLButtonElement>) =>
+    const addRowClicked = (_: React.MouseEvent<HTMLButtonElement>) =>
     {
         editingContext?.addRow();
     };

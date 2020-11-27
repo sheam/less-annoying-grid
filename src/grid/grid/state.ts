@@ -5,33 +5,33 @@ import { IProgress } from './types-sync';
 
 export interface IGridState<TModel extends object>
 {
-    pagination : IPagination | null;
-    setPagination : Setter<IPagination>;
-    isEditing : boolean;
-    setIsEditing : Setter<boolean>;
-    dataState : IDataState<TModel>;
-    setDataState : Setter<IDataState<TModel>>;
-    sort : ISortColumn | null;
-    setSort : Setter<ISortColumn | null>;
-    filters : IFieldFilter[];
-    setFilters : Setter<IFieldFilter[]>;
-    editField : IEditField | null;
-    setEditField : Setter<IEditField | null>;
-    syncProgress : IProgress | null;
-    setSyncProgress : Setter<IProgress | null>;
-    needsSave : boolean;
-    setNeedsSave : Setter<boolean>;
-    isLoading : boolean;
-    setIsLoading : Setter<boolean>;
-    saveRequested : boolean;
-    setSaveRequested : Setter<boolean>;
-    validationErrors : boolean;
-    setValidationErrors : Setter<boolean>;
+    pagination: IPagination | null;
+    setPagination: Setter<IPagination>;
+    isEditing: boolean;
+    setIsEditing: Setter<boolean>;
+    dataState: IDataState<TModel>;
+    setDataState: Setter<IDataState<TModel>>;
+    sort: ISortColumn | null;
+    setSort: Setter<ISortColumn | null>;
+    filters: IFieldFilter[];
+    setFilters: Setter<IFieldFilter[]>;
+    editField: IEditField | null;
+    setEditField: Setter<IEditField | null>;
+    syncProgress: IProgress | null;
+    setSyncProgress: Setter<IProgress | null>;
+    needsSave: boolean;
+    setNeedsSave: Setter<boolean>;
+    isLoading: boolean;
+    setIsLoading: Setter<boolean>;
+    saveRequested: boolean;
+    setSaveRequested: Setter<boolean>;
+    validationErrors: boolean;
+    setValidationErrors: Setter<boolean>;
 }
 
 export function useGridState<TModel extends object>(
-    props : IGridProps<TModel>
-) : IGridState<TModel>
+    props: IGridProps<TModel>
+): IGridState<TModel>
 {
     const initialPagination = props.footer?.initialPageSize
         ? { pageSize: props.footer?.initialPageSize, currentPage: 1 }

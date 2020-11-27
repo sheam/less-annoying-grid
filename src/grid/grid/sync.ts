@@ -2,23 +2,23 @@ import { IDataState, IGridProps, IRowData } from './types-grid';
 import { hasChanged, uuid } from './util';
 import { IGridState } from './state';
 import
-    {
-        IDataResult,
-        IFieldFilter,
-        IPagination,
-        ISortColumn,
-    } from './types-pagination';
+{
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+} from './types-pagination';
 import
-    {
-        IProgress,
-        ISyncData,
-        ISyncDataResult,
-        SyncAction,
-    } from './types-sync';
+{
+    IProgress,
+    ISyncData,
+    ISyncDataResult,
+    SyncAction,
+} from './types-sync';
 
 export function syncDataEffect<TModel extends object>(
-    state : IGridState<TModel>,
-    props : IGridProps<TModel>
+    state: IGridState<TModel>,
+    props: IGridProps<TModel>
 )
 {
     const sync = async () =>
@@ -35,11 +35,11 @@ export function syncDataEffect<TModel extends object>(
 }
 
 export function loadDataEffect<TModel extends object>(
-    state : IGridState<TModel>,
-    getDataAsync : (
-        p : IPagination | null,
-        s : ISortColumn | null,
-        f : IFieldFilter[]
+    state: IGridState<TModel>,
+    getDataAsync: (
+        p: IPagination | null,
+        s: ISortColumn | null,
+        f: IFieldFilter[]
     ) => Promise<IDataResult<TModel>>
 )
 {
@@ -50,11 +50,11 @@ export function loadDataEffect<TModel extends object>(
             state.sort,
             state.filters
         );
-        const newState : IDataState<TModel> = {
+        const newState: IDataState<TModel> = {
             totalCount: d.totalCount,
             data: d.data.map((m, i) =>
             {
-                const result : IRowData<TModel> = {
+                const result: IRowData<TModel> = {
                     syncAction: SyncAction.unchanged,
                     model: m,
                     rowNumber: i + 1,
@@ -76,9 +76,9 @@ export function loadDataEffect<TModel extends object>(
 }
 
 export async function syncChanges<TModel extends object>(
-    state : IGridState<TModel>,
-    props : IGridProps<TModel>
-) : Promise<ISyncDataResult<TModel>[]>
+    state: IGridState<TModel>,
+    props: IGridProps<TModel>
+): Promise<ISyncDataResult<TModel>[]>
 {
     if (!props.editable)
     {
@@ -97,7 +97,7 @@ export async function syncChanges<TModel extends object>(
         .filter(r => hasChanged(r))
         .map(r =>
         {
-            const result : ISyncData<TModel> = {
+            const result: ISyncData<TModel> = {
                 model: r.model,
                 rowId: r.rowId,
                 syncAction: r.syncAction,
@@ -111,8 +111,8 @@ export async function syncChanges<TModel extends object>(
     });
 
     const applyUpdates = (
-        p : IProgress,
-        interim ?: Array<ISyncDataResult<TModel>>
+        p: IProgress,
+        interim?: Array<ISyncDataResult<TModel>>
     ) => _applySyncResults(state, p, interim);
 
     try
@@ -128,10 +128,10 @@ export async function syncChanges<TModel extends object>(
 }
 
 export function _applySyncResults<TModel extends object>(
-    state : IGridState<TModel>,
-    progress : IProgress | null,
-    results : Array<ISyncDataResult<TModel>> | undefined
-) : void
+    state: IGridState<TModel>,
+    progress: IProgress | null,
+    results: Array<ISyncDataResult<TModel>> | undefined
+): void
 {
     if (progress)
     {

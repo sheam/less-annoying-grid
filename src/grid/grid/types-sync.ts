@@ -8,21 +8,21 @@ export enum SyncAction
 
 export interface ISyncData<TModel extends object>
 {
-    model : TModel | null;
-    rowId : string;
-    syncAction : SyncAction;
+    model: TModel | null;
+    rowId: string;
+    syncAction: SyncAction;
 }
 
 export interface ISyncDataResult<TModel extends object>
     extends ISyncData<TModel>
 {
-    success : boolean;
-    error ?: string;
+    success: boolean;
+    error?: string;
 }
 
 export interface IProgress
 {
-    current : number;
-    total : number;
-    message ?: string;
+    current: number;
+    total: number;
+    message?: string;
 }

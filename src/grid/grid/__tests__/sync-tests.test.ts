@@ -4,12 +4,12 @@ import { _applySyncResults } from '../sync';
 import { ISyncDataResult, SyncAction } from '../types-sync';
 interface IData
 {
-    key : number;
-    firstName : string;
-    lastName : string;
+    key: number;
+    firstName: string;
+    lastName: string;
 }
 
-function getData() : IData[]
+function getData(): IData[]
 {
     return [
         { key: 1, firstName: 'Shea', lastName: 'Martin' },
@@ -19,10 +19,10 @@ function getData() : IData[]
     ];
 }
 
-function getDefaultState() : IGridState<IData>
+function getDefaultState(): IGridState<IData>
 {
     const data = getData();
-    const rowData : Array<IRowData<IData>> = data.map((m, i) =>
+    const rowData: Array<IRowData<IData>> = data.map((m, i) =>
     {
         return {
             model: m,
@@ -61,8 +61,8 @@ function getDefaultState() : IGridState<IData>
 it('applies updates', () =>
 {
     const state = getDefaultState();
-    const results : Array<ISyncDataResult<IData>> = state.dataState.data.map(
-        (r : IRowData<IData>) =>
+    const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
+        (r: IRowData<IData>) =>
         {
             return {
                 rowId: r.rowId,
@@ -91,8 +91,8 @@ it('applies adds', () =>
     state.dataState.data[0].syncAction = SyncAction.added;
     state.dataState.data[1].syncAction = SyncAction.added;
 
-    const results : Array<ISyncDataResult<IData>> = state.dataState.data.map(
-        (r : IRowData<IData>) =>
+    const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
+        (r: IRowData<IData>) =>
         {
             return {
                 rowId: r.rowId,
@@ -120,8 +120,8 @@ it('applies delete', () =>
     const deletedKey = state.dataState.data[1].model.key;
     state.dataState.data[1].syncAction = SyncAction.deleted;
 
-    const results : Array<ISyncDataResult<IData>> = state.dataState.data.map(
-        (r : IRowData<IData>) =>
+    const results: Array<ISyncDataResult<IData>> = state.dataState.data.map(
+        (r: IRowData<IData>) =>
         {
             return {
                 rowId: r.rowId,

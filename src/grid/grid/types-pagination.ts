@@ -1,24 +1,24 @@
 export interface IFieldFilter
 {
-    field : string;
-    value : string;
-    operator : 'eq' | 'ne' | 'gt' | 'ge' | 'lt' | 'le' | 'contains';
+    field: string;
+    value: string;
+    operator: 'eq' | 'ne' | 'gt' | 'ge' | 'lt' | 'le' | 'contains';
 }
 
 export interface ISortColumn
 {
-    field : string;
-    direction : 'ASC' | 'DESC';
+    field: string;
+    direction: 'ASC' | 'DESC';
 }
 
 export interface IPagination
 {
-    currentPage : number;
-    pageSize : number;
+    currentPage: number;
+    pageSize: number;
 }
 
 export interface IDataResult<TModel extends object>
 {
-    totalCount : number;
-    data : TModel[];
+    totalCount: number;
+    data: TModel[];
 }

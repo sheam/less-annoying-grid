@@ -10,14 +10,14 @@ import { IGridContext } from '../../context';
 import { Column } from '../../..';
 import { SyncAction } from '../../types-sync';
 
-const getByTestId = (c : ReactWrapper | ShallowWrapper, name : string) =>
+const getByTestId = (c: ReactWrapper | ShallowWrapper, name: string) =>
     c.find(`[data-test="${name}"]`);
-const getCellAt = (c : ReactWrapper | ShallowWrapper, index : number) =>
+const getCellAt = (c: ReactWrapper | ShallowWrapper, index: number) =>
     c.find(`[data-test="data-row"]`).find('td').at(index);
 
 function setGridContextData(
-    gridContext : GridContext.IGridContext<IData>
-) : void
+    gridContext: GridContext.IGridContext<IData>
+): void
 {
     if (!gridContext.setPagination)
     {
@@ -31,7 +31,7 @@ function setGridContextData(
 it('renders a rows of readonly data', async () =>
 {
     const model = data[0];
-    const rowData : IRowData<IData> = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -55,7 +55,7 @@ it('renders a rows of readonly data', async () =>
 
 it('renders a rows of inline edit data', async () =>
 {
-    const gridContext : IGridContext<IData> = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -74,7 +74,7 @@ it('renders a rows of inline edit data', async () =>
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData : IRowData<IData> = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -98,7 +98,7 @@ it('renders a rows of inline edit data', async () =>
 
 it('renders an editor in number col', async () =>
 {
-    const gridContext : IGridContext<IData> = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -117,7 +117,7 @@ it('renders an editor in number col', async () =>
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData : IRowData<IData> = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -159,7 +159,7 @@ it('renders an editor in number col', async () =>
 
 it('renders an editor in text col', async () =>
 {
-    const gridContext : IGridContext<IData> = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -178,7 +178,7 @@ it('renders an editor in text col', async () =>
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData : IRowData<IData> = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -220,7 +220,7 @@ it('renders an editor in text col', async () =>
 
 it('renders an editor in date col', async () =>
 {
-    const gridContext : IGridContext<IData> = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -239,7 +239,7 @@ it('renders an editor in date col', async () =>
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData : IRowData<IData> = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -281,7 +281,7 @@ it('renders an editor in date col', async () =>
 
 it('renders an editor with drop down values', async () =>
 {
-    const gridContext : IGridContext<IData> = {
+    const gridContext: IGridContext<IData> = {
         editingContext: {
             isEditing: false,
             needsSave: false,
@@ -300,7 +300,7 @@ it('renders an editor with drop down values', async () =>
     setGridContextData(gridContext);
 
     const model = data[0];
-    const rowData : IRowData<IData> = {
+    const rowData: IRowData<IData> = {
         rowNumber: 1,
         rowId: `uid-1`,
         model,
@@ -349,13 +349,13 @@ it('renders an editor with drop down values', async () =>
 
 interface IData
 {
-    numVal : number;
-    textVal : string;
-    enumVal : string;
-    birthday : Date;
+    numVal: number;
+    textVal: string;
+    enumVal: string;
+    birthday: Date;
 }
 
-const cols : Array<Column<IData>> = [
+const cols: Array<Column<IData>> = [
     {
         type: 'data',
         name: 'Number',
@@ -378,7 +378,7 @@ const cols : Array<Column<IData>> = [
     },
 ];
 
-const data : IData[] = [
+const data: IData[] = [
     {
         numVal: 1,
         textVal: 'one',
