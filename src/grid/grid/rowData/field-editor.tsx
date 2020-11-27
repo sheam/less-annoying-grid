@@ -7,11 +7,11 @@ import { cloneData } from '../util';
 
 interface IFieldEditorProps
 {
-    field : string;
-    editorType : ColumnEditorTypeBuiltIn;
+    field: string;
+    editorType: ColumnEditorTypeBuiltIn;
 }
 
-export const FieldEditor : React.FunctionComponent<IFieldEditorProps> = ({
+export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
     field,
     editorType,
 }) =>
@@ -23,7 +23,7 @@ export const FieldEditor : React.FunctionComponent<IFieldEditorProps> = ({
         editorType.type === 'values' ? editorType.subType : editorType.type;
 
     const changeHandler = (
-        e : ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+        e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
     ) =>
     {
         (model as any)[field] = coerceValueType(e.target.value, inputType);
@@ -36,7 +36,7 @@ export const FieldEditor : React.FunctionComponent<IFieldEditorProps> = ({
     };
 
     const detectSpecialKeys = (
-        e : KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
+        e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
     ) =>
     {
         if (e.key === 'Escape')
@@ -133,7 +133,7 @@ export const FieldEditor : React.FunctionComponent<IFieldEditorProps> = ({
 
 type InputType = 'number' | 'text' | 'date';
 
-function coerceValueType(value : string, inputType : InputType) : any
+function coerceValueType(value: string, inputType: InputType): any
 {
     if (inputType === 'text' || inputType === undefined)
     {
