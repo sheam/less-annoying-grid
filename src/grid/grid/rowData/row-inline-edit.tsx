@@ -13,12 +13,14 @@ import { IRowContext, RowContext } from './row-context';
 import { RowDetailTemplateTriggerCell } from './detail-template';
 
 export const RowInlineEdit = <TModel extends object>(
-    props: IRowProps<TModel>
-) => {
+    props : IRowProps<TModel>
+) =>
+{
     const { editingContext, renderRowDetail } = useGridContext();
     const [rowData, setRowData] = useState(props.data);
 
-    if (!editingContext) {
+    if (!editingContext)
+    {
         throw new Error(
             'RowInlineEdit can not be used with a not editable grid'
         );
@@ -29,15 +31,18 @@ export const RowInlineEdit = <TModel extends object>(
     );
     const uid = props.data.rowNumber;
 
-    const startEditing = (field: string) => {
+    const startEditing = (field : string) =>
+    {
         console.log(`editing ${field}`);
 
         editingContext.setEditField(field, props.data.rowNumber);
         setRowData(cloneData(props.data));
     };
 
-    const onChange = (model: TModel) => {
-        if (!editingContext.editField) {
+    const onChange = (model : TModel) =>
+    {
+        if (!editingContext.editField)
+        {
             throw new Error('on change fired without an edit field set');
         }
         const hasChanges =
@@ -56,8 +61,10 @@ export const RowInlineEdit = <TModel extends object>(
         });
     };
 
-    const doneEditing = (commitChanges: boolean, advance: Direction) => {
-        if (!editingContext.editField) {
+    const doneEditing = (commitChanges : boolean, advance : Direction) =>
+    {
+        if (!editingContext.editField)
+        {
             throw new Error('doneEditing called but now editField in context');
         }
 
@@ -65,42 +72,52 @@ export const RowInlineEdit = <TModel extends object>(
 
         editingContext.setEditField(null, null);
 
-        if (commitChanges && hasChanged(rowData)) {
+        if (commitChanges && hasChanged(rowData))
+        {
             editingContext.updateRow(rowData);
-        } else {
+        } else
+        {
             setRowData(props.data);
         }
 
-        if (advance !== Direction.none) {
-            const currentIndex = columns.findIndex(c => {
-                if (!c || c.type !== 'data') {
+        if (advance !== Direction.none)
+        {
+            const currentIndex = columns.findIndex(c =>
+            {
+                if (!c || c.type !== 'data')
+                {
                     return false;
                 }
                 return c.field === wasEditingField?.field;
             });
 
-            if (currentIndex < 0) {
+            if (currentIndex < 0)
+            {
                 throw new Error(
                     'could not find the field that was just being edited'
                 );
             }
 
-            let nextField: Column<TModel> | undefined;
+            let nextField : Column<TModel> | undefined;
             const searchIncrement = advance === Direction.forward ? 1 : -1;
             for (
                 let i = currentIndex + searchIncrement;
                 i < columns.length && i >= 0;
                 i += searchIncrement
-            ) {
+            )
+            {
                 const c = columns[i];
-                if (colIsEditable(c)) {
+                if (colIsEditable(c))
+                {
                     nextField = c;
                     break;
                 }
             }
-            if (nextField?.type === 'data' && nextField?.field) {
+            if (nextField?.type === 'data' && nextField?.field)
+            {
                 startEditing(nextField.field);
-            } else {
+            } else
+            {
                 nextField = undefined;
                 const startIndex =
                     advance === Direction.forward ? 0 : columns.length - 1;
@@ -108,14 +125,17 @@ export const RowInlineEdit = <TModel extends object>(
                     let i = startIndex;
                     i < columns.length && i >= 0;
                     i += searchIncrement
-                ) {
+                )
+                {
                     const c = columns[i];
-                    if (colIsEditable(c)) {
+                    if (colIsEditable(c))
+                    {
                         nextField = c;
                         break;
                     }
                 }
-                if (nextField && nextField.type === 'data' && nextField.field) {
+                if (nextField && nextField.type === 'data' && nextField.field)
+                {
                     editingContext.setEditField(
                         nextField.field,
                         props.data.rowNumber + searchIncrement
@@ -129,7 +149,7 @@ export const RowInlineEdit = <TModel extends object>(
     if (hasChanged(rowData)) classes.push('modified');
     if (editingContext.editField) classes.push('edit-row');
 
-    const rowEditContext: IRowContext = {
+    const rowEditContext : IRowContext = {
         model: rowData.model,
         doneEditing,
         onChange,
@@ -144,12 +164,15 @@ export const RowInlineEdit = <TModel extends object>(
                         isShowing={rowData.showDetail}
                     />
                 )}
-                {columns.map(c => {
-                    if (!c) {
+                {columns.map(c =>
+                {
+                    if (!c)
+                    {
                         throw new Error('column should not be null');
                     }
 
-                    if (c.type === 'data' && c.editable) {
+                    if (c.type === 'data' && c.editable)
+                    {
                         return (
                             <CellInlineEdit
                                 key={`td-${uid}-${c.name}`}
@@ -157,15 +180,16 @@ export const RowInlineEdit = <TModel extends object>(
                                 data={rowData}
                                 isEditing={
                                     editingContext?.editField?.field ===
-                                        c.field &&
+                                    c.field &&
                                     editingContext?.editField?.rowId ===
-                                        props.data.rowId
+                                    props.data.rowId
                                 }
                                 startEditing={startEditing}
                             />
                         );
                     }
-                    if (c.type === 'display' || c.type === 'data') {
+                    if (c.type === 'display' || c.type === 'data')
+                    {
                         return (
                             <CellReadonly
                                 key={`td-${uid}-${c.name}`}
@@ -174,7 +198,8 @@ export const RowInlineEdit = <TModel extends object>(
                             />
                         );
                     }
-                    if (c.type === 'action') {
+                    if (c.type === 'action')
+                    {
                         return (
                             <ActionCell
                                 key={`td-${uid}-${c.name}`}
@@ -190,5 +215,5 @@ export const RowInlineEdit = <TModel extends object>(
     );
 };
 
-const colIsEditable = <TModel extends object>(c: Column<TModel> | undefined) =>
+const colIsEditable = <TModel extends object>(c : Column<TModel> | undefined) =>
     !(!c || c.type !== 'data' || c.hidden || !c.editable || !c.field);

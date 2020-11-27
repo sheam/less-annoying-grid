@@ -3,18 +3,21 @@ import { ValidationError } from './validation-error';
 import { Column } from '../..';
 import { IRowData } from '../types-grid';
 
-interface ICellProps<TModel extends object> {
-    column: Column<TModel>;
-    data: IRowData<TModel>;
+interface ICellProps<TModel extends object>
+{
+    column : Column<TModel>;
+    data : IRowData<TModel>;
 }
 
 export const CellReadonly = <TModel extends object>({
     column,
     data,
-}: ICellProps<TModel>) => {
+} : ICellProps<TModel>) =>
+{
     const c = column;
 
-    if (c.type === 'data') {
+    if (c.type === 'data')
+    {
         return (
             <td hidden={c.hidden}>
                 {c.renderDisplay && c.renderDisplay(data.model)}
@@ -26,7 +29,8 @@ export const CellReadonly = <TModel extends object>({
             </td>
         );
     }
-    if (c.type === 'display') {
+    if (c.type === 'display')
+    {
         return <td>{c.renderDisplay(data.model)}</td>;
     }
 

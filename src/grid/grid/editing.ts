@@ -5,31 +5,34 @@ import { IProgress, SyncAction } from './types-sync';
 import { Column } from './columns/types';
 import { validateModel } from './columns/validation';
 
-export interface IGridEditContext<TModel extends object> {
-    editMode: GridEditMode;
-    autoSave: boolean;
+export interface IGridEditContext<TModel extends object>
+{
+    editMode : GridEditMode;
+    autoSave : boolean;
 
-    isEditing: boolean;
+    isEditing : boolean;
 
-    needsSave: boolean;
-    syncProgress: IProgress | null;
-    validationErrors: boolean;
+    needsSave : boolean;
+    syncProgress : IProgress | null;
+    validationErrors : boolean;
 
-    editField: IEditField | null;
-    setEditField: (field: string | null, rowNumber: number | null) => void;
+    editField : IEditField | null;
+    setEditField : (field : string | null, rowNumber : number | null) => void;
 
-    updateRow: (rowData: IRowData<TModel>) => boolean;
-    addRow: (model?: TModel) => IRowData<TModel>;
-    deleteRow: (rowData: IRowData<TModel>) => boolean;
+    updateRow : (rowData : IRowData<TModel>) => boolean;
+    addRow : (model ?: TModel) => IRowData<TModel>;
+    deleteRow : (rowData : IRowData<TModel>) => boolean;
 
-    sync: () => void;
+    sync : () => void;
 }
 
 export function createEditingContext<TModel extends object>(
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): IGridEditContext<TModel> | null {
-    if (!props.editable) {
+    state : IGridState<TModel>,
+    props : IGridProps<TModel>
+) : IGridEditContext<TModel> | null
+{
+    if (!props.editable)
+    {
         return null;
     }
 
@@ -40,7 +43,7 @@ export function createEditingContext<TModel extends object>(
         editField: state.editField,
         setEditField: (f, rn) => setCurrentEditField(f, rn, state),
         updateRow: rowData => updateRow(rowData, state, props),
-        addRow: (model?: TModel) =>
+        addRow: (model ?: TModel) =>
             addRow(model || createNewRow(props.columns), state, props),
         deleteRow: rowData => deleteRow(rowData, state, props),
         editMode: props.editable.editMode,
@@ -51,37 +54,45 @@ export function createEditingContext<TModel extends object>(
 }
 
 function setCurrentEditField<TModel extends object>(
-    field: string | null,
-    rowNumber: number | null,
-    state: IGridState<TModel>
-) {
-    if (field && rowNumber) {
+    field : string | null,
+    rowNumber : number | null,
+    state : IGridState<TModel>
+)
+{
+    if (field && rowNumber)
+    {
         const row = state.dataState.data.find(r => r.rowNumber === rowNumber);
-        if (row) {
+        if (row)
+        {
             state.setEditField({ rowId: row.rowId, field });
             state.setIsEditing(true);
-        } else {
+        } else
+        {
             state.setEditField(null);
             state.setIsEditing(false);
         }
-    } else {
+    } else
+    {
         state.setEditField(null);
         state.setIsEditing(false);
     }
 }
 
 function updateRow<TModel extends object>(
-    rowData: IRowData<TModel>,
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): boolean {
-    if (!hasChanged(rowData)) {
+    rowData : IRowData<TModel>,
+    state : IGridState<TModel>,
+    props : IGridProps<TModel>
+) : boolean
+{
+    if (!hasChanged(rowData))
+    {
         return true;
     }
 
     const data = state.dataState.data;
     const index = data.findIndex(r => r.rowNumber === rowData.rowNumber);
-    if (index < 0) {
+    if (index < 0)
+    {
         throw new Error(`unable to find row with id=${rowData.rowNumber}`);
     }
     const existingRow = data[index];
@@ -95,7 +106,8 @@ function updateRow<TModel extends object>(
     state.setNeedsSave(state.needsSave);
     state.setDataState({ totalCount: state.dataState.totalCount, data });
 
-    if (props.editable?.autoSave) {
+    if (props.editable?.autoSave)
+    {
         state.setSaveRequested(true);
     }
 
@@ -103,12 +115,13 @@ function updateRow<TModel extends object>(
 }
 
 function addRow<TModel extends object>(
-    model: TModel,
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): IRowData<TModel> {
+    model : TModel,
+    state : IGridState<TModel>,
+    props : IGridProps<TModel>
+) : IRowData<TModel>
+{
     const data = state.dataState.data;
-    const newRow: IRowData<TModel> = {
+    const newRow : IRowData<TModel> = {
         rowId: uuid(),
         model,
         syncAction: SyncAction.added,
@@ -116,9 +129,11 @@ function addRow<TModel extends object>(
         showDetail: false,
     };
 
-    if (props.editable?.addToBottom) {
+    if (props.editable?.addToBottom)
+    {
         data.push(newRow);
-    } else {
+    } else
+    {
         data.unshift(newRow);
     }
 
@@ -127,7 +142,8 @@ function addRow<TModel extends object>(
     setValidation(newRow, props.columns, state);
     state.setDataState({ data, totalCount: state.dataState.totalCount + 1 });
 
-    if (props.editable?.autoSave) {
+    if (props.editable?.autoSave)
+    {
         state.setSaveRequested(true);
     }
 
@@ -135,13 +151,15 @@ function addRow<TModel extends object>(
 }
 
 function deleteRow<TModel extends object>(
-    rowData: IRowData<TModel>,
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): boolean {
+    rowData : IRowData<TModel>,
+    state : IGridState<TModel>,
+    props : IGridProps<TModel>
+) : boolean
+{
     const data = state.dataState.data;
     const existingRow = data.find(r => r.rowNumber === rowData.rowNumber);
-    if (!existingRow) {
+    if (!existingRow)
+    {
         throw new Error(`unable to find row with id=${rowData.rowNumber}`);
     }
     existingRow.syncAction = SyncAction.deleted;
@@ -156,7 +174,8 @@ function deleteRow<TModel extends object>(
     state.setDataState({ data, totalCount: state.dataState.totalCount - 1 });
     state.setNeedsSave(state.needsSave || hasChanged(rowData));
 
-    if (props.editable?.autoSave) {
+    if (props.editable?.autoSave)
+    {
         state.setSaveRequested(true);
     }
 
@@ -164,26 +183,31 @@ function deleteRow<TModel extends object>(
 }
 
 function setValidation<TModel extends object>(
-    rowData: IRowData<TModel>,
-    columns: Array<Column<TModel>>,
-    state: IGridState<TModel>
-): void {
+    rowData : IRowData<TModel>,
+    columns : Array<Column<TModel>>,
+    state : IGridState<TModel>
+) : void
+{
     rowData.validationErrors = null;
 
     const errors = validateModel(rowData.model, columns);
-    if (errors?.length > 0) {
+    if (errors?.length > 0)
+    {
         rowData.validationErrors = errors;
         state.setValidationErrors(true);
     }
 }
 
 function createNewRow<TModel extends object>(
-    columns: Array<Column<TModel>>
-): TModel {
-    const model: any = {};
+    columns : Array<Column<TModel>>
+) : TModel
+{
+    const model : any = {};
 
-    columns.forEach(c => {
-        if (c.type === 'data' && c.defaultValue !== undefined) {
+    columns.forEach(c =>
+    {
+        if (c.type === 'data' && c.defaultValue !== undefined)
+        {
             model[c.field] =
                 typeof c.defaultValue === 'function'
                     ? c.defaultValue()

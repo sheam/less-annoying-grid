@@ -2,7 +2,8 @@ import { ElementOrString } from '../types-grid';
 import { ISyncData, SyncAction } from '../types-sync';
 import { AggregateValidator } from './validation';
 
-export interface IDataColumn<TModel extends object> {
+export interface IDataColumn<TModel extends object>
+{
     type: 'data';
     name: string;
     field: string;
@@ -14,21 +15,24 @@ export interface IDataColumn<TModel extends object> {
     defaultValue?: any | (() => any);
 }
 
-interface IDisplayColumn<TModel extends object> {
+interface IDisplayColumn<TModel extends object>
+{
     type: 'display';
     name: string;
     hidden?: boolean;
     renderDisplay: (model: TModel) => ElementOrString;
 }
 
-export interface IActionColumn<TModel extends object> {
+export interface IActionColumn<TModel extends object>
+{
     type: 'action';
     name: string;
     hidden?: boolean;
     actions: Array<Action<TModel>>;
 }
 
-interface IColumnGroup<TModel extends object> {
+interface IColumnGroup<TModel extends object>
+{
     type: 'group';
     name: string;
     hidden?: boolean;
@@ -46,22 +50,25 @@ export type NonGroupColumn<TModel extends object> =
     | IDisplayColumn<TModel>
     | IActionColumn<TModel>;
 
-export interface IActionEdit {
+export interface IActionEdit
+{
     type: 'edit';
     name?: string;
     buttonContent?: ElementOrString;
 }
 
-export interface IActionDelete<TModel extends object> {
+export interface IActionDelete<TModel extends object>
+{
     type: 'delete';
     name?: string;
     buttonContent?: ElementOrString;
     confirm?:
-        | boolean
-        | ((model: TModel, currentSyncAction: SyncAction) => Promise<boolean>);
+    | boolean
+    | ((model: TModel, currentSyncAction: SyncAction) => Promise<boolean>);
 }
 
-interface IActionCustom<TModel extends object> {
+interface IActionCustom<TModel extends object>
+{
     type: 'custom';
     name?: string;
     buttonContent?: ElementOrString;
@@ -77,31 +84,36 @@ export type Action<TModel extends object> =
     | IActionDelete<TModel>
     | IActionCustom<TModel>;
 
-interface IEditorText {
+interface IEditorText
+{
     type: 'text';
     maxLength?: number;
 }
 
-interface IEditorNumber {
+interface IEditorNumber
+{
     type: 'number';
     min?: number;
     max?: number;
     step?: number;
 }
 
-interface IEditorDate {
+interface IEditorDate
+{
     type: 'date';
     startRange?: Date;
     endRange?: Date;
 }
 
-interface IEditorValues {
+interface IEditorValues
+{
     type: 'values';
     subType: 'text' | 'number';
     values: { text: string; value: any }[];
 }
 
-interface IEditorCustom {
+interface IEditorCustom
+{
     type: 'custom';
     editor: JSX.Element;
 }

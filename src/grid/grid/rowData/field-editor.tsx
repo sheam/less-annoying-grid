@@ -5,15 +5,17 @@ import { Direction } from '../types-grid';
 import { useRowContext } from './row-context';
 import { cloneData } from '../util';
 
-interface IFieldEditorProps {
-    field: string;
-    editorType: ColumnEditorTypeBuiltIn;
+interface IFieldEditorProps
+{
+    field : string;
+    editorType : ColumnEditorTypeBuiltIn;
 }
 
-export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
+export const FieldEditor : React.FunctionComponent<IFieldEditorProps> = ({
     field,
     editorType,
-}) => {
+}) =>
+{
     const context = useRowContext();
     const model = cloneData(context.model);
 
@@ -21,28 +23,34 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
         editorType.type === 'values' ? editorType.subType : editorType.type;
 
     const changeHandler = (
-        e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
-    ) => {
+        e : ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+    ) =>
+    {
         (model as any)[field] = coerceValueType(e.target.value, inputType);
         context.onChange(model);
     };
 
-    const focusLost = () => {
+    const focusLost = () =>
+    {
         context.doneEditing(true, Direction.none);
     };
 
     const detectSpecialKeys = (
-        e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
-    ) => {
-        if (e.key === 'Escape') {
+        e : KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
+    ) =>
+    {
+        if (e.key === 'Escape')
+        {
             e.preventDefault();
             context.doneEditing(false, Direction.none);
         }
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter')
+        {
             e.preventDefault();
             context.doneEditing(true, Direction.none);
         }
-        if (e.key === 'Tab') {
+        if (e.key === 'Tab')
+        {
             e.preventDefault();
             context.doneEditing(
                 true,
@@ -53,7 +61,8 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
 
     const stringFieldValue = (model as any)[field]?.toString() || '';
 
-    if (editorType.type === 'text') {
+    if (editorType.type === 'text')
+    {
         return (
             <input
                 name={field}
@@ -67,7 +76,8 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
             />
         );
     }
-    if (editorType.type === 'number') {
+    if (editorType.type === 'number')
+    {
         return (
             <input
                 name={field}
@@ -83,7 +93,8 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
             />
         );
     }
-    if (editorType.type === 'date') {
+    if (editorType.type === 'date')
+    {
         return (
             <input
                 name={field}
@@ -98,7 +109,8 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
             />
         );
     }
-    if (editorType.type === 'values') {
+    if (editorType.type === 'values')
+    {
         return (
             <select
                 name={field}
@@ -121,21 +133,27 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
 
 type InputType = 'number' | 'text' | 'date';
 
-function coerceValueType(value: string, inputType: InputType): any {
-    if (inputType === 'text' || inputType === undefined) {
+function coerceValueType(value : string, inputType : InputType) : any
+{
+    if (inputType === 'text' || inputType === undefined)
+    {
         return value;
     }
 
-    if (!value) {
+    if (!value)
+    {
         return null;
     }
 
-    if (inputType === 'date') {
+    if (inputType === 'date')
+    {
         return new Date(value);
     }
 
-    if (inputType === 'number') {
-        if (value.indexOf('.') < 0) {
+    if (inputType === 'number')
+    {
+        if (value.indexOf('.') < 0)
+        {
             return parseInt(value, 10) || null;
         }
         return parseFloat(value) || null;

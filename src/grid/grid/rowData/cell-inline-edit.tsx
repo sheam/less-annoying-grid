@@ -4,11 +4,12 @@ import { IRowData } from '../types-grid';
 import { ValidationError } from './validation-error';
 import { ColumnEditorType, IDataColumn } from '../columns/types';
 
-interface ICellInlineEditProps<TModel extends object> {
-    isEditing: boolean;
-    startEditing: (field: string) => void;
-    column: IDataColumn<TModel>;
-    data: IRowData<TModel>;
+interface ICellInlineEditProps<TModel extends object>
+{
+    isEditing : boolean;
+    startEditing : (field : string) => void;
+    column : IDataColumn<TModel>;
+    data : IRowData<TModel>;
 }
 
 export const CellInlineEdit = <TModel extends object>({
@@ -16,13 +17,17 @@ export const CellInlineEdit = <TModel extends object>({
     data,
     isEditing,
     startEditing,
-}: ICellInlineEditProps<TModel>) => {
-    if (!field) {
+} : ICellInlineEditProps<TModel>) =>
+{
+    if (!field)
+    {
         throw new Error('field not provided to editable cell');
     }
 
-    if (isEditing) {
-        if (!editable) {
+    if (isEditing)
+    {
+        if (!editable)
+        {
             throw new Error(
                 `column for field ${field} is being edited, but has not defined editor`
             );
@@ -37,7 +42,8 @@ export const CellInlineEdit = <TModel extends object>({
                 />
             </td>
         );
-    } else {
+    } else
+    {
         const clickHandler = editable ? () => startEditing(field) : undefined;
         return (
             <td hidden={hidden} onClick={clickHandler}>
@@ -55,10 +61,12 @@ export const CellInlineEdit = <TModel extends object>({
 };
 
 function getEditorElement(
-    editor: ColumnEditorType,
-    field: string
-): JSX.Element {
-    if (editor.type === 'custom') {
+    editor : ColumnEditorType,
+    field : string
+) : JSX.Element
+{
+    if (editor.type === 'custom')
+    {
         return editor.editor;
     }
     return <FieldEditor field={field} editorType={editor} />;

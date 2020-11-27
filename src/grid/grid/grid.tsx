@@ -10,18 +10,20 @@ import { loadDataEffect, syncDataEffect } from './sync';
 import { IGridProps } from './types-grid';
 import { getNonGroupColumns } from './util';
 
-interface IChildren {
-    children?: {
-        toolbar?: JSX.Element;
-        emptyState?: JSX.Element;
-        loadingState?: JSX.Element;
-        savingState?: JSX.Element;
+interface IChildren
+{
+    children ?: {
+        toolbar ?: JSX.Element;
+        emptyState ?: JSX.Element;
+        loadingState ?: JSX.Element;
+        savingState ?: JSX.Element;
     };
 }
 
 export const Grid = <TModel extends object>(
-    props: IGridProps<TModel> & PropsWithChildren<IChildren>
-) => {
+    props : IGridProps<TModel> & PropsWithChildren<IChildren>
+) =>
+{
     const state = useGridState(props);
 
     useEffect(
@@ -69,10 +71,10 @@ export const Grid = <TModel extends object>(
                                     </td>
                                 </tr>
                             )}
-                        {state.dataState.data.map(d => {
-                            const key = `${d.rowId}-${d.syncAction}-${
-                                d.validationErrors?.length || 0
-                            }`;
+                        {state.dataState.data.map(d =>
+                        {
+                            const key = `${d.rowId}-${d.syncAction}-${d.validationErrors?.length || 0
+                                }`;
                             return (
                                 <Row
                                     key={key}

@@ -7,16 +7,18 @@ import { Footer, IFooterProps } from '../footer';
 import { GridEditMode } from '../../types-grid';
 import { IPagination } from '../../types-pagination';
 
-const getByTestId = (c: ShallowWrapper, name: string) =>
+const getByTestId = (c : ShallowWrapper, name : string) =>
     c.find(`[data-test="${name}"]`);
-const jumpButton = (c: ShallowWrapper, index: number) =>
+const jumpButton = (c : ShallowWrapper, index : number) =>
     getByTestId(c, 'jump').at(index);
-const jumpButtonValue = (c: ShallowWrapper, index: number) =>
+const jumpButtonValue = (c : ShallowWrapper, index : number) =>
     jumpButton(c, index).props().value;
-const jumpButtonDisabled = (c: ShallowWrapper, index: number) =>
+const jumpButtonDisabled = (c : ShallowWrapper, index : number) =>
     jumpButton(c, index).props().disabled;
-function setGridContextData(gridContext: GridContext.IGridContext<any>): void {
-    if (!gridContext.setPagination) {
+function setGridContextData(gridContext : GridContext.IGridContext<any>) : void
+{
+    if (!gridContext.setPagination)
+    {
         gridContext.setPagination = jest.fn(); // default implementation
     }
     jest.spyOn(GridContext, 'useGridContext').mockImplementation(
@@ -24,8 +26,9 @@ function setGridContextData(gridContext: GridContext.IGridContext<any>): void {
     );
 }
 
-it('renders a footer with pagination data', () => {
-    const pagination: IPagination = {
+it('renders a footer with pagination data', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
@@ -54,8 +57,9 @@ it('renders a footer with pagination data', () => {
     expect(jumpButtonValue(component, 4)).toBe(5);
 });
 
-it('renders correct number of pages', () => {
-    const pagination: IPagination = {
+it('renders correct number of pages', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 5,
     };
@@ -70,8 +74,9 @@ it('renders correct number of pages', () => {
     expect(jumpButtonValue(component, 6)).toBe(20);
 });
 
-it('renders a footer with big jump to end', () => {
-    const pagination: IPagination = {
+it('renders a footer with big jump to end', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
@@ -93,8 +98,9 @@ it('renders a footer with big jump to end', () => {
     expect(jumpButtonValue(component, 6)).toBe(10);
 });
 
-it('renders a footer with big jump to front', () => {
-    const pagination: IPagination = {
+it('renders a footer with big jump to front', () =>
+{
+    const pagination : IPagination = {
         currentPage: 10,
         pageSize: 10,
     };
@@ -116,8 +122,9 @@ it('renders a footer with big jump to front', () => {
     expect(jumpButtonDisabled(component, 6)).toBeTruthy();
 });
 
-it('next advances 1 page', () => {
-    const pagination: IPagination = {
+it('next advances 1 page', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
@@ -139,8 +146,9 @@ it('next advances 1 page', () => {
     });
 });
 
-it('next does not advance past the end', () => {
-    const pagination: IPagination = {
+it('next does not advance past the end', () =>
+{
+    const pagination : IPagination = {
         currentPage: 10,
         pageSize: 10,
     };
@@ -161,8 +169,9 @@ it('next does not advance past the end', () => {
     });
 });
 
-it('prev goes 1 page back', () => {
-    const pagination: IPagination = {
+it('prev goes 1 page back', () =>
+{
+    const pagination : IPagination = {
         currentPage: 5,
         pageSize: 10,
     };
@@ -183,8 +192,9 @@ it('prev goes 1 page back', () => {
     });
 });
 
-it('prev does not go back past 1', () => {
-    const pagination: IPagination = {
+it('prev does not go back past 1', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
@@ -205,13 +215,14 @@ it('prev does not go back past 1', () => {
     });
 });
 
-it('page size options', () => {
-    const pagination: IPagination = {
+it('page size options', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
     setGridContextData({ pagination });
-    const config: IFooterProps = {
+    const config : IFooterProps = {
         pageSizeOptions: [5, 10, 100, 1000], //should not render the 1000 because it doesn't make sense
     };
     const totalCount = 100;
@@ -232,7 +243,8 @@ it('page size options', () => {
         getByTestId(component, 'page-size-select').find('option')
     ).toHaveLength(3);
 
-    if (!config.pageSizeOptions) {
+    if (!config.pageSizeOptions)
+    {
         throw new Error('pageSizeOptions not configured properly for test');
     }
     expect(
@@ -249,12 +261,13 @@ it('page size options', () => {
     ).toBe(config.pageSizeOptions[2]);
 });
 
-it('changing page size', () => {
-    const pagination: IPagination = {
+it('changing page size', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
-    const config: IFooterProps = {
+    const config : IFooterProps = {
         pageSizeOptions: [5, 10, 100, 1000], //should not render the 1000 because it doesn't make sense
     };
     const totalCount = 100;
@@ -281,12 +294,13 @@ it('changing page size', () => {
     });
 });
 
-it('disabled when needs saving', () => {
-    const pagination: IPagination = {
+it('disabled when needs saving', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
-    const config: IFooterProps = {
+    const config : IFooterProps = {
         pageSizeOptions: [5, 10, 100], //should not render the 1000 because it doesn't make sense
     };
     const totalCount = 100;
@@ -327,17 +341,19 @@ it('disabled when needs saving', () => {
     ).toBeTruthy();
 
     const jumps = getByTestId(component, 'jump');
-    for (let i = 0; i < jumps.length; i++) {
+    for (let i = 0; i < jumps.length; i++)
+    {
         expect(jumps.at(0).prop('disabled')).toBeTruthy();
     }
 });
 
-it('disabled when needs editing', () => {
-    const pagination: IPagination = {
+it('disabled when needs editing', () =>
+{
+    const pagination : IPagination = {
         currentPage: 1,
         pageSize: 10,
     };
-    const config: IFooterProps = {
+    const config : IFooterProps = {
         pageSizeOptions: [5, 10, 100], //should not render the 1000 because it doesn't make sense
     };
     const totalCount = 100;
@@ -378,7 +394,8 @@ it('disabled when needs editing', () => {
     ).toBeTruthy();
 
     const jumps = getByTestId(component, 'jump');
-    for (let i = 0; i < jumps.length; i++) {
+    for (let i = 0; i < jumps.length; i++)
+    {
         expect(jumps.at(0).prop('disabled')).toBeTruthy();
     }
 });

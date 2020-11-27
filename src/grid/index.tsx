@@ -3,18 +3,20 @@ import { IFooterProps } from './grid/header-footer/footer';
 import { GridContext, useGridContext } from './grid/context';
 import { Grid } from './grid/grid';
 import { GridEditMode } from './grid/types-grid';
-import {
-    IDataResult,
-    IFieldFilter,
-    IPagination,
-    ISortColumn,
-} from './grid/types-pagination';
-import {
-    IProgress,
-    ISyncData,
-    ISyncDataResult,
-    SyncAction,
-} from './grid/types-sync';
+import
+    {
+        IDataResult,
+        IFieldFilter,
+        IPagination,
+        ISortColumn,
+    } from './grid/types-pagination';
+import
+    {
+        IProgress,
+        ISyncData,
+        ISyncDataResult,
+        SyncAction,
+    } from './grid/types-sync';
 import * as validate from './grid/columns/validation';
 
 export type {
@@ -29,7 +31,8 @@ export type {
     Column,
 };
 
-export {
+export
+{
     GridEditMode,
     SyncAction,
     GridContext,

@@ -1,27 +1,30 @@
 import * as React from 'react';
 import { useGridContext } from '../context';
 
-export interface IFooterProps {
-    pageSizeOptions?: number[];
-    initialPageSize?: number;
-    numPageJumpButtons?: number;
+export interface IFooterProps
+{
+    pageSizeOptions ?: number[];
+    initialPageSize ?: number;
+    numPageJumpButtons ?: number;
 
-    firstLabel?: string;
-    lastLabel?: string;
-    nextLabel?: string;
-    prevLabel?: string;
-    itemsName?: string;
+    firstLabel ?: string;
+    lastLabel ?: string;
+    nextLabel ?: string;
+    prevLabel ?: string;
+    itemsName ?: string;
 }
 
-interface IInternalFooterProps {
-    totalCount: number;
-    numColumns: number;
-    config?: IFooterProps;
+interface IInternalFooterProps
+{
+    totalCount : number;
+    numColumns : number;
+    config ?: IFooterProps;
 }
 
-export const Footer: (props: IInternalFooterProps) => JSX.Element = (
-    props: IInternalFooterProps
-) => {
+export const Footer : (props : IInternalFooterProps) => JSX.Element = (
+    props : IInternalFooterProps
+) =>
+{
     const { pagination, setPagination, editingContext } = useGridContext();
     if (!setPagination || !pagination) return <></>;
 
@@ -29,7 +32,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (
         editingContext?.isEditing || editingContext?.needsSave
     );
 
-    const setPaginationDataSafe = (newCurrentPage: number, pageSize: number) =>
+    const setPaginationDataSafe = (newCurrentPage : number, pageSize : number) =>
         setPagination({
             currentPage: clamp(
                 newCurrentPage,
@@ -38,7 +41,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (
             ),
             pageSize,
         });
-    const jumpToPage = (currentPage: number) =>
+    const jumpToPage = (currentPage : number) =>
         setPagination({ currentPage, pageSize: pagination.pageSize });
 
     const totalPages = getTotalPages(props.totalCount, pagination.pageSize);
@@ -132,23 +135,27 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (
     );
 };
 
-function clamp(n: number, min: number, max: number): number {
-    if (n > max) {
+function clamp(n : number, min : number, max : number) : number
+{
+    if (n > max)
+    {
         return max;
     }
-    if (n < min) {
+    if (n < min)
+    {
         return min;
     }
     return n;
 }
 
 function getPageJumpButtons(
-    currentPage: number,
-    totalPages: number,
-    setPage: (n: number) => void,
-    numJumpButtons: number | undefined,
-    disabled: boolean
-): JSX.Element {
+    currentPage : number,
+    totalPages : number,
+    setPage : (n : number) => void,
+    numJumpButtons : number | undefined,
+    disabled : boolean
+) : JSX.Element
+{
     const defaultNumJumpButtons = 7;
     const two = 2;
     numJumpButtons = Math.min(
@@ -156,23 +163,28 @@ function getPageJumpButtons(
         totalPages
     );
     let firstJump = Math.max(1, currentPage - Math.floor(numJumpButtons / two));
-    if (firstJump + numJumpButtons > totalPages) {
+    if (firstJump + numJumpButtons > totalPages)
+    {
         firstJump = totalPages - numJumpButtons + 1;
     }
     let pageJumps = Array(numJumpButtons)
         .fill(null)
         .map((_, i) => i + firstJump);
 
-    if (pageJumps.indexOf(1) < 0) {
-        if (pageJumps.length >= numJumpButtons) {
+    if (pageJumps.indexOf(1) < 0)
+    {
+        if (pageJumps.length >= numJumpButtons)
+        {
             pageJumps = pageJumps.slice(1);
         }
         pageJumps.push(1);
     }
     pageJumps.sort((a, b) => a - b);
 
-    if (pageJumps.indexOf(totalPages) < 0) {
-        if (pageJumps.length >= numJumpButtons) {
+    if (pageJumps.indexOf(totalPages) < 0)
+    {
+        if (pageJumps.length >= numJumpButtons)
+        {
             pageJumps.pop();
         }
         pageJumps.push(totalPages);
@@ -204,10 +216,12 @@ function getPageJumpButtons(
     );
 }
 
-function getTotalPages(totalCount: number, pageSize: number): number {
+function getTotalPages(totalCount : number, pageSize : number) : number
+{
     const pageCount = totalCount / pageSize;
     const pageCountInt = Math.floor(pageCount);
-    if (pageCount - pageCountInt === 0) {
+    if (pageCount - pageCountInt === 0)
+    {
         return pageCount;
     }
 
@@ -217,10 +231,11 @@ function getTotalPages(totalCount: number, pageSize: number): number {
 // tslint:disable-next-line:no-magic-numbers
 const defaultPageSizeOption = [5, 10, 20, 50, 100];
 function getPageSizeOptions(
-    pageSizes: number[] | undefined,
-    currentPageSize: number | undefined,
-    totalItemCount: number
-): number[] {
+    pageSizes : number[] | undefined,
+    currentPageSize : number | undefined,
+    totalItemCount : number
+) : number[]
+{
     pageSizes = pageSizes || defaultPageSizeOption;
     pageSizes.push(currentPageSize || 10);
     pageSizes = pageSizes

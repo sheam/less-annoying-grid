@@ -1,30 +1,33 @@
 import * as React from 'react';
-import {
-    Column,
-    Grid,
-    GridEditMode,
-    IDataResult,
-    IFieldFilter,
-    IPagination,
-    IProgress,
-    ISortColumn,
-    ISyncData,
-    ISyncDataResult,
-    SyncAction,
-} from '../../grid';
-import {
-    addData,
-    deleteData,
-    getData as getMockData,
-    IData as IMockData,
-    updateData,
-} from './mock-data';
+import
+    {
+        Column,
+        Grid,
+        GridEditMode,
+        IDataResult,
+        IFieldFilter,
+        IPagination,
+        IProgress,
+        ISortColumn,
+        ISyncData,
+        ISyncDataResult,
+        SyncAction,
+    } from '../../grid';
+import
+    {
+        addData,
+        deleteData,
+        getData as getMockData,
+        IData as IMockData,
+        updateData,
+    } from './mock-data';
 import './styles.css';
 import { useGridContext, validate } from '../../grid';
 import { ToolBar } from './toolbar';
 import { CustomEditorExample } from './custom-editor-example';
 
-const TestGrid: React.FunctionComponent = (): JSX.Element => {
+const TestGrid : React.FunctionComponent = () : JSX.Element =>
+{
     return (
         <div className="container">
             <Grid
@@ -55,7 +58,8 @@ const TestGrid: React.FunctionComponent = (): JSX.Element => {
 
 export default TestGrid;
 
-function detailTemplate(m: IMockData): JSX.Element    {
+function detailTemplate(m : IMockData) : JSX.Element
+{
     return (
         <div>
             <div>
@@ -70,7 +74,7 @@ function detailTemplate(m: IMockData): JSX.Element    {
     );
 }
 
-const cols: Array<Column<IMockData>> = [
+const cols : Array<Column<IMockData>> = [
     {
         name: 'Key',
         field: 'key',
@@ -156,7 +160,8 @@ const cols: Array<Column<IMockData>> = [
         editable: {
             type: 'values',
             subType: 'number',
-            values: [1, 2, 3, 4].map(n => {
+            values: [1, 2, 3, 4].map(n =>
+            {
                 return { text: n.toString(), value: n };
             }),
         },
@@ -173,8 +178,10 @@ const cols: Array<Column<IMockData>> = [
             {
                 type: 'delete',
                 buttonContent: 'DEL',
-                confirm: (m, _) => {
-                    return new Promise<boolean>(resolve => {
+                confirm: (m, _) =>
+                {
+                    return new Promise<boolean>(resolve =>
+                    {
                         resolve(
                             window.confirm(
                                 `Are you sure you would like to delete the row with Key=${m.key}`
@@ -187,10 +194,12 @@ const cols: Array<Column<IMockData>> = [
     },
 ];
 
-const SyncProgress: React.FunctionComponent = () => {
+const SyncProgress : React.FunctionComponent = () =>
+{
     const { editingContext } = useGridContext();
     const progress = editingContext?.syncProgress;
-    if (!progress) {
+    if (!progress)
+    {
         return null;
     }
     return (
@@ -205,35 +214,43 @@ const SyncProgress: React.FunctionComponent = () => {
 };
 
 function getDataAsync(
-    pagination: IPagination | null,
-    sort: ISortColumn | null,
-    filters: IFieldFilter[]
-): Promise<IDataResult<IMockData>> {
-    return new Promise<IDataResult<IMockData>>(resolve => {
+    pagination : IPagination | null,
+    sort : ISortColumn | null,
+    filters : IFieldFilter[]
+) : Promise<IDataResult<IMockData>>
+{
+    return new Promise<IDataResult<IMockData>>(resolve =>
+    {
         const data = getMockData(pagination, sort, filters);
-        setTimeout(() => {
+        setTimeout(() =>
+        {
             resolve(data);
         }, 1000);
     });
 }
 
 function syncDataAsync(
-    changes: Array<ISyncData<IMockData>>,
-    updateProgress: (
-        p: IProgress,
-        interimResults?: Array<ISyncDataResult<IMockData>>
+    changes : Array<ISyncData<IMockData>>,
+    updateProgress : (
+        p : IProgress,
+        interimResults ?: Array<ISyncDataResult<IMockData>>
     ) => void
-): Promise<Array<ISyncDataResult<IMockData>>> {
-    return new Promise<Array<ISyncDataResult<IMockData>>>(resolve => {
-        const results: Array<ISyncDataResult<IMockData>> = [];
+) : Promise<Array<ISyncDataResult<IMockData>>>
+{
+    return new Promise<Array<ISyncDataResult<IMockData>>>(resolve =>
+    {
+        const results : Array<ISyncDataResult<IMockData>> = [];
         let count = 0;
-        for (let change of changes) {
-            if (!change.model) {
+        for (let change of changes)
+        {
+            if (!change.model)
+            {
                 throw new Error('change should never be null');
             }
 
-            let resultModel: IMockData | null;
-            switch (change.syncAction) {
+            let resultModel : IMockData | null;
+            switch (change.syncAction)
+            {
                 case SyncAction.updated:
                     resultModel = updateData(change.model);
                     break;
@@ -250,7 +267,7 @@ function syncDataAsync(
                     );
             }
 
-            const syncResult: ISyncDataResult<IMockData> = {
+            const syncResult : ISyncDataResult<IMockData> = {
                 model: resultModel,
                 syncAction: change.syncAction,
                 rowId: change.rowId,

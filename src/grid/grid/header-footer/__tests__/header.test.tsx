@@ -6,26 +6,29 @@ import { Header } from '../header';
 import { Column, IDataColumn } from '../../columns/types';
 import { ISortColumn } from '../../types-pagination';
 
-interface IDataRow {
-    col1: string;
-    col2: string;
-    col3: string;
+interface IDataRow
+{
+    col1 : string;
+    col2 : string;
+    col3 : string;
 }
 
-const getByTestId = (c: ShallowWrapper, name: string) =>
+const getByTestId = (c : ShallowWrapper, name : string) =>
     c.find(`[data-test="${name}"]`);
-const headerCell = (c: ShallowWrapper, index: number) =>
+const headerCell = (c : ShallowWrapper, index : number) =>
     getByTestId(c, 'header').at(index);
-const groupCell = (c: ShallowWrapper, index: number) =>
+const groupCell = (c : ShallowWrapper, index : number) =>
     getByTestId(c, 'group').at(index);
-function setGridContextData(gridContext: GridContext.IGridContext<any>): void {
+function setGridContextData(gridContext : GridContext.IGridContext<any>) : void
+{
     jest.spyOn(GridContext, 'useGridContext').mockImplementation(
         () => gridContext
     );
 }
 
-it('renders simple header', () => {
-    const cols: Array<Column<IDataRow>> = [
+it('renders simple header', () =>
+{
+    const cols : Array<Column<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -49,8 +52,9 @@ it('renders simple header', () => {
     expect(headerCell(c, 2).text()).toContain(cols[2].name);
 });
 
-it('renders grouped header', () => {
-    const cols: Array<Column<IDataRow>> = [
+it('renders grouped header', () =>
+{
+    const cols : Array<Column<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -99,8 +103,9 @@ it('renders grouped header', () => {
     expect(groupCell(c, 1).text()).toContain(cols[1].name);
 });
 
-it('renders sort ASC', () => {
-    const cols: Array<IDataColumn<IDataRow>> = [
+it('renders sort ASC', () =>
+{
+    const cols : Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -117,7 +122,7 @@ it('renders sort ASC', () => {
             type: 'data',
         },
     ];
-    const sort: ISortColumn = {
+    const sort : ISortColumn = {
         field: 'col2',
         direction: 'ASC',
     };
@@ -137,8 +142,9 @@ it('renders sort ASC', () => {
     expect(headerCell(c, 1).text()).toContain(sortAscLabel);
 });
 
-it('renders sort ASC custom', () => {
-    const cols: Array<IDataColumn<IDataRow>> = [
+it('renders sort ASC custom', () =>
+{
+    const cols : Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -155,7 +161,7 @@ it('renders sort ASC custom', () => {
             type: 'data',
         },
     ];
-    const sort: ISortColumn = {
+    const sort : ISortColumn = {
         field: 'col2',
         direction: 'ASC',
     };
@@ -175,8 +181,9 @@ it('renders sort ASC custom', () => {
     expect(headerCell(c, 1).text()).toContain(sortAscLabel);
 });
 
-it('renders sort DESC', () => {
-    const cols: Array<IDataColumn<IDataRow>> = [
+it('renders sort DESC', () =>
+{
+    const cols : Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -193,7 +200,7 @@ it('renders sort DESC', () => {
             type: 'data',
         },
     ];
-    const sort: ISortColumn = {
+    const sort : ISortColumn = {
         field: 'col2',
         direction: 'DESC',
     };
@@ -213,8 +220,9 @@ it('renders sort DESC', () => {
     expect(headerCell(c, 1).text()).toContain(sortDescLabel);
 });
 
-it('non-sortable header clicked -> no sorting', () => {
-    const cols: Array<IDataColumn<IDataRow>> = [
+it('non-sortable header clicked -> no sorting', () =>
+{
+    const cols : Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -249,8 +257,9 @@ it('non-sortable header clicked -> no sorting', () => {
     expect(setSort).toHaveBeenCalledTimes(0);
 });
 
-it('no sort to sort -> ASC', () => {
-    const cols: Array<IDataColumn<IDataRow>> = [
+it('no sort to sort -> ASC', () =>
+{
+    const cols : Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -286,8 +295,9 @@ it('no sort to sort -> ASC', () => {
     expect(setSort).toBeCalledWith({ field: cols[1].field, direction: 'ASC' });
 });
 
-it('ASC sort col clicked -> DESC', () => {
-    const cols: Array<IDataColumn<IDataRow>> = [
+it('ASC sort col clicked -> DESC', () =>
+{
+    const cols : Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -305,7 +315,7 @@ it('ASC sort col clicked -> DESC', () => {
             type: 'data',
         },
     ];
-    const sort: ISortColumn = {
+    const sort : ISortColumn = {
         field: 'col2',
         direction: 'ASC',
     };
@@ -326,8 +336,9 @@ it('ASC sort col clicked -> DESC', () => {
     expect(setSort).toBeCalledWith({ field: cols[1].field, direction: 'DESC' });
 });
 
-it('DESC sort col clicked -> no sorting', () => {
-    const cols: Array<IDataColumn<IDataRow>> = [
+it('DESC sort col clicked -> no sorting', () =>
+{
+    const cols : Array<IDataColumn<IDataRow>> = [
         {
             name: 'col 1',
             field: 'col1',
@@ -345,7 +356,7 @@ it('DESC sort col clicked -> no sorting', () => {
             type: 'data',
         },
     ];
-    const sort: ISortColumn = {
+    const sort : ISortColumn = {
         field: 'col2',
         direction: 'DESC',
     };

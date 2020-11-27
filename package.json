@@ -22,7 +22,7 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "format": "tsfmt -r",
-        "eject": "react-scripts eject",
+        "eject": "react-scripts eject"
     },
     "eslintConfig": {
         "extends": [
@@ -51,7 +51,6 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn format"
         }
     }
 }

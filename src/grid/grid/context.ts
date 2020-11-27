@@ -5,26 +5,27 @@ import { IGridState } from './state';
 import { createEditingContext, IGridEditContext } from './editing';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 
-export interface IGridContext<TModel extends object> {
-    pagination?: IPagination | null;
-    setPagination?: Setter<IPagination>;
-    resetPagination?: () => void;
+export interface IGridContext<TModel extends object>
+{
+    pagination ?: IPagination | null;
+    setPagination ?: Setter<IPagination>;
+    resetPagination ?: () => void;
 
-    sort?: ISortColumn | null;
-    setSort?: Setter<ISortColumn | null>;
+    sort ?: ISortColumn | null;
+    setSort ?: Setter<ISortColumn | null>;
 
-    filters?: IFieldFilter[];
-    setFilters?: Setter<IFieldFilter[]>;
+    filters ?: IFieldFilter[];
+    setFilters ?: Setter<IFieldFilter[]>;
 
-    isLoading?: boolean;
-    setIsLoading?: Setter<boolean>;
+    isLoading ?: boolean;
+    setIsLoading ?: Setter<boolean>;
 
-    showDetailForRow?: (rowId: string, show: boolean) => void;
-    renderRowDetail?: (model: TModel) => JSX.Element;
-    rowDetailButtonShowingContent?: ElementOrString;
-    rowDetailButtonHiddenContent?: ElementOrString;
+    showDetailForRow ?: (rowId : string, show : boolean) => void;
+    renderRowDetail ?: (model : TModel) => JSX.Element;
+    rowDetailButtonShowingContent ?: ElementOrString;
+    rowDetailButtonHiddenContent ?: ElementOrString;
 
-    editingContext?: IGridEditContext<TModel> | null;
+    editingContext ?: IGridEditContext<TModel> | null;
 }
 
 export const GridContext = React.createContext({});
@@ -33,14 +34,17 @@ export const useGridContext = <TModel extends object>() =>
     useContext<IGridContext<TModel>>(GridContext);
 
 export function createGridContext<TModel extends object>(
-    props: IGridProps<TModel>,
-    state: IGridState<TModel>
-): IGridContext<TModel> {
+    props : IGridProps<TModel>,
+    state : IGridState<TModel>
+) : IGridContext<TModel>
+{
     return {
         pagination: state.pagination,
         setPagination: state.setPagination,
-        resetPagination: () => {
-            if (!state.pagination?.pageSize) {
+        resetPagination: () =>
+        {
+            if (!state.pagination?.pageSize)
+            {
                 return;
             }
             state.setPagination({
@@ -63,13 +67,15 @@ export function createGridContext<TModel extends object>(
 }
 
 function showDetailForRow<TModel extends object>(
-    rowId: string,
-    show: boolean,
-    state: IGridState<TModel>
-): void {
+    rowId : string,
+    show : boolean,
+    state : IGridState<TModel>
+) : void
+{
     const data = state.dataState.data;
     const index = data.findIndex(r => r.rowId === rowId);
-    if (index < 0) {
+    if (index < 0)
+    {
         throw new Error(
             `Unable to file row with id '${rowId}' to show detail for`
         );

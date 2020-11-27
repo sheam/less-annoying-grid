@@ -5,19 +5,23 @@ import { ISortColumn } from '../types-pagination';
 import { ElementOrString } from '../types-grid';
 import { getNonGroupColumns } from '../util';
 
-export interface IHeaderProps<TModel extends object> {
-    columns: Array<Column<TModel>>;
-    toolbar?: JSX.Element;
+export interface IHeaderProps<TModel extends object>
+{
+    columns : Array<Column<TModel>>;
+    toolbar ?: JSX.Element;
 
-    sortAscLabel?: ElementOrString;
-    sortDescLabel?: ElementOrString;
+    sortAscLabel ?: ElementOrString;
+    sortDescLabel ?: ElementOrString;
 }
 
-export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
+export const Header = <TModel extends object>(props : IHeaderProps<TModel>) =>
+{
     const { sort, setSort, renderRowDetail } = useGridContext();
 
-    const getGroupHeaderCell = (c: Column<TModel>): JSX.Element => {
-        if (c.type !== 'group' || !c.subColumns) {
+    const getGroupHeaderCell = (c : Column<TModel>) : JSX.Element =>
+    {
+        if (c.type !== 'group' || !c.subColumns)
+        {
             const hide = c.type !== 'display' && c.hidden;
             return (
                 <th
@@ -42,8 +46,10 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
         );
     };
 
-    const getHeaderCell = (c: NonGroupColumn<TModel>): JSX.Element => {
-        if (c.type === 'action') {
+    const getHeaderCell = (c : NonGroupColumn<TModel>) : JSX.Element =>
+    {
+        if (c.type === 'action')
+        {
             return (
                 <th key={c.name} hidden={c.hidden} data-test="header">
                     {c.name}
@@ -65,19 +71,23 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
     };
 
     const getSortLabel = (
-        c: NonGroupColumn<TModel>
-    ): ElementOrString | null => {
-        if (c.type !== 'data' || sort?.field !== c.field || !sort?.direction) {
+        c : NonGroupColumn<TModel>
+    ) : ElementOrString | null =>
+    {
+        if (c.type !== 'data' || sort?.field !== c.field || !sort?.direction)
+        {
             return null;
         }
-        if (sort.direction === 'ASC') {
+        if (sort.direction === 'ASC')
+        {
             return (
                 <span className="sort-indicator" data-test="sort-asc">
                     {props.sortAscLabel || 'v'}
                 </span>
             );
         }
-        if (sort.direction === 'DESC') {
+        if (sort.direction === 'DESC')
+        {
             return (
                 <span className="sort-indicator" data-test="sort-desc">
                     {props.sortDescLabel || '^'}
@@ -87,17 +97,22 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
         return null;
     };
 
-    const headerClicked = (c: NonGroupColumn<TModel>): void => {
-        if (c.type !== 'data' || !setSort) {
+    const headerClicked = (c : NonGroupColumn<TModel>) : void =>
+    {
+        if (c.type !== 'data' || !setSort)
+        {
             return;
         }
 
-        let sortCol: ISortColumn = { field: c.field, direction: 'ASC' };
-        if (sort?.field === c.field) {
-            if (sort.direction === 'ASC') {
+        let sortCol : ISortColumn = { field: c.field, direction: 'ASC' };
+        if (sort?.field === c.field)
+        {
+            if (sort.direction === 'ASC')
+            {
                 sortCol.direction = 'DESC';
             }
-            if (sort.direction === 'DESC') {
+            if (sort.direction === 'DESC')
+            {
                 setSort(null);
                 return;
             }

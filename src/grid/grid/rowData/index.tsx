@@ -8,24 +8,30 @@ import { SyncAction } from '../types-sync';
 import { RowDetailTemplate } from './detail-template';
 import { getNonGroupColumns } from '../util';
 
-export const Row = <TModel extends object>(props: IRowProps<TModel>) => {
+export const Row = <TModel extends object>(props : IRowProps<TModel>) =>
+{
     const { editingContext, renderRowDetail } = useGridContext();
-    if (props.data.syncAction === SyncAction.deleted) {
+    if (props.data.syncAction === SyncAction.deleted)
+    {
         return null;
     }
 
-    let row: JSX.Element | null = null;
-    if (!editingContext) {
+    let row : JSX.Element | null = null;
+    if (!editingContext)
+    {
         row = <RowReadOnly {...props} />;
-    } else if (editingContext.editMode === GridEditMode.inline) {
+    } else if (editingContext.editMode === GridEditMode.inline)
+    {
         row = <RowInlineEdit {...props} />;
     }
 
-    if (!row) {
+    if (!row)
+    {
         throw new Error('unhandled edit mode');
     }
 
-    if (renderRowDetail) {
+    if (renderRowDetail)
+    {
         return (
             <>
                 {row}
@@ -37,7 +43,8 @@ export const Row = <TModel extends object>(props: IRowProps<TModel>) => {
                 </RowDetailTemplate>
             </>
         );
-    } else {
+    } else
+    {
         return row;
     }
 };

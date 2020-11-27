@@ -4,15 +4,17 @@ import { IRowData } from '../types-grid';
 import { Action } from '../columns/types';
 import { SyncAction } from '../types-sync';
 
-interface IActionButtonProps<TModel extends object> {
-    action: Action<TModel>;
-    rowData: IRowData<TModel>;
+interface IActionButtonProps<TModel extends object>
+{
+    action : Action<TModel>;
+    rowData : IRowData<TModel>;
 }
 
 export const ActionButton = <TModel extends object>({
     action,
     rowData,
-}: IActionButtonProps<TModel>) => {
+} : IActionButtonProps<TModel>) =>
+{
     const context = useGridContext<TModel>();
     const name = action.name || action.type;
     const content = action.buttonContent || <>{name}</>;
@@ -25,23 +27,32 @@ export const ActionButton = <TModel extends object>({
 };
 
 function getHandler<TModel extends object>(
-    action: Action<TModel>,
-    rowData: IRowData<TModel>,
-    context: IGridContext<TModel>
-) {
-    return () => {
-        switch (action.type) {
+    action : Action<TModel>,
+    rowData : IRowData<TModel>,
+    context : IGridContext<TModel>
+)
+{
+    return () =>
+    {
+        switch (action.type)
+        {
             case 'delete':
-                if (action.confirm) {
-                    if (action.confirm === true) {
-                        if (window.confirm(`Delete item?`)) {
+                if (action.confirm)
+                {
+                    if (action.confirm === true)
+                    {
+                        if (window.confirm(`Delete item?`))
+                        {
                             context.editingContext?.deleteRow(rowData);
                         }
-                    } else {
+                    } else
+                    {
                         action
                             .confirm(rowData.model, rowData.syncAction)
-                            .then(doDelete => {
-                                if (doDelete) {
+                            .then(doDelete =>
+                            {
+                                if (doDelete)
+                                {
                                     context.editingContext?.deleteRow(rowData);
                                 }
                             });
@@ -59,14 +70,18 @@ function getHandler<TModel extends object>(
                     rowData.rowId,
                     rowData.syncAction
                 );
-                if (changes) {
-                    for (let change of changes) {
-                        if (!change.model) {
+                if (changes)
+                {
+                    for (let change of changes)
+                    {
+                        if (!change.model)
+                        {
                             throw new Error(
                                 'the changed model must not be null'
                             );
                         }
-                        switch (change.syncAction) {
+                        switch (change.syncAction)
+                        {
                             case SyncAction.deleted:
                                 context.editingContext?.deleteRow(rowData);
                                 break;

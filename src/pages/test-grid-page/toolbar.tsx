@@ -3,9 +3,10 @@ import { FormEvent } from 'react';
 import { useGridContext } from '../../grid';
 import './styles.css';
 
-interface IToolbarProps {}
+interface IToolbarProps { }
 
-export const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
+export const ToolBar : React.FunctionComponent<IToolbarProps> = () =>
+{
     const {
         setSort,
         filters,
@@ -13,16 +14,20 @@ export const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
         resetPagination,
         editingContext,
     } = useGridContext();
-    if (!setSort || !setFilters || !resetPagination) {
+    if (!setSort || !setFilters || !resetPagination)
+    {
         throw new Error('configuration error');
     }
 
-    const filterChanged = (e: FormEvent): void => {
+    const filterChanged = (e : FormEvent) : void =>
+    {
         resetPagination();
         const val = (e.target as any).value.toString();
-        if (!val) {
+        if (!val)
+        {
             setFilters([]);
-        } else {
+        } else
+        {
             setFilters([
                 {
                     field: 'four',
@@ -34,22 +39,27 @@ export const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
     };
 
     let currentFilter = '';
-    if (filters && filters.length > 0) {
+    if (filters && filters.length > 0)
+    {
         currentFilter = filters[0].value;
     }
     const canSave =
         (editingContext?.needsSave || editingContext?.syncProgress) &&
         !editingContext?.validationErrors;
-    const saveClicked = async (_: React.MouseEvent<HTMLButtonElement>) => {
-        if (!canSave) {
+    const saveClicked = async (_ : React.MouseEvent<HTMLButtonElement>) =>
+    {
+        if (!canSave)
+        {
             throw new Error('save clicked when canSave is false');
         }
-        if (!editingContext?.sync) {
+        if (!editingContext?.sync)
+        {
             throw new Error('save clicked when editing context is null');
         }
         await editingContext.sync();
     };
-    const addRowClicked = (_: React.MouseEvent<HTMLButtonElement>) => {
+    const addRowClicked = (_ : React.MouseEvent<HTMLButtonElement>) =>
+    {
         editingContext?.addRow();
     };
     return (
@@ -77,14 +87,16 @@ export const ToolBar: React.FunctionComponent<IToolbarProps> = () => {
             </label>
             <button
                 disabled={!canSave}
-                onClick={async e => {
+                onClick={async e =>
+                {
                     await saveClicked(e);
                 }}
             >
                 Save
             </button>
             <button
-                onClick={async e => {
+                onClick={async e =>
+                {
                     await addRowClicked(e);
                 }}
             >

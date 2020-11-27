@@ -4,8 +4,9 @@ import { IRowProps } from './types';
 import { CellReadonly } from './cell-readonly';
 
 export const RowReadOnly = <TModel extends object>(
-    props: IRowProps<TModel>
-) => {
+    props : IRowProps<TModel>
+) =>
+{
     const columns = props.columns.flatMap(c =>
         c.type === 'group' ? c.subColumns : c
     );
@@ -13,8 +14,10 @@ export const RowReadOnly = <TModel extends object>(
 
     return (
         <tr data-test="data-row" className="data-row">
-            {columns.map(c => {
-                if (c?.type === 'data' || c?.type === 'display') {
+            {columns.map(c =>
+            {
+                if (c?.type === 'data' || c?.type === 'display')
+                {
                     return (
                         <CellReadonly
                             key={`td-${uid}-${c.name}`}
@@ -23,7 +26,8 @@ export const RowReadOnly = <TModel extends object>(
                         />
                     );
                 }
-                if (c?.type === 'action') {
+                if (c?.type === 'action')
+                {
                     return (
                         <ActionCell
                             key={`td-${uid}-${c.name}`}

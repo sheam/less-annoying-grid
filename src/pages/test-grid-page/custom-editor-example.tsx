@@ -4,39 +4,47 @@ import { cloneData } from '../../grid/grid/util';
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { Direction } from '../../grid/grid/types-grid';
 
-interface ICustomEditorExampleProps {
-    field: string;
+interface ICustomEditorExampleProps
+{
+    field : string;
 }
 
-export const CustomEditorExample: React.FunctionComponent<ICustomEditorExampleProps> = ({
+export const CustomEditorExample : React.FunctionComponent<ICustomEditorExampleProps> = ({
     field,
-}) => {
+}) =>
+{
     const context = useRowContext();
     const model = cloneData(context.model);
 
     const changeHandler = (
-        e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
-    ) => {
+        e : ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+    ) =>
+    {
         model[field] = `n-${e.target.value}`;
         context.onChange(model);
     };
 
-    const focusLost = () => {
+    const focusLost = () =>
+    {
         context.doneEditing(true, Direction.none);
     };
 
     const detectSpecialKeys = (
-        e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
-    ) => {
-        if (e.key === 'Escape') {
+        e : KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
+    ) =>
+    {
+        if (e.key === 'Escape')
+        {
             e.preventDefault();
             context.doneEditing(false, Direction.none);
         }
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter')
+        {
             e.preventDefault();
             context.doneEditing(true, Direction.none);
         }
-        if (e.key === 'Tab') {
+        if (e.key === 'Tab')
+        {
             e.preventDefault();
             context.doneEditing(
                 true,
@@ -47,9 +55,11 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
 
     let n = 1;
     const strVal = model[field]?.toString();
-    if (strVal) {
+    if (strVal)
+    {
         const match = strVal.match(/n-(\d+)/i);
-        if (match) {
+        if (match)
+        {
             n = parseInt(match[1]);
         }
     }
