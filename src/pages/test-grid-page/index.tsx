@@ -1,32 +1,32 @@
 import * as React from 'react';
 import
-    {
-        Column,
-        Grid,
-        GridEditMode,
-        IDataResult,
-        IFieldFilter,
-        IPagination,
-        IProgress,
-        ISortColumn,
-        ISyncData,
-        ISyncDataResult,
-        SyncAction,
-    } from '../../grid';
+{
+    Column,
+    Grid,
+    GridEditMode,
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    IProgress,
+    ISortColumn,
+    ISyncData,
+    ISyncDataResult,
+    SyncAction,
+} from '../../grid';
 import
-    {
-        addData,
-        deleteData,
-        getData as getMockData,
-        IData as IMockData,
-        updateData,
-    } from './mock-data';
+{
+    addData,
+    deleteData,
+    getData as getMockData,
+    IData as IMockData,
+    updateData,
+} from './mock-data';
 import './styles.css';
 import { useGridContext, validate } from '../../grid';
 import { ToolBar } from './toolbar';
 import { CustomEditorExample } from './custom-editor-example';
 
-const TestGrid : React.FunctionComponent = () : JSX.Element =>
+const TestGrid: React.FunctionComponent = (): JSX.Element =>
 {
     return (
         <div className="container">
@@ -58,7 +58,7 @@ const TestGrid : React.FunctionComponent = () : JSX.Element =>
 
 export default TestGrid;
 
-function detailTemplate(m : IMockData) : JSX.Element
+function detailTemplate(m: IMockData): JSX.Element
 {
     return (
         <div>
@@ -74,7 +74,7 @@ function detailTemplate(m : IMockData) : JSX.Element
     );
 }
 
-const cols : Array<Column<IMockData>> = [
+const cols: Array<Column<IMockData>> = [
     {
         name: 'Key',
         field: 'key',
@@ -194,7 +194,7 @@ const cols : Array<Column<IMockData>> = [
     },
 ];
 
-const SyncProgress : React.FunctionComponent = () =>
+const SyncProgress: React.FunctionComponent = () =>
 {
     const { editingContext } = useGridContext();
     const progress = editingContext?.syncProgress;
@@ -214,10 +214,10 @@ const SyncProgress : React.FunctionComponent = () =>
 };
 
 function getDataAsync(
-    pagination : IPagination | null,
-    sort : ISortColumn | null,
-    filters : IFieldFilter[]
-) : Promise<IDataResult<IMockData>>
+    pagination: IPagination | null,
+    sort: ISortColumn | null,
+    filters: IFieldFilter[]
+): Promise<IDataResult<IMockData>>
 {
     return new Promise<IDataResult<IMockData>>(resolve =>
     {
@@ -230,16 +230,16 @@ function getDataAsync(
 }
 
 function syncDataAsync(
-    changes : Array<ISyncData<IMockData>>,
-    updateProgress : (
-        p : IProgress,
-        interimResults ?: Array<ISyncDataResult<IMockData>>
+    changes: Array<ISyncData<IMockData>>,
+    updateProgress: (
+        p: IProgress,
+        interimResults?: Array<ISyncDataResult<IMockData>>
     ) => void
-) : Promise<Array<ISyncDataResult<IMockData>>>
+): Promise<Array<ISyncDataResult<IMockData>>>
 {
     return new Promise<Array<ISyncDataResult<IMockData>>>(resolve =>
     {
-        const results : Array<ISyncDataResult<IMockData>> = [];
+        const results: Array<ISyncDataResult<IMockData>> = [];
         let count = 0;
         for (let change of changes)
         {
@@ -248,7 +248,7 @@ function syncDataAsync(
                 throw new Error('change should never be null');
             }
 
-            let resultModel : IMockData | null;
+            let resultModel: IMockData | null;
             switch (change.syncAction)
             {
                 case SyncAction.updated:
@@ -267,7 +267,7 @@ function syncDataAsync(
                     );
             }
 
-            const syncResult : ISyncDataResult<IMockData> = {
+            const syncResult: ISyncDataResult<IMockData> = {
                 model: resultModel,
                 syncAction: change.syncAction,
                 rowId: change.rowId,
