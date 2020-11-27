@@ -14,7 +14,7 @@ export interface IHeaderProps<TModel extends object> {
 }
 
 export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
-    const { sort, setSort } = useGridContext();
+    const { sort, setSort, renderRowDetail } = useGridContext();
 
     const getGroupHeaderCell = (c: Column<TModel>): JSX.Element => {
         if (c.type !== 'group' || !c.subColumns) {
@@ -110,19 +110,22 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) => {
     const hasGroups = !!columns.find(c => c.type === 'group');
     // @ts-ignore
     const allCols = getNonGroupColumns(columns);
+    const toolbarWidth = allCols.length + (renderRowDetail ? 1 : 0);
     return (
         <thead>
             {props.toolbar && (
                 <tr className="toolbar" data-test="toolbar">
-                    <th colSpan={allCols.length}>{props.toolbar}</th>
+                    <th colSpan={toolbarWidth}>{props.toolbar}</th>
                 </tr>
             )}
             {hasGroups && (
                 <tr className="column-groups">
+                    {renderRowDetail && <td className="detail-button-col" />}
                     {columns.map(c => getGroupHeaderCell(c))}
                 </tr>
             )}
             <tr className="column-headings">
+                {renderRowDetail && <td className="detail-button-col" />}
                 {allCols.map(c => getHeaderCell(c))}
             </tr>
         </thead>

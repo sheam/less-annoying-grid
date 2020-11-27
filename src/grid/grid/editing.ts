@@ -86,12 +86,9 @@ function updateRow<TModel extends object>(
     }
     const existingRow = data[index];
 
-    const newRow: IRowData<TModel> = {
-        model: rowData.model,
-        rowId: rowData.rowId,
-        syncAction: rowData.syncAction,
-        rowNumber: existingRow.rowNumber,
-    };
+    const newRow = Object.assign({}, rowData);
+    newRow.rowNumber = existingRow.rowNumber;
+
     data[index] = newRow;
     data.forEach((r, i) => (r.rowNumber = i + 1));
     setValidation(newRow, props.columns, state);
@@ -111,11 +108,12 @@ function addRow<TModel extends object>(
     props: IGridProps<TModel>
 ): IRowData<TModel> {
     const data = state.dataState.data;
-    const newRow = {
+    const newRow: IRowData<TModel> = {
         rowId: uuid(),
         model,
         syncAction: SyncAction.added,
         rowNumber: -1,
+        showDetail: false,
     };
 
     if (props.editable?.addToBottom) {
@@ -186,11 +184,10 @@ function createNewRow<TModel extends object>(
 
     columns.forEach(c => {
         if (c.type === 'data' && c.defaultValue !== undefined) {
-            const val =
+            model[c.field] =
                 typeof c.defaultValue === 'function'
                     ? c.defaultValue()
                     : c.defaultValue;
-            model[c.field] = val;
         }
     });
 

@@ -8,6 +8,7 @@ import { Row } from './rowData';
 import { useGridState } from './state';
 import { loadDataEffect, syncDataEffect } from './sync';
 import { IGridProps } from './types-grid';
+import { getNonGroupColumns } from './util';
 
 interface IChildren {
     children?: {
@@ -34,9 +35,9 @@ export const Grid = <TModel extends object>(
 
     const context = createGridContext(props, state);
 
-    const totalColumns = props.columns.flatMap(c =>
-        c.type === 'group' ? c.subColumns : c
-    ).length;
+    const renderColWidth =
+        getNonGroupColumns(props.columns).length +
+        (props.renderRowDetail ? 1 : 0);
     const showLoading = state.isLoading && props.children?.loadingState;
     const showSaving = state.syncProgress && props.children?.savingState;
     const showSync = showLoading || showSaving;
@@ -63,7 +64,7 @@ export const Grid = <TModel extends object>(
                             !state.dataState.totalCount &&
                             props.children?.emptyState && (
                                 <tr>
-                                    <td colSpan={totalColumns}>
+                                    <td colSpan={renderColWidth}>
                                         {props.children.emptyState}
                                     </td>
                                 </tr>
@@ -84,7 +85,7 @@ export const Grid = <TModel extends object>(
 
                     {state.pagination && (
                         <Footer
-                            numColumns={totalColumns}
+                            numColumns={renderColWidth}
                             totalCount={state.dataState.totalCount}
                             config={props.footer}
                         />

@@ -10,11 +10,12 @@ import { Direction } from '../types-grid';
 import { SyncAction } from '../types-sync';
 import { CellReadonly } from './cell-readonly';
 import { IRowContext, RowContext } from './row-context';
+import { RowDetailTemplateTriggerCell } from './detail-template';
 
 export const RowInlineEdit = <TModel extends object>(
     props: IRowProps<TModel>
 ) => {
-    const { editingContext } = useGridContext();
+    const { editingContext, renderRowDetail } = useGridContext();
     const [rowData, setRowData] = useState(props.data);
 
     if (!editingContext) {
@@ -51,6 +52,7 @@ export const RowInlineEdit = <TModel extends object>(
             model,
             validationErrors: rowData.validationErrors,
             syncAction: getNewSyncAction(props.data.syncAction, newSyncAction),
+            showDetail: props.data.showDetail,
         });
     };
 
@@ -123,7 +125,7 @@ export const RowInlineEdit = <TModel extends object>(
         }
     };
 
-    const classes = [rowData.syncAction.toString()];
+    const classes = [rowData.syncAction.toString(), 'data-row'];
     if (hasChanged(rowData)) classes.push('modified');
     if (editingContext.editField) classes.push('edit-row');
 
@@ -136,6 +138,12 @@ export const RowInlineEdit = <TModel extends object>(
     return (
         <RowContext.Provider value={rowEditContext}>
             <tr className={classes.join(' ')} data-test="data-row">
+                {renderRowDetail && (
+                    <RowDetailTemplateTriggerCell
+                        rowId={rowData.rowId}
+                        isShowing={rowData.showDetail}
+                    />
+                )}
                 {columns.map(c => {
                     if (!c) {
                         throw new Error('column should not be null');

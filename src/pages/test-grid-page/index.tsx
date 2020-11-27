@@ -33,6 +33,9 @@ const TestGrid: React.FunctionComponent = (): JSX.Element => {
                 sortDescLabel="(DESC)"
                 getDataAsync={getDataAsync}
                 footer={{ initialPageSize: 10 }}
+                renderRowDetail={detailTemplate}
+                rowDetailButtonShowingContent="hide"
+                rowDetailButtonHiddenContent="show"
                 editable={{
                     editMode: GridEditMode.inline,
                     autoSave: false,
@@ -51,6 +54,21 @@ const TestGrid: React.FunctionComponent = (): JSX.Element => {
 };
 
 export default TestGrid;
+
+function detailTemplate(m: IMockData): JSX.Element {
+    return (
+        <div>
+            <div>
+                <label>Num</label>
+                {m.num}
+            </div>
+            <div>
+                <label>Key</label>
+                {m.key}
+            </div>
+        </div>
+    );
+}
 
 const cols: Array<Column<IMockData>> = [
     {

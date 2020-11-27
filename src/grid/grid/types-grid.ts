@@ -35,6 +35,10 @@ export interface IGridProps<TModel extends object> {
     sortAscLabel?: ElementOrString;
     sortDescLabel?: ElementOrString;
 
+    renderRowDetail?: (model: TModel) => JSX.Element;
+    rowDetailButtonShowingContent?: ElementOrString;
+    rowDetailButtonHiddenContent?: ElementOrString;
+
     getDataAsync: (
         pagination: IPagination | null,
         sort: ISortColumn | null,
@@ -72,6 +76,7 @@ export interface IRowData<TModel extends object> {
     rowId: string;
     model: TModel;
     syncAction: SyncAction;
+    showDetail: boolean;
     validationErrors?: IValidationError[] | null;
 }
 

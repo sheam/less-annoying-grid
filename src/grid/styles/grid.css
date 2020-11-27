@@ -44,6 +44,16 @@ div.bn-grid table td .validation-error {
     font-size: small;
     font-style: italic;
 }
+div.bn-grid table th.template-trigger button,
+div.bn-grid table td.template-trigger button {
+    background-color: transparent;
+    border: none;
+}
+div.bn-grid table th.template-trigger button .showing,
+div.bn-grid table td.template-trigger button .showing {
+    color: red;
+    font-weight: bold;
+}
 div.bn-grid table tfoot .bn-jumps button:disabled {
     background-color: #5bc0de;
 }

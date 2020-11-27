@@ -79,6 +79,7 @@ function getHandler<TModel extends object>(
                                     rowNumber: -1,
                                     rowId: change.rowId,
                                     syncAction: SyncAction.updated,
+                                    showDetail: false,
                                 });
                                 break;
                         }

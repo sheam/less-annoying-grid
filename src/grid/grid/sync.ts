@@ -51,6 +51,7 @@ export function loadDataEffect<TModel extends object>(
                     model: m,
                     rowNumber: i + 1,
                     rowId: uuid(),
+                    showDetail: false,
                 };
                 return result;
             }),
@@ -122,26 +123,27 @@ export function _applySyncResults<TModel extends object>(
     }
     const data = state.dataState.data;
     if (results) {
-        for (let r of results) {
-            if (!r.success) {
+        for (let syncResult of results) {
+            if (!syncResult.success) {
                 continue;
             }
-            const index = data.findIndex(er => er.rowId === r.rowId);
+            const index = data.findIndex(er => er.rowId === syncResult.rowId);
             if (index < 0) {
                 //we may have already updated this one.
                 continue;
             }
-            if (r.syncAction === SyncAction.deleted) {
+            if (syncResult.syncAction === SyncAction.deleted) {
                 state.dataState.data.splice(index, 1);
             } else {
-                if (!r.model) {
+                if (!syncResult.model) {
                     throw new Error('result model should not be null');
                 }
                 state.dataState.data[index] = {
-                    model: r.model,
+                    model: syncResult.model,
                     syncAction: SyncAction.unchanged,
                     rowNumber: data[index].rowNumber,
                     rowId: uuid(),
+                    showDetail: data[index].showDetail,
                 };
             }
         }

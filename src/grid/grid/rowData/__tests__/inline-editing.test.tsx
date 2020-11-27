@@ -33,6 +33,7 @@ it('renders a rows of readonly data', async () => {
         rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
+        showDetail: false,
     };
     const c = mount(
         <table>
@@ -74,6 +75,7 @@ it('renders a rows of inline edit data', async () => {
         rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
+        showDetail: false,
     };
     const c = mount(
         <table>
@@ -115,6 +117,7 @@ it('renders an editor in number col', async () => {
         rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
+        showDetail: false,
     };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[0];
@@ -173,6 +176,7 @@ it('renders an editor in text col', async () => {
         rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
+        showDetail: false,
     };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[1];
@@ -231,6 +235,7 @@ it('renders an editor in date col', async () => {
         rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
+        showDetail: false,
     };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[3];
@@ -289,6 +294,7 @@ it('renders an editor with drop down values', async () => {
         rowId: `uid-1`,
         model,
         syncAction: SyncAction.unchanged,
+        showDetail: false,
     };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[3];

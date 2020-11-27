@@ -12,7 +12,7 @@ export const RowReadOnly = <TModel extends object>(
     const uid = props.data.rowNumber;
 
     return (
-        <tr data-test="data-row">
+        <tr data-test="data-row" className="data-row">
             {columns.map(c => {
                 if (c?.type === 'data' || c?.type === 'display') {
                     return (

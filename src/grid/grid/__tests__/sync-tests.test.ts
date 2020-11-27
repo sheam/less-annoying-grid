@@ -25,6 +25,7 @@ function getDefaultState(): IGridState<IData> {
             syncAction: SyncAction.updated,
             rowNumber: i + 1,
             rowId: '123',
+            showDetail: false,
         };
     });
     return {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { IGridProps, Setter } from './types-grid';
+import { ElementOrString, IGridProps, Setter } from './types-grid';
 import { IGridState } from './state';
 import { createEditingContext, IGridEditContext } from './editing';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
@@ -18,6 +18,11 @@ export interface IGridContext<TModel extends object> {
 
     isLoading?: boolean;
     setIsLoading?: Setter<boolean>;
+
+    showDetailForRow?: (rowId: string, show: boolean) => void;
+    renderRowDetail?: (model: TModel) => JSX.Element;
+    rowDetailButtonShowingContent?: ElementOrString;
+    rowDetailButtonHiddenContent?: ElementOrString;
 
     editingContext?: IGridEditContext<TModel> | null;
 }
@@ -49,6 +54,26 @@ export function createGridContext<TModel extends object>(
         setFilters: state.setFilters,
         isLoading: state.isLoading,
         setIsLoading: state.setIsLoading,
+        renderRowDetail: props.renderRowDetail,
         editingContext: createEditingContext(state, props),
+        showDetailForRow: (rowId, show) => showDetailForRow(rowId, show, state),
+        rowDetailButtonShowingContent: props.rowDetailButtonShowingContent,
+        rowDetailButtonHiddenContent: props.rowDetailButtonHiddenContent,
     };
+}
+
+function showDetailForRow<TModel extends object>(
+    rowId: string,
+    show: boolean,
+    state: IGridState<TModel>
+): void {
+    const data = state.dataState.data;
+    const index = data.findIndex(r => r.rowId === rowId);
+    if (index < 0) {
+        throw new Error(
+            `Unable to file row with id '${rowId}' to show detail for`
+        );
+    }
+    data[index].showDetail = show;
+    state.setDataState({ totalCount: state.dataState.totalCount, data });
 }
