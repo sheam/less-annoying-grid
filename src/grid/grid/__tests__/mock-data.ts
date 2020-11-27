@@ -1,22 +1,10 @@
-import
-{
-    IDataResult,
-    IFieldFilter,
-    IPagination,
-    ISortColumn,
-} from '../../grid';
-import { cloneData } from '../../grid/grid/util';
+import { cloneData } from "../util";
+import { IDataResult, IFieldFilter, IPagination, ISortColumn } from "../types-pagination";
 
 export interface IData
 {
-    num: number;
-    one: string;
-    two: string;
-    threeA: string;
-    threeB: string;
-    four: number;
-    five: number;
     key: number;
+    name: string;
 }
 
 export function update(model: IData): IData
@@ -38,8 +26,6 @@ export function getData(
     filters: IFieldFilter[]
 ): IDataResult<IData>
 {
-    console.log('getting data');
-
     const compare = (a: IData, b: IData): number =>
     {
         if (!sort) return 0;
@@ -69,11 +55,11 @@ export function getData(
     {
         for (const f of filters)
         {
-            if (f.field === 'four' && f.operator === 'contains')
+            if (f.operator != 'eq')
             {
-                // eslint-disable-next-line eqeqeq
-                data = data.filter(x => x.four == parseInt(f.value));
+                throw new Error(`Operator '${f.operator}' is not supported by mock data`);
             }
+            data = data.filter(x => (x as any)[f.field] === f.value);
         }
     }
 
@@ -119,23 +105,29 @@ export function deleteData(model: IData)
     _data.splice(index, 1);
 }
 
-const _data = generateData(1000);
-function generateData(n: number)
+let _data: IData[];
+
+export function resetData(totalCount: number)
 {
     const result: IData[] = [];
-    for (let i = 0; i < n; i++)
+    for (let i = 0; i < totalCount; i++)
     {
-        const rowNum = i + 1;
         result.push({
-            num: 100 + i,
-            one: `n-${rowNum}`,
-            two: `${rowNum}-2`,
-            threeA: `${rowNum}-3a`,
-            threeB: `${rowNum}-3b`,
-            four: (i % 4) + 1,
-            five: (i % 4) + 1,
+            name: `name-${i + 1}`,
             key: i + 1,
         });
     }
-    return result;
+    _data = result;
+}
+
+export function getDataAsync(
+    pagination: IPagination | null,
+    sort: ISortColumn | null,
+    filters: IFieldFilter[]
+): Promise<IDataResult<IData>>
+{
+    return new Promise<IDataResult<IData>>(resolve =>
+    {
+        resolve(getData(pagination, sort, filters));
+    });
 }

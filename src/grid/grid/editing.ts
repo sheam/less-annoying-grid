@@ -78,7 +78,8 @@ function setCurrentEditField<TModel extends object>(
     }
 }
 
-function updateRow<TModel extends object>(
+//exported for testing only
+export function updateRow<TModel extends object>(
     rowData: IRowData<TModel>,
     state: IGridState<TModel>,
     props: IGridProps<TModel>
@@ -103,7 +104,7 @@ function updateRow<TModel extends object>(
     data[index] = newRow;
     data.forEach((r, i) => (r.rowNumber = i + 1));
     setValidation(newRow, props.columns, state);
-    state.setNeedsSave(state.needsSave);
+    state.setNeedsSave(true);
     state.setDataState({ totalCount: state.dataState.totalCount, data });
 
     if (props.editable?.autoSave)
@@ -114,7 +115,8 @@ function updateRow<TModel extends object>(
     return true; //success
 }
 
-function addRow<TModel extends object>(
+//exported for testing only
+export function addRow<TModel extends object>(
     model: TModel,
     state: IGridState<TModel>,
     props: IGridProps<TModel>
@@ -150,7 +152,8 @@ function addRow<TModel extends object>(
     return newRow; //success
 }
 
-function deleteRow<TModel extends object>(
+//exported for testing only
+export function deleteRow<TModel extends object>(
     rowData: IRowData<TModel>,
     state: IGridState<TModel>,
     props: IGridProps<TModel>
@@ -162,6 +165,11 @@ function deleteRow<TModel extends object>(
     {
         throw new Error(`unable to find row with id=${rowData.rowNumber}`);
     }
+    if (existingRow.syncAction === SyncAction.deleted)
+    {
+        return true;
+    }
+
     existingRow.syncAction = SyncAction.deleted;
     existingRow.model = rowData.model;
     existingRow.rowNumber = -1;
@@ -172,7 +180,7 @@ function deleteRow<TModel extends object>(
     );
 
     state.setDataState({ data, totalCount: state.dataState.totalCount - 1 });
-    state.setNeedsSave(state.needsSave || hasChanged(rowData));
+    state.setNeedsSave(true);
 
     if (props.editable?.autoSave)
     {

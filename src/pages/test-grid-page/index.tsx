@@ -42,6 +42,7 @@ const TestGrid: React.FunctionComponent = (): JSX.Element =>
                 editable={{
                     editMode: GridEditMode.inline,
                     autoSave: false,
+                    addToBottom: true,
                     syncChanges: syncDataAsync,
                 }}
             >

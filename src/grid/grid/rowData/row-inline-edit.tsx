@@ -33,8 +33,6 @@ export const RowInlineEdit = <TModel extends object>(
 
     const startEditing = (field: string) =>
     {
-        console.log(`editing ${field}`);
-
         editingContext.setEditField(field, props.data.rowNumber);
         setRowData(cloneData(props.data));
     };
