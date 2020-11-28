@@ -4,7 +4,7 @@ import { PropsWithChildren, useEffect } from 'react';
 import { createGridContext, GridContext } from './context';
 import { Footer } from './header-footer/footer';
 import { Header } from './header-footer/header';
-import { Row } from './rowData';
+import { Row } from './rowData/row';
 import { useGridState } from './state';
 import { loadDataEffect, syncDataEffect } from './sync';
 import { IGridProps } from './types-grid';

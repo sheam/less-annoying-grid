@@ -17,6 +17,9 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
     {
         context.doneEditing(true, Direction.none);
     }
+    function cancelClicked()
+    {
+    }
 
     //TODO: will need to modify the field editor in order to work here
     return (
