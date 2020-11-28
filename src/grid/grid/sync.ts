@@ -1,5 +1,5 @@
 import { IDataState, IGridProps, IRowData } from './types-grid';
-import { hasChanged, uuid } from './util';
+import { cloneData, hasChanged, uuid } from './util';
 import { IGridState } from './state';
 import
 {
@@ -60,6 +60,7 @@ export function loadDataEffect<TModel extends object>(
                     rowNumber: i + 1,
                     rowId: uuid(),
                     showDetail: false,
+                    originalModel: cloneData(m),
                 };
                 return result;
             }),
@@ -167,6 +168,7 @@ export function _applySyncResults<TModel extends object>(
                     rowNumber: data[index].rowNumber,
                     rowId: uuid(),
                     showDetail: data[index].showDetail,
+                    originalModel: cloneData(syncResult.model),
                 };
             }
         }

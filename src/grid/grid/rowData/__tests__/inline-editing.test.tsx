@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as GridContext from '../../context';
 import { RowReadOnly } from '../row-readonly';
 import { RowInlineEdit } from '../row-inline-edit';
-import { cloneData } from '../../util';
+import { cloneData, shallowClone } from '../../util';
 import { GridEditMode, IRowData } from '../../types-grid';
 import { IGridContext } from '../../context';
 import { Column } from '../../..';
@@ -28,6 +28,27 @@ function setGridContextData(
     );
 }
 
+function getDefaultContext(): IGridContext<IData>
+{
+    return {
+        editingContext: {
+            needsSave: false,
+            syncProgress: null,
+            editField: null,
+            setEditField: jest.fn(),
+            updateRow: jest.fn(),
+            editMode: GridEditMode.inline,
+            autoSave: false,
+            sync: jest.fn(),
+            deleteRow: jest.fn(),
+            addRow: jest.fn(),
+            validationErrors: false,
+            revertAll: jest.fn(),
+            revertRow: jest.fn(),
+        }
+    };
+}
+
 it('renders a rows of readonly data', async () =>
 {
     const model = data[0];
@@ -37,7 +58,9 @@ it('renders a rows of readonly data', async () =>
         model,
         syncAction: SyncAction.unchanged,
         showDetail: false,
+        originalModel: shallowClone(model)
     };
+    const cols = getColumns();
     const c = mount(
         <table>
             <tbody>
@@ -55,22 +78,8 @@ it('renders a rows of readonly data', async () =>
 
 it('renders a rows of inline edit data', async () =>
 {
-    const gridContext: IGridContext<IData> = {
-        editingContext: {
-            isEditing: false,
-            needsSave: false,
-            syncProgress: null,
-            editField: null,
-            setEditField: jest.fn(),
-            updateRow: jest.fn(),
-            editMode: GridEditMode.inline,
-            autoSave: false,
-            sync: jest.fn(),
-            deleteRow: jest.fn(),
-            addRow: jest.fn(),
-            validationErrors: false,
-        },
-    };
+    const gridContext = getDefaultContext();
+    const cols = getColumns();
     setGridContextData(gridContext);
 
     const model = data[0];
@@ -80,6 +89,7 @@ it('renders a rows of inline edit data', async () =>
         model,
         syncAction: SyncAction.unchanged,
         showDetail: false,
+        originalModel: shallowClone(model),
     };
     const c = mount(
         <table>
@@ -98,22 +108,9 @@ it('renders a rows of inline edit data', async () =>
 
 it('renders an editor in number col', async () =>
 {
-    const gridContext: IGridContext<IData> = {
-        editingContext: {
-            isEditing: false,
-            needsSave: false,
-            syncProgress: null,
-            editField: null,
-            setEditField: jest.fn(),
-            updateRow: jest.fn(),
-            editMode: GridEditMode.inline,
-            autoSave: false,
-            sync: jest.fn(),
-            deleteRow: jest.fn(),
-            addRow: jest.fn(),
-            validationErrors: false,
-        },
-    };
+    const gridContext = getDefaultContext();
+    const cols = getColumns();
+
     setGridContextData(gridContext);
 
     const model = data[0];
@@ -123,6 +120,7 @@ it('renders an editor in number col', async () =>
         model,
         syncAction: SyncAction.unchanged,
         showDetail: false,
+        originalModel: shallowClone(model),
     };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[0];
@@ -141,6 +139,7 @@ it('renders an editor in number col', async () =>
             rowId: rowData.rowId,
         };
     }
+
     const c = mount(
         <table>
             <tbody>
@@ -159,22 +158,8 @@ it('renders an editor in number col', async () =>
 
 it('renders an editor in text col', async () =>
 {
-    const gridContext: IGridContext<IData> = {
-        editingContext: {
-            isEditing: false,
-            needsSave: false,
-            syncProgress: null,
-            editField: null,
-            setEditField: jest.fn(),
-            updateRow: jest.fn(),
-            editMode: GridEditMode.inline,
-            autoSave: false,
-            sync: jest.fn(),
-            deleteRow: jest.fn(),
-            addRow: jest.fn(),
-            validationErrors: false,
-        },
-    };
+    const gridContext = getDefaultContext();
+    const cols = getColumns();
     setGridContextData(gridContext);
 
     const model = data[0];
@@ -184,6 +169,7 @@ it('renders an editor in text col', async () =>
         model,
         syncAction: SyncAction.unchanged,
         showDetail: false,
+        originalModel: shallowClone(model),
     };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[1];
@@ -220,22 +206,8 @@ it('renders an editor in text col', async () =>
 
 it('renders an editor in date col', async () =>
 {
-    const gridContext: IGridContext<IData> = {
-        editingContext: {
-            isEditing: false,
-            needsSave: false,
-            syncProgress: null,
-            editField: null,
-            setEditField: jest.fn(),
-            updateRow: jest.fn(),
-            editMode: GridEditMode.inline,
-            autoSave: false,
-            sync: jest.fn(),
-            deleteRow: jest.fn(),
-            addRow: jest.fn(),
-            validationErrors: false,
-        },
-    };
+    const gridContext = getDefaultContext();
+    const cols = getColumns();
     setGridContextData(gridContext);
 
     const model = data[0];
@@ -245,6 +217,7 @@ it('renders an editor in date col', async () =>
         model,
         syncAction: SyncAction.unchanged,
         showDetail: false,
+        originalModel: shallowClone(model)
     };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[3];
@@ -281,22 +254,8 @@ it('renders an editor in date col', async () =>
 
 it('renders an editor with drop down values', async () =>
 {
-    const gridContext: IGridContext<IData> = {
-        editingContext: {
-            isEditing: false,
-            needsSave: false,
-            syncProgress: null,
-            editField: null,
-            setEditField: jest.fn(),
-            updateRow: jest.fn(),
-            editMode: GridEditMode.inline,
-            autoSave: false,
-            sync: jest.fn(),
-            deleteRow: jest.fn(),
-            addRow: jest.fn(),
-            validationErrors: false,
-        },
-    };
+    const gridContext = getDefaultContext();
+    const cols = getColumns();
     setGridContextData(gridContext);
 
     const model = data[0];
@@ -306,6 +265,7 @@ it('renders an editor with drop down values', async () =>
         model,
         syncAction: SyncAction.unchanged,
         showDetail: false,
+        originalModel: shallowClone(model),
     };
     const colsWithEdit = cloneData(cols);
     const editCol = colsWithEdit[3];
@@ -355,28 +315,31 @@ interface IData
     birthday: Date;
 }
 
-const cols: Array<Column<IData>> = [
-    {
-        type: 'data',
-        name: 'Number',
-        field: 'numVal',
-    },
-    {
-        type: 'data',
-        name: 'Text',
-        field: 'textVal',
-    },
-    {
-        type: 'data',
-        name: 'Enum',
-        field: 'enumVal',
-    },
-    {
-        type: 'data',
-        name: 'Birthday',
-        field: 'birthday',
-    },
-];
+function getColumns(): Array<Column<IData>>
+{
+    return [
+        {
+            type: 'data',
+            name: 'Number',
+            field: 'numVal',
+        },
+        {
+            type: 'data',
+            name: 'Text',
+            field: 'textVal',
+        },
+        {
+            type: 'data',
+            name: 'Enum',
+            field: 'enumVal',
+        },
+        {
+            type: 'data',
+            name: 'Birthday',
+            field: 'birthday',
+        },
+    ];
+}
 
 const data: IData[] = [
     {

@@ -77,7 +77,7 @@ export interface IEditField
 export interface IDataState<TModel extends object>
 {
     totalCount: number;
-    data: IRowData<TModel>[];
+    data: Array<IRowData<TModel>>;
 }
 
 export interface IRowData<TModel extends object>
@@ -85,6 +85,7 @@ export interface IRowData<TModel extends object>
     rowNumber: number;
     rowId: string;
     model: TModel;
+    originalModel: TModel;
     syncAction: SyncAction;
     showDetail: boolean;
     validationErrors?: IValidationError[] | null;

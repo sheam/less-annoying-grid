@@ -56,6 +56,7 @@ export const RowInlineEdit = <TModel extends object>(
             validationErrors: rowData.validationErrors,
             syncAction: getNewSyncAction(props.data.syncAction, newSyncAction),
             showDetail: props.data.showDetail,
+            originalModel: props.data.originalModel
         });
     };
 
@@ -72,7 +73,7 @@ export const RowInlineEdit = <TModel extends object>(
 
         if (commitChanges && hasChanged(rowData))
         {
-            editingContext.updateRow(rowData);
+            editingContext.updateRow(rowData.rowId, rowData.model);
         } else
         {
             setRowData(props.data);

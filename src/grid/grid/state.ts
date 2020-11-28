@@ -7,8 +7,6 @@ export interface IGridState<TModel extends object>
 {
     pagination: IPagination | null;
     setPagination: Setter<IPagination>;
-    isEditing: boolean;
-    setIsEditing: Setter<boolean>;
     dataState: IDataState<TModel>;
     setDataState: Setter<IDataState<TModel>>;
     sort: ISortColumn | null;
@@ -66,8 +64,6 @@ export function useGridState<TModel extends object>(
         setSyncProgress,
         dataState,
         setDataState,
-        isEditing,
-        setIsEditing,
         needsSave,
         setNeedsSave,
         editField,

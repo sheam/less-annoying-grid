@@ -4,7 +4,7 @@ import { addRow, deleteRow, updateRow } from "../editing";
 import * as mock from './mock-data'
 import { getData } from './mock-data'
 import { SyncAction } from "../types-sync";
-import { cloneData } from "../util";
+import { cloneData, shallowClone } from "../util";
 
 interface IData
 {
@@ -41,8 +41,6 @@ function getDefaultState(): IGridState<IData>
     const result: IGridState<IData> = {
         pagination: null,
         setPagination: jest.fn(),
-        isEditing: false,
-        setIsEditing: jest.fn(),
         dataState: { totalCount: 0, data: [] },
         setDataState: jest.fn(),
         sort: null,
@@ -72,6 +70,7 @@ function getDefaultState(): IGridState<IData>
             syncAction: SyncAction.unchanged,
             showDetail: false,
             validationErrors: null,
+            originalModel: shallowClone(d),
         };
         return row;
     });
@@ -177,7 +176,7 @@ it('update row: autosave=false', () =>
         expect(newState.data[index].syncAction).toBe(SyncAction.updated);
     });
 
-    updateRow(updatedRow, state, props);
+    updateRow(updatedRow.rowId, updatedRow.model, state, props);
 
     expect(state.setDataState).toHaveBeenCalledTimes(1);
     expect(state.setNeedsSave).toHaveBeenLastCalledWith(true);
@@ -214,7 +213,7 @@ it('update row: autosave=true', () =>
         expect(newState.data[index].syncAction).toBe(SyncAction.updated);
     });
 
-    updateRow(updatedRow, state, props);
+    updateRow(updatedRow.rowId, updatedRow.model, state, props);
 
     expect(state.setDataState).toHaveBeenCalledTimes(1);
     expect(state.setNeedsSave).toHaveBeenLastCalledWith(true);
@@ -248,7 +247,7 @@ it('delete row: autosave=false', () =>
         expect(newState.data[index].syncAction).toBe(SyncAction.deleted);
     });
 
-    deleteRow(deletedRow, state, props);
+    deleteRow(deletedRow.rowId, state, props);
 
     expect(state.setDataState).toHaveBeenCalledTimes(1);
     expect(state.setNeedsSave).toHaveBeenLastCalledWith(true);
@@ -294,7 +293,7 @@ it('delete row: autosave=true', () =>
         expect(newState.data[index].syncAction).toBe(SyncAction.deleted);
     });
 
-    deleteRow(deletedRow, state, props);
+    deleteRow(deletedRow.rowId, state, props);
 
     expect(state.setDataState).toHaveBeenCalledTimes(1);
     expect(state.setNeedsSave).toHaveBeenLastCalledWith(true);

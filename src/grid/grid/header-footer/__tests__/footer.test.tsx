@@ -316,13 +316,14 @@ it('disabled when needs saving', () =>
             setEditField: jest.fn(),
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
-            isEditing: false,
             editField: null,
             autoSave: false,
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
             validationErrors: false,
+            revertRow: jest.fn(),
+            revertAll: jest.fn()
         },
     });
 
@@ -370,12 +371,13 @@ it('disabled when needs editing', () =>
             editField: { rowId: '1', field: 'one' },
             setEditField: jest.fn(),
             editMode: GridEditMode.inline,
-            isEditing: true,
             autoSave: false,
             sync: jest.fn(),
             deleteRow: jest.fn(),
             addRow: jest.fn(),
             validationErrors: false,
+            revertAll: jest.fn(),
+            revertRow: jest.fn(),
         },
     });
 

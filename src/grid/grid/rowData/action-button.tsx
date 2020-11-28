@@ -43,7 +43,7 @@ function getHandler<TModel extends object>(
                     {
                         if (window.confirm(`Delete item?`))
                         {
-                            context.editingContext?.deleteRow(rowData);
+                            context.editingContext?.deleteRow(rowData.rowId);
                         }
                     } else
                     {
@@ -53,7 +53,7 @@ function getHandler<TModel extends object>(
                             {
                                 if (doDelete)
                                 {
-                                    context.editingContext?.deleteRow(rowData);
+                                    context.editingContext?.deleteRow(rowData.rowId);
                                 }
                             });
                     }
@@ -83,19 +83,13 @@ function getHandler<TModel extends object>(
                         switch (change.syncAction)
                         {
                             case SyncAction.deleted:
-                                context.editingContext?.deleteRow(rowData);
+                                context.editingContext?.deleteRow(rowData.rowId);
                                 break;
                             case SyncAction.added:
                                 context.editingContext?.addRow(change.model);
                                 break;
                             case SyncAction.updated:
-                                context.editingContext?.updateRow({
-                                    model: change.model,
-                                    rowNumber: -1,
-                                    rowId: change.rowId,
-                                    syncAction: SyncAction.updated,
-                                    showDetail: false,
-                                });
+                                context.editingContext?.updateRow(change.rowId, change.model);
                                 break;
                         }
                     }

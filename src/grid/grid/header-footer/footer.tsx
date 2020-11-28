@@ -29,7 +29,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (
     if (!setPagination || !pagination) return <></>;
 
     const preventPaging = !!(
-        editingContext?.isEditing || editingContext?.needsSave
+        editingContext?.editField || editingContext?.needsSave
     );
 
     const setPaginationDataSafe = (newCurrentPage: number, pageSize: number) =>

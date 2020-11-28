@@ -7,6 +7,11 @@ export function cloneData<TModel>(model: TModel): TModel
     return JSON.parse(JSON.stringify(model));
 }
 
+export function shallowClone<TModel>(model: TModel): TModel
+{
+    return Object.assign({}, model);
+}
+
 export function getNewSyncAction(
     current: SyncAction,
     newAction: SyncAction

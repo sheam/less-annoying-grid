@@ -1,5 +1,5 @@
 import { GridEditMode, IEditField, IGridProps, IRowData } from './types-grid';
-import { hasChanged, uuid } from './util';
+import { getNewSyncAction, uuid } from './util';
 import { IGridState } from './state';
 import { IProgress, SyncAction } from './types-sync';
 import { Column } from './columns/types';
@@ -10,8 +10,6 @@ export interface IGridEditContext<TModel extends object>
     editMode: GridEditMode;
     autoSave: boolean;
 
-    isEditing: boolean;
-
     needsSave: boolean;
     syncProgress: IProgress | null;
     validationErrors: boolean;
@@ -19,9 +17,11 @@ export interface IGridEditContext<TModel extends object>
     editField: IEditField | null;
     setEditField: (field: string | null, rowNumber: number | null) => void;
 
-    updateRow: (rowData: IRowData<TModel>) => boolean;
+    updateRow: (rowId: string, model: TModel) => IRowData<TModel>;
     addRow: (model?: TModel) => IRowData<TModel>;
-    deleteRow: (rowData: IRowData<TModel>) => boolean;
+    deleteRow: (rowId: string) => void;
+    revertAll: () => void;
+    revertRow: (rowId: string) => void;
 
     sync: () => void;
 }
@@ -37,12 +37,11 @@ export function createEditingContext<TModel extends object>(
     }
 
     return {
-        isEditing: state.isEditing,
         needsSave: state.needsSave,
         syncProgress: state.syncProgress,
         editField: state.editField,
         setEditField: (f, rn) => setCurrentEditField(f, rn, state),
-        updateRow: rowData => updateRow(rowData, state, props),
+        updateRow: (rowId, model) => updateRow(rowId, model, state, props),
         addRow: (model?: TModel) =>
             addRow(model || createNewRow(props.columns), state, props),
         deleteRow: rowData => deleteRow(rowData, state, props),
@@ -50,6 +49,8 @@ export function createEditingContext<TModel extends object>(
         autoSave: props.editable.autoSave,
         sync: () => state.setSaveRequested(true),
         validationErrors: state.validationErrors,
+        revertAll: () => revertRows(state.dataState.data.map(r => r.rowId), state),
+        revertRow: (r) => revertRows([r], state),
     };
 }
 
@@ -65,41 +66,39 @@ function setCurrentEditField<TModel extends object>(
         if (row)
         {
             state.setEditField({ rowId: row.rowId, field });
-            state.setIsEditing(true);
         } else
         {
             state.setEditField(null);
-            state.setIsEditing(false);
         }
     } else
     {
         state.setEditField(null);
-        state.setIsEditing(false);
     }
 }
 
 //exported for testing only
 export function updateRow<TModel extends object>(
-    rowData: IRowData<TModel>,
+    rowId: string,
+    model: TModel,
     state: IGridState<TModel>,
     props: IGridProps<TModel>
-): boolean
+): IRowData<TModel>
 {
-    if (!hasChanged(rowData))
-    {
-        return true;
-    }
-
     const data = state.dataState.data;
-    const index = data.findIndex(r => r.rowNumber === rowData.rowNumber);
+    const index = data.findIndex(r => r.rowId === rowId);
     if (index < 0)
     {
-        throw new Error(`unable to find row with id=${rowData.rowNumber}`);
+        throw new Error(`unable to find row with id=${rowId}`);
     }
     const existingRow = data[index];
+    if (deepEqual(existingRow.model, model))
+    {
+        return existingRow; //no changes
+    }
 
-    const newRow = Object.assign({}, rowData);
-    newRow.rowNumber = existingRow.rowNumber;
+    const newRow = Object.assign({}, existingRow);
+    newRow.model = model;
+    newRow.syncAction = getNewSyncAction(existingRow.syncAction, SyncAction.updated);
 
     data[index] = newRow;
     data.forEach((r, i) => (r.rowNumber = i + 1));
@@ -112,7 +111,12 @@ export function updateRow<TModel extends object>(
         state.setSaveRequested(true);
     }
 
-    return true; //success
+    return newRow;
+}
+
+function deepEqual(a: any, b: any): boolean
+{
+    return JSON.stringify(a) === JSON.stringify(b);
 }
 
 //exported for testing only
@@ -129,6 +133,7 @@ export function addRow<TModel extends object>(
         syncAction: SyncAction.added,
         rowNumber: -1,
         showDetail: false,
+        originalModel: model,
     };
 
     if (props.editable?.addToBottom)
@@ -142,7 +147,7 @@ export function addRow<TModel extends object>(
     data.forEach((r, i) => (r.rowNumber = i + 1));
     state.setNeedsSave(true);
     setValidation(newRow, props.columns, state);
-    state.setDataState({ data, totalCount: state.dataState.totalCount + 1 });
+    state.setDataState({ data, totalCount: state.dataState.totalCount });
 
     if (props.editable?.autoSave)
     {
@@ -154,24 +159,23 @@ export function addRow<TModel extends object>(
 
 //exported for testing only
 export function deleteRow<TModel extends object>(
-    rowData: IRowData<TModel>,
+    rowId: string,
     state: IGridState<TModel>,
     props: IGridProps<TModel>
-): boolean
+): void
 {
     const data = state.dataState.data;
-    const existingRow = data.find(r => r.rowNumber === rowData.rowNumber);
+    const existingRow = data.find(r => r.rowId === rowId);
     if (!existingRow)
     {
-        throw new Error(`unable to find row with id=${rowData.rowNumber}`);
+        throw new Error(`unable to find row with id=${rowId}`);
     }
     if (existingRow.syncAction === SyncAction.deleted)
     {
-        return true;
+        return;
     }
 
     existingRow.syncAction = SyncAction.deleted;
-    existingRow.model = rowData.model;
     existingRow.rowNumber = -1;
 
     //renumber non-deleted
@@ -179,15 +183,48 @@ export function deleteRow<TModel extends object>(
         (r, i) => (r.rowNumber = i + 1)
     );
 
-    state.setDataState({ data, totalCount: state.dataState.totalCount - 1 });
+    state.setDataState({ data, totalCount: state.dataState.totalCount });
     state.setNeedsSave(true);
 
     if (props.editable?.autoSave)
     {
         state.setSaveRequested(true);
     }
+}
 
-    return true; //success
+function revertRows<TModel extends object>(
+    revertRowIdList: Array<string>,
+    state: IGridState<TModel>
+): void
+{
+    const existingData = state.dataState.data;
+    const newData = new Array<IRowData<TModel>>();
+    for (let existingRow of existingData)
+    {
+        const index = revertRowIdList.indexOf(existingRow.rowId);
+        if (index < 0 || existingRow.syncAction === SyncAction.unchanged)
+        {
+            //not reverting this row, so just copy it into new state
+            newData.push(existingRow);
+            continue;
+        }
+
+        if (existingRow.syncAction === SyncAction.added)
+        {
+            //leave out added rows
+            continue;
+        }
+
+        existingRow.model = existingRow.originalModel;
+        existingRow.syncAction = SyncAction.unchanged;
+    }
+
+    //renumber non-deleted
+    existingData.forEach(
+        (r, i) => (r.rowNumber = i + 1)
+    );
+
+    state.setDataState({ totalCount: state.dataState.totalCount, data: existingData });
 }
 
 function setValidation<TModel extends object>(

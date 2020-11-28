@@ -2,6 +2,7 @@ import { IRowData } from '../types-grid';
 import { IGridState } from '../state';
 import { _applySyncResults } from '../sync';
 import { ISyncDataResult, SyncAction } from '../types-sync';
+import { cloneData } from "../util";
 interface IData
 {
     key: number;
@@ -30,13 +31,12 @@ function getDefaultState(): IGridState<IData>
             rowNumber: i + 1,
             rowId: '123',
             showDetail: false,
+            originalModel: cloneData(m),
         };
     });
     return {
         pagination: null,
         setPagination: jest.fn(),
-        isEditing: false,
-        setIsEditing: jest.fn(),
         dataState: { totalCount: rowData.length, data: rowData },
         setDataState: jest.fn(),
         sort: null,
