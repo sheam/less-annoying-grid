@@ -98,7 +98,7 @@ it('add row: autosave=false', () =>
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
     {
         expect(newState.data.length).toBe(pageSize + 1);
-        expect(newState.totalCount).toBe(totalData + 1);
+        expect(newState.totalCount).toBe(totalData);
         expect(newState.data[0].rowNumber).toBe(1);
         expect(newState.data[0].showDetail).toBeFalsy();
         expect(newState.data[0].rowId).toBeTruthy();
@@ -130,7 +130,7 @@ it('add row: autosave=true', () =>
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
     {
         expect(newState.data.length).toBe(pageSize + 1);
-        expect(newState.totalCount).toBe(totalData + 1);
+        expect(newState.totalCount).toBe(totalData);
         expect(newState.data[0].rowNumber).toBe(1);
         expect(newState.data[0].showDetail).toBeFalsy();
         expect(newState.data[0].rowId).toBeTruthy();
@@ -237,7 +237,7 @@ it('delete row: autosave=false', () =>
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
     {
         expect(newState.data.length).toBe(pageSize);
-        expect(newState.totalCount).toBe(totalData - 1);
+        expect(newState.totalCount).toBe(totalData);
         expect(newState.data[index].rowNumber).toBe(-1);
         expect(newState.data[index].rowId).toBe(originalRow.rowId);
         expect(newState.data[index].showDetail).toBe(originalRow.showDetail);
@@ -283,7 +283,7 @@ it('delete row: autosave=true', () =>
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
     {
         expect(newState.data.length).toBe(pageSize);
-        expect(newState.totalCount).toBe(totalData - 1);
+        expect(newState.totalCount).toBe(totalData);
         expect(newState.data[index].rowNumber).toBe(-1);
         expect(newState.data[index].rowId).toBe(originalRow.rowId);
         expect(newState.data[index].showDetail).toBe(originalRow.showDetail);

@@ -62,6 +62,10 @@ export const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
     {
         editingContext?.addRow();
     };
+    const cancelClicked = (_: React.MouseEvent<HTMLButtonElement>) =>
+    {
+        editingContext?.revertAll();
+    };
     return (
         <div>
             <h4>Product SKUs</h4>
@@ -93,6 +97,15 @@ export const ToolBar: React.FunctionComponent<IToolbarProps> = () =>
                 }}
             >
                 Save
+            </button>
+            <button
+                disabled={!editingContext?.needsSave}
+                onClick={async e =>
+                {
+                    await cancelClicked(e);
+                }}
+            >
+                Cancel Changes
             </button>
             <button
                 onClick={async e =>

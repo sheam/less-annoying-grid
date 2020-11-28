@@ -1,5 +1,5 @@
 import { GridEditMode, IEditField, IGridProps, IRowData } from './types-grid';
-import { getNewSyncAction, uuid } from './util';
+import { deepEqual, getNewSyncAction, shallowClone, uuid } from './util';
 import { IGridState } from './state';
 import { IProgress, SyncAction } from './types-sync';
 import { Column } from './columns/types';
@@ -114,11 +114,6 @@ export function updateRow<TModel extends object>(
     return newRow;
 }
 
-function deepEqual(a: any, b: any): boolean
-{
-    return JSON.stringify(a) === JSON.stringify(b);
-}
-
 //exported for testing only
 export function addRow<TModel extends object>(
     model: TModel,
@@ -192,7 +187,8 @@ export function deleteRow<TModel extends object>(
     }
 }
 
-function revertRows<TModel extends object>(
+// exported only for testing
+export function revertRows<TModel extends object>(
     revertRowIdList: Array<string>,
     state: IGridState<TModel>
 ): void
@@ -215,16 +211,23 @@ function revertRows<TModel extends object>(
             continue;
         }
 
-        existingRow.model = existingRow.originalModel;
+        existingRow.model = shallowClone(existingRow.originalModel);
         existingRow.syncAction = SyncAction.unchanged;
+        existingRow.validationErrors = null;
+
+        newData.push(existingRow);
     }
 
     //renumber non-deleted
-    existingData.forEach(
+    newData.forEach(
         (r, i) => (r.rowNumber = i + 1)
     );
 
-    state.setDataState({ totalCount: state.dataState.totalCount, data: existingData });
+    const hasChanges = newData.findIndex(r => r.syncAction !== SyncAction.unchanged) >= 0;
+    const hasErrors = newData.findIndex(r => r.validationErrors && r.validationErrors.length > 0) >= 0;
+    state.setDataState({ totalCount: state.dataState.totalCount, data: newData });
+    state.setValidationErrors(hasErrors);
+    state.setNeedsSave(hasChanges);
 }
 
 function setValidation<TModel extends object>(
