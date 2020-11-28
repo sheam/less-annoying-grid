@@ -123,7 +123,6 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
     const columns = props.columns;
 
     const hasGroups = !!columns.find(c => c.type === 'group');
-    // @ts-ignore
     const allCols = getNonGroupColumns(columns);
     const toolbarWidth = allCols.length + (renderRowDetail ? 1 : 0);
     return (
