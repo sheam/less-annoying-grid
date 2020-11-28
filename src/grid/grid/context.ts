@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { useContext } from 'react';
 import
-    {
-        ElementOrString,
-        GridEditMode,
-        IEditField,
-        IGridProps,
-        IRowData,
-        Setter
-    } from './types-grid';
+{
+    ElementOrString,
+    GridEditMode,
+    IEditField,
+    IGridProps,
+    IRowData,
+    Setter
+} from './types-grid';
 import { IGridState } from './state';
 import
-    {
-        addRow,
-        createNewRow, deleteRow,
-        revertRows,
-        setCurrentEditField,
-        updateRow
-    } from './editing';
+{
+    addRow,
+    createNewRow, deleteRow,
+    revertRows,
+    setCurrentEditField,
+    updateRow
+} from './editing';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 import { IProgress } from "../index";
 
@@ -118,6 +118,9 @@ export interface IGridEditContext<TModel extends object>
     revertAll: () => void;
     revertRow: (rowId: string) => void;
 
+    modelEditor: JSX.Element | undefined;
+    modelTypeName: string;
+
     sync: () => void;
 }
 
@@ -146,5 +149,7 @@ export function createEditingContext<TModel extends object>(
         validationErrors: state.validationErrors,
         revertAll: () => revertRows(state.dataState.data.map(r => r.rowId), state),
         revertRow: (r: string) => revertRows([r], state),
+        modelEditor: props.editable.modelEditor,
+        modelTypeName: props.editable.modelTypeName,
     };
 }

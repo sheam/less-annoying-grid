@@ -66,6 +66,7 @@ export interface IGridEditConfig<TModel extends object>
         ) => void
     ) => Promise<Array<ISyncDataResult<TModel>>>;
     modelEditor?: JSX.Element;
+    modelTypeName: string;
 }
 
 export interface IEditField

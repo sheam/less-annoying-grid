@@ -32,6 +32,7 @@ function getDefaultProps(): IGridProps<IData>
             editMode: GridEditMode.inline,
             autoSave: false,
             syncChanges: jest.fn(),
+            modelTypeName: 'MyObject',
         }
     };
 }

@@ -45,7 +45,6 @@ export function useGridState<TModel extends object>(
         totalCount: 0,
         data: [],
     });
-    const [isEditing, setIsEditing] = useState(false);
     const [editField, setEditField] = useState<IEditField | null>(null);
     const [saveRequested, setSaveRequested] = useState<boolean>(false);
     const [needsSave, setNeedsSave] = useState(false);

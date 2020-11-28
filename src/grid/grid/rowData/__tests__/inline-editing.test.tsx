@@ -45,6 +45,8 @@ function getDefaultContext(): IGridContext<IData>
             validationErrors: false,
             revertAll: jest.fn(),
             revertRow: jest.fn(),
+            modelEditor: undefined,
+            modelTypeName: 'MyObject',
         }
     };
 }

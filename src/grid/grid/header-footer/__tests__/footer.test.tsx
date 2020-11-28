@@ -323,7 +323,9 @@ it('disabled when needs saving', () =>
             addRow: jest.fn(),
             validationErrors: false,
             revertRow: jest.fn(),
-            revertAll: jest.fn()
+            revertAll: jest.fn(),
+            modelTypeName: 'MyObject',
+            modelEditor: undefined,
         },
     });
 
@@ -378,6 +380,8 @@ it('disabled when needs editing', () =>
             validationErrors: false,
             revertAll: jest.fn(),
             revertRow: jest.fn(),
+            modelTypeName: 'MyObject',
+            modelEditor: undefined,
         },
     });
 

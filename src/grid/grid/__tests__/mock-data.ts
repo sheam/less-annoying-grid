@@ -55,7 +55,7 @@ export function getData(
     {
         for (const f of filters)
         {
-            if (f.operator != 'eq')
+            if (f.operator !== 'eq')
             {
                 throw new Error(`Operator '${f.operator}' is not supported by mock data`);
             }
@@ -77,16 +77,16 @@ export function getData(
     };
 }
 
-export function updateData(model: IData): IData
-{
-    const index = _data.findIndex(x => x.key === model.key);
-    if (index < 0)
-    {
-        throw new Error(`could not find data with key '${model.key}'`);
-    }
-    _data[index] = model;
-    return model;
-}
+// export function updateData(model: IData): IData
+// {
+//     const index = _data.findIndex(x => x.key === model.key);
+//     if (index < 0)
+//     {
+//         throw new Error(`could not find data with key '${model.key}'`);
+//     }
+//     _data[index] = model;
+//     return model;
+// }
 
 export function addData(model: IData): IData
 {
@@ -95,15 +95,15 @@ export function addData(model: IData): IData
     return model;
 }
 
-export function deleteData(model: IData)
-{
-    const index = _data.findIndex(x => x.key === model.key);
-    if (index < 0)
-    {
-        throw new Error(`could not find data with key '${model.key}'`);
-    }
-    _data.splice(index, 1);
-}
+// export function deleteData(model: IData)
+// {
+//     const index = _data.findIndex(x => x.key === model.key);
+//     if (index < 0)
+//     {
+//         throw new Error(`could not find data with key '${model.key}'`);
+//     }
+//     _data.splice(index, 1);
+// }
 
 let _data: IData[];
 

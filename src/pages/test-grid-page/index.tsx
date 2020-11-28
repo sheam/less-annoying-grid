@@ -40,10 +40,11 @@ const TestGrid: React.FunctionComponent = (): JSX.Element =>
                 rowDetailButtonShowingContent="hide"
                 rowDetailButtonHiddenContent="show"
                 editable={{
-                    editMode: GridEditMode.inline,
+                    editMode: GridEditMode.external,
                     autoSave: false,
                     addToBottom: true,
                     syncChanges: syncDataAsync,
+                    modelTypeName: 'MyObject',
                 }}
             >
                 {{

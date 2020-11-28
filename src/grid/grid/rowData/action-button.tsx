@@ -32,6 +32,7 @@ function getHandler<TModel extends object>(
     context: IGridContext<TModel>
 )
 {
+    const modelTypeName = context.editingContext?.modelTypeName || 'item';
     return () =>
     {
         switch (action.type)
@@ -41,7 +42,7 @@ function getHandler<TModel extends object>(
                 {
                     if (action.confirm === true)
                     {
-                        if (window.confirm(`Delete item?`))
+                        if (window.confirm(`Delete ${modelTypeName}?`))
                         {
                             context.editingContext?.deleteRow(rowData.rowId);
                         }

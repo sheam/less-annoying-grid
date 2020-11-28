@@ -7,8 +7,9 @@ import { Header } from './header-footer/header';
 import { Row } from './rowData/row';
 import { useGridState } from './state';
 import { loadDataEffect, syncDataEffect } from './sync';
-import { IGridProps } from './types-grid';
+import { GridEditMode, IGridProps } from './types-grid';
 import { getNonGroupColumns } from './util';
+import { PopupEditor } from "./rowData/row-popup-editor";
 
 interface IChildren
 {
@@ -43,10 +44,12 @@ export const Grid = <TModel extends object>(
     const showLoading = state.isLoading && props.children?.loadingState;
     const showSaving = state.syncProgress && props.children?.savingState;
     const showSync = showLoading || showSaving;
+    const needExternalEditor = props.editable?.editMode === GridEditMode.external;
 
     return (
         <GridContext.Provider value={context}>
             <div className="bn-grid">
+                {needExternalEditor && <PopupEditor columns={props.columns} />}
                 <div hidden={!showSync} className="sync-panel">
                     <div className="sync-panel-content">
                         {showLoading && props.children?.loadingState}
@@ -60,7 +63,6 @@ export const Grid = <TModel extends object>(
                         sortAscLabel={props.sortAscLabel}
                         sortDescLabel={props.sortDescLabel}
                     />
-
                     <tbody>
                         {!showLoading &&
                             !state.dataState.totalCount &&
@@ -84,7 +86,6 @@ export const Grid = <TModel extends object>(
                             );
                         })}
                     </tbody>
-
                     {state.pagination && (
                         <Footer
                             numColumns={renderColWidth}
