@@ -1,9 +1,25 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { ElementOrString, IGridProps, Setter } from './types-grid';
+import
+    {
+        ElementOrString,
+        GridEditMode,
+        IEditField,
+        IGridProps,
+        IRowData,
+        Setter
+    } from './types-grid';
 import { IGridState } from './state';
-import { createEditingContext, IGridEditContext } from './editing';
+import
+    {
+        addRow,
+        createNewRow, deleteRow,
+        revertRows,
+        setCurrentEditField,
+        updateRow
+    } from './editing';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
+import { IProgress } from "../index";
 
 export interface IGridContext<TModel extends object>
 {
@@ -82,4 +98,53 @@ function showDetailForRow<TModel extends object>(
     }
     data[index].showDetail = show;
     state.setDataState({ totalCount: state.dataState.totalCount, data });
+}
+
+export interface IGridEditContext<TModel extends object>
+{
+    editMode: GridEditMode;
+    autoSave: boolean;
+
+    needsSave: boolean;
+    syncProgress: IProgress | null;
+    validationErrors: boolean;
+
+    editField: IEditField | null;
+    setEditField: (field: string | null, rowNumber: number | null) => void;
+
+    updateRow: (rowId: string, model: TModel) => IRowData<TModel>;
+    addRow: (model?: TModel) => IRowData<TModel>;
+    deleteRow: (rowId: string) => void;
+    revertAll: () => void;
+    revertRow: (rowId: string) => void;
+
+    sync: () => void;
+}
+
+export function createEditingContext<TModel extends object>(
+    state: IGridState<TModel>,
+    props: IGridProps<TModel>
+): IGridEditContext<TModel> | null
+{
+    if (!props.editable)
+    {
+        return null;
+    }
+
+    return {
+        needsSave: state.needsSave,
+        syncProgress: state.syncProgress,
+        editField: state.editField,
+        setEditField: (f: string | null, rn: number | null) => setCurrentEditField(f, rn, state),
+        updateRow: (rowId: string, model: TModel) => updateRow(rowId, model, state, props),
+        addRow: (model?: TModel) =>
+            addRow(model || createNewRow(props.columns), state, props),
+        deleteRow: (rowId: string) => deleteRow(rowId, state, props),
+        editMode: props.editable.editMode,
+        autoSave: props.editable.autoSave,
+        sync: () => state.setSaveRequested(true),
+        validationErrors: state.validationErrors,
+        revertAll: () => revertRows(state.dataState.data.map(r => r.rowId), state),
+        revertRow: (r: string) => revertRows([r], state),
+    };
 }

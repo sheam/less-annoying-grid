@@ -1,60 +1,11 @@
-import { GridEditMode, IEditField, IGridProps, IRowData } from './types-grid';
+import { IGridProps, IRowData } from './types-grid';
 import { deepEqual, getNewSyncAction, shallowClone, uuid } from './util';
 import { IGridState } from './state';
-import { IProgress, SyncAction } from './types-sync';
+import { SyncAction } from './types-sync';
 import { Column } from './columns/types';
 import { validateModel } from './columns/validation';
 
-export interface IGridEditContext<TModel extends object>
-{
-    editMode: GridEditMode;
-    autoSave: boolean;
-
-    needsSave: boolean;
-    syncProgress: IProgress | null;
-    validationErrors: boolean;
-
-    editField: IEditField | null;
-    setEditField: (field: string | null, rowNumber: number | null) => void;
-
-    updateRow: (rowId: string, model: TModel) => IRowData<TModel>;
-    addRow: (model?: TModel) => IRowData<TModel>;
-    deleteRow: (rowId: string) => void;
-    revertAll: () => void;
-    revertRow: (rowId: string) => void;
-
-    sync: () => void;
-}
-
-export function createEditingContext<TModel extends object>(
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): IGridEditContext<TModel> | null
-{
-    if (!props.editable)
-    {
-        return null;
-    }
-
-    return {
-        needsSave: state.needsSave,
-        syncProgress: state.syncProgress,
-        editField: state.editField,
-        setEditField: (f, rn) => setCurrentEditField(f, rn, state),
-        updateRow: (rowId, model) => updateRow(rowId, model, state, props),
-        addRow: (model?: TModel) =>
-            addRow(model || createNewRow(props.columns), state, props),
-        deleteRow: rowData => deleteRow(rowData, state, props),
-        editMode: props.editable.editMode,
-        autoSave: props.editable.autoSave,
-        sync: () => state.setSaveRequested(true),
-        validationErrors: state.validationErrors,
-        revertAll: () => revertRows(state.dataState.data.map(r => r.rowId), state),
-        revertRow: (r) => revertRows([r], state),
-    };
-}
-
-function setCurrentEditField<TModel extends object>(
+export function setCurrentEditField<TModel extends object>(
     field: string | null,
     rowNumber: number | null,
     state: IGridState<TModel>
@@ -246,7 +197,7 @@ function setValidation<TModel extends object>(
     }
 }
 
-function createNewRow<TModel extends object>(
+export function createNewRow<TModel extends object>(
     columns: Array<Column<TModel>>
 ): TModel
 {
