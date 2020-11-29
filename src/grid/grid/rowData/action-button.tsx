@@ -62,7 +62,7 @@ function getHandler<TModel extends object>(
                 break;
 
             case 'edit':
-                context.editingContext?.setEditField(null, rowData.rowNumber);
+                context.editingContext?.setEditField(null, rowData);
                 break;
 
             case 'custom':

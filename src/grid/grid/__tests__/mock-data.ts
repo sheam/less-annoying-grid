@@ -5,6 +5,8 @@ export interface IData
 {
     key: number;
     name: string;
+    age: number;
+    eyeColor: string;
 }
 
 export function update(model: IData): IData
@@ -115,6 +117,8 @@ export function resetData(totalCount: number)
         result.push({
             name: `name-${i + 1}`,
             key: i + 1,
+            age: Math.round(Math.random() * 100),
+            eyeColor: ['brown', 'blue', 'green', 'red'][Math.round(Math.random() * 3)]
         });
     }
     _data = result;

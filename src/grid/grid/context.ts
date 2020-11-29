@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import
 {
+    Direction,
     ElementOrString,
     GridEditMode,
     IEditField,
@@ -12,10 +13,9 @@ import
 import { IGridState } from './state';
 import
 {
-    addRow,
+    addRow, advanceEditField,
     createNewRow, deleteRow,
     revertRows,
-    setCurrentEditField,
     updateRow
 } from './editing';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
@@ -109,8 +109,9 @@ export interface IGridEditContext<TModel extends object>
     syncProgress: IProgress | null;
     validationErrors: boolean;
 
-    editField: IEditField | null;
-    setEditField: (field: string | null, rowNumber: number | null) => void;
+    editField: IEditField<TModel> | null;
+    setEditField: (field: string | null, rowData: IRowData<TModel> | null) => void;
+    advanceEditField: (direction: Direction) => void;
 
     updateRow: (rowId: string, model: TModel) => IRowData<TModel>;
     addRow: (model?: TModel) => IRowData<TModel>;
@@ -138,7 +139,7 @@ export function createEditingContext<TModel extends object>(
         needsSave: state.needsSave,
         syncProgress: state.syncProgress,
         editField: state.editField,
-        setEditField: (f: string | null, rn: number | null) => setCurrentEditField(f, rn, state),
+        setEditField: (f: string | null, r: IRowData<TModel> | null) => r ? state.setEditField({ field: f, rowData: r }) : state.setEditField(null),
         updateRow: (rowId: string, model: TModel) => updateRow(rowId, model, state, props),
         addRow: (model?: TModel) =>
             addRow(model || createNewRow(props.columns), state, props),
@@ -151,5 +152,6 @@ export function createEditingContext<TModel extends object>(
         revertRow: (r: string) => revertRows([r], state),
         modelEditor: props.editable.modelEditor,
         modelTypeName: props.editable.modelTypeName,
+        advanceEditField: dir => advanceEditField(state, props.columns, dir),
     };
 }

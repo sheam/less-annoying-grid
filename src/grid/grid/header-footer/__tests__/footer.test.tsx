@@ -6,6 +6,7 @@ import * as GridContext from '../../context';
 import { Footer, IFooterProps } from '../footer';
 import { GridEditMode } from '../../types-grid';
 import { IPagination } from '../../types-pagination';
+import { SyncAction } from "../../types-sync";
 
 const getByTestId = (c: ShallowWrapper, name: string) =>
     c.find(`[data-test="${name}"]`);
@@ -326,6 +327,7 @@ it('disabled when needs saving', () =>
             revertAll: jest.fn(),
             modelTypeName: 'MyObject',
             modelEditor: undefined,
+            advanceEditField: jest.fn(),
         },
     });
 
@@ -370,7 +372,7 @@ it('disabled when needs editing', () =>
             needsSave: false,
             syncProgress: null,
             updateRow: jest.fn(),
-            editField: { rowId: '1', field: 'one' },
+            editField: { rowData: { rowNumber: 1, syncAction: SyncAction.updated, rowId: '1', showDetail: false, model: {}, originalModel: {} }, field: 'one' },
             setEditField: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
@@ -382,6 +384,7 @@ it('disabled when needs editing', () =>
             revertRow: jest.fn(),
             modelTypeName: 'MyObject',
             modelEditor: undefined,
+            advanceEditField: jest.fn(),
         },
     });
 

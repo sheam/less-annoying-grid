@@ -18,7 +18,7 @@ import
 export enum GridEditMode
 {
     inline = 'inline',
-    row = 'row',
+    // row = 'row',
     external = 'external',
 }
 
@@ -69,10 +69,10 @@ export interface IGridEditConfig<TModel extends object>
     modelTypeName: string;
 }
 
-export interface IEditField
+export interface IEditField<TModel extends object>
 {
-    rowId: string;
-    field: string;
+    rowData: IRowData<TModel>
+    field: string | null;
 }
 
 export interface IDataState<TModel extends object>

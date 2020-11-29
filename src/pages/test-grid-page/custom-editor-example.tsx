@@ -70,6 +70,7 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
                 <input
                     type="number"
                     value={n}
+                    autoFocus={true}
                     onKeyDown={detectSpecialKeys}
                     onBlur={focusLost}
                     onChange={changeHandler}

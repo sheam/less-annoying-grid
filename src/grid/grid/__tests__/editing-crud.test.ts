@@ -2,15 +2,9 @@ import { GridEditMode, IDataState, IGridProps, IRowData } from "../types-grid";
 import { IGridState } from "../state";
 import { addRow, deleteRow, updateRow } from "../editing";
 import * as mock from './mock-data'
-import { getData } from './mock-data'
+import { getData, IData } from './mock-data'
 import { SyncAction } from "../types-sync";
 import { cloneData, shallowClone } from "../util";
-
-interface IData
-{
-    key: number;
-    name: string;
-}
 
 function getDefaultProps(): IGridProps<IData>
 {
@@ -94,7 +88,7 @@ it('add row: autosave=false', () =>
     }
     props.editable.autoSave = false;
 
-    const modelToAdd: IData = { key: 0, name: 'new-guy' };
+    const modelToAdd: IData = { key: 0, name: 'new-guy', age: 7, eyeColor: 'blue' };
 
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
     {
@@ -126,7 +120,7 @@ it('add row: autosave=true', () =>
     }
     props.editable.autoSave = true;
 
-    const modelToAdd: IData = { key: 0, name: 'new-guy' };
+    const modelToAdd: IData = { key: 0, name: 'new-guy', age: 99, eyeColor: 'blue' };
 
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
     {
@@ -161,7 +155,7 @@ it('update row: autosave=false', () =>
     const index = 3;
     const originalRow = cloneData(state.dataState.data[index]);
     const updatedRow = cloneData(state.dataState.data[index]);
-    updatedRow.model = { key: originalRow.model.key, name: 'new name value' };
+    updatedRow.model = { key: originalRow.model.key, name: 'new name value', age: 99, eyeColor: 'blue' };
     updatedRow.syncAction = SyncAction.updated;
 
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
@@ -198,7 +192,7 @@ it('update row: autosave=true', () =>
     const index = 3;
     const originalRow = cloneData(state.dataState.data[index]);
     const updatedRow = cloneData(state.dataState.data[index]);
-    updatedRow.model = { key: originalRow.model.key, name: 'new name value' };
+    updatedRow.model = { key: originalRow.model.key, name: 'new name value', age: 99, eyeColor: 'blue' };
     updatedRow.syncAction = SyncAction.updated;
 
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>

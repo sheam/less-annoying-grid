@@ -13,8 +13,8 @@ export interface IGridState<TModel extends object>
     setSort: Setter<ISortColumn | null>;
     filters: IFieldFilter[];
     setFilters: Setter<IFieldFilter[]>;
-    editField: IEditField | null;
-    setEditField: Setter<IEditField | null>;
+    editField: IEditField<TModel> | null;
+    setEditField: Setter<IEditField<TModel> | null>;
     syncProgress: IProgress | null;
     setSyncProgress: Setter<IProgress | null>;
     needsSave: boolean;
@@ -45,7 +45,7 @@ export function useGridState<TModel extends object>(
         totalCount: 0,
         data: [],
     });
-    const [editField, setEditField] = useState<IEditField | null>(null);
+    const [editField, setEditField] = useState<IEditField<TModel> | null>(null);
     const [saveRequested, setSaveRequested] = useState<boolean>(false);
     const [needsSave, setNeedsSave] = useState(false);
     const [validationErrors, setValidationErrors] = useState(false);

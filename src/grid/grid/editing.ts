@@ -1,30 +1,66 @@
-import { IGridProps, IRowData } from './types-grid';
+import { Direction, IGridProps, IRowData } from './types-grid';
 import { deepEqual, getNewSyncAction, shallowClone, uuid } from './util';
 import { IGridState } from './state';
 import { SyncAction } from './types-sync';
-import { Column } from './columns/types';
+import { Column, IDataColumn } from './columns/types';
 import { validateModel } from './columns/validation';
 
-export function setCurrentEditField<TModel extends object>(
-    field: string | null,
-    rowNumber: number | null,
-    state: IGridState<TModel>
-)
+export function advanceEditField<TModel extends object>(state: IGridState<TModel>, columns: Array<Column<TModel>>, direction: Direction)
 {
-    if (field && rowNumber)
+    if (!state.editField)
     {
-        const row = state.dataState.data.find(r => r.rowNumber === rowNumber);
-        if (row)
-        {
-            state.setEditField({ rowId: row.rowId, field });
-        } else
-        {
-            state.setEditField(null);
-        }
-    } else
+        return;
+    }
+
+    const data = state.dataState.data;
+    const dataColumns = columns.filter(c => c.type === 'data' && c.editable) as Array<IDataColumn<TModel>>;
+
+    let colIndex = dataColumns.findIndex(c => c.field === state.editField?.field);
+    if (colIndex < 0)
+    {
+        throw new Error(
+            'could not find the field that was just being edited'
+        );
+    }
+
+    //first-most edit field case
+    let row = state.editField.rowData;
+    if (colIndex === 0 && row.rowNumber === 1 && direction === Direction.backward)
     {
         state.setEditField(null);
+        return;
     }
+
+    //last-most edit field case
+    if (colIndex === dataColumns.length - 1 && row.rowNumber === data.length && direction === Direction.forward)
+    {
+        state.setEditField(null);
+        return;
+    }
+
+    if (direction === Direction.forward && colIndex === dataColumns.length - 1)
+    {
+        colIndex = 0;
+        row = data[row.rowNumber];
+    }
+    else if (direction === Direction.backward && colIndex === 0)
+    {
+        colIndex = dataColumns.length - 1;
+        row = data[row.rowNumber - 2];
+    }
+    else
+    {
+        const searchIncrement = direction === Direction.forward ? 1 : -1;
+        colIndex = colIndex + searchIncrement;
+    }
+
+    const nextCol = dataColumns[colIndex];
+    if (!row || !nextCol)
+    {
+        throw new Error('error trying to determine next edit field');
+    }
+
+    state.setEditField({ field: nextCol.field, rowData: row });
 }
 
 //exported for testing only

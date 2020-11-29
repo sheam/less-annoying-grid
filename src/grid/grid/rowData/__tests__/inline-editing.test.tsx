@@ -47,6 +47,7 @@ function getDefaultContext(): IGridContext<IData>
             revertRow: jest.fn(),
             modelEditor: undefined,
             modelTypeName: 'MyObject',
+            advanceEditField: jest.fn(),
         }
     };
 }
@@ -138,7 +139,7 @@ it('renders an editor in number col', async () =>
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowId,
+            rowData,
         };
     }
 
@@ -187,7 +188,7 @@ it('renders an editor in text col', async () =>
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowId,
+            rowData,
         };
     }
     const c = mount(
@@ -235,7 +236,7 @@ it('renders an editor in date col', async () =>
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowId,
+            rowData,
         };
     }
     const c = mount(
@@ -290,7 +291,7 @@ it('renders an editor with drop down values', async () =>
 
         gridContext.editingContext.editField = {
             field: editCol.field,
-            rowId: rowData.rowId,
+            rowData,
         };
     }
     const c = mount(
