@@ -6,8 +6,10 @@ export interface IRowContext
 {
     model: any;
     onChange: (model: any) => void;
-    doneEditing: (commitChanges: boolean, direction: Direction) => void;
+    doneEditingField: (commitChanges: boolean, direction: Direction) => void;
+    doneEditingModel?: (commitChanges: boolean, finalModel?: any) => void;
     focusField: string | null | undefined;
+    isAdd: boolean;
 }
 
 export const RowContext = React.createContext<IRowContext>({} as any);

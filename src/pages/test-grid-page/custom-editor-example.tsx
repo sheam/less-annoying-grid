@@ -27,7 +27,7 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
 
     const focusLost = () =>
     {
-        context.doneEditing(true, Direction.none);
+        context.doneEditingField(true, Direction.none);
     };
 
     const detectSpecialKeys = (
@@ -37,17 +37,17 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
         if (e.key === 'Escape')
         {
             e.preventDefault();
-            context.doneEditing(false, Direction.none);
+            context.doneEditingField(false, Direction.none);
         }
         if (e.key === 'Enter')
         {
             e.preventDefault();
-            context.doneEditing(true, Direction.none);
+            context.doneEditingField(true, Direction.none);
         }
         if (e.key === 'Tab')
         {
             e.preventDefault();
-            context.doneEditing(
+            context.doneEditingField(
                 true,
                 e.shiftKey ? Direction.backward : Direction.forward
             );

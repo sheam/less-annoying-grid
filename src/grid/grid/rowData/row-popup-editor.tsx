@@ -2,9 +2,10 @@ import * as React from 'react';
 import { Column, ColumnEditorType, IDataColumn } from "../columns/types";
 import { FieldEditor } from "./field-editor";
 import { useGridContext } from "../context";
-import { IRowContext, RowContext } from "./row-context";
+import { IRowContext, RowContext, useRowContext } from "./row-context";
 import { SyncAction } from "../types-sync";
 import { useState } from "react";
+import { Direction } from "../types-grid";
 
 interface IPopupEditorProps<TModel extends object>
 {
@@ -24,17 +25,19 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
         throw new Error('edit field not defined');
     }
 
-    const [model, setModel] = useState(editField.rowData.model);
     const editableDataColumns = columns.filter(c => c.type === 'data' && c.editable) as Array<IDataColumn<TModel>>;
+    const [model, setModel] = useState(editField.rowData.model);
 
     const rowEditContext: IRowContext = {
         model: model,
-        doneEditing: (commit, _) => doneEditing(commit),
+        doneEditingField: (commit, dir) => doneEditingField(commit, dir),
+        doneEditingModel: (commit, finalModel) => complete(commit, finalModel),
         onChange,
-        focusField: editableDataColumns[0].field,
+        focusField: editField.field,
+        isAdd: editField.rowData.syncAction === SyncAction.added,
     };
 
-    function doneEditing(commitChanges: boolean)
+    function doneEditingField(commitChanges: boolean, dir: Direction)
     {
         if (!context.editingContext || !editField)
         {
@@ -52,9 +55,26 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
         setModel(changedModel);
     }
 
-    function complete(saveChanges: boolean)
+    function complete(saveChanges: boolean, finalModel?: TModel)
     {
+        if (!context.editingContext || !editField)
+        {
+            throw new Error('edit context must be defined.');
+        }
 
+        if (saveChanges)
+        {
+            if (finalModel)
+            {
+                context.editingContext.updateRow(editField.rowData.rowId, finalModel);
+            }
+        }
+        else
+        {
+            context.editingContext.revertRow(editField.rowData.rowId);
+        }
+
+        context.editingContext.setEditField(null, null);
     }
 
 
@@ -83,32 +103,51 @@ interface IPopupEditorGeneratedProps<TModel extends object>
 
 export const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, modelTypeName }: IPopupEditorGeneratedProps<TModel>) =>
 {
-    let count = 1;
+    const context = useRowContext();
+
+    function cancel()
+    {
+        if (!context?.doneEditingModel)
+        {
+            throw new Error('RowContext must be defined');
+        }
+
+        context.doneEditingModel(false);
+    }
+
+    function save()
+    {
+        if (!context?.doneEditingModel)
+        {
+            throw new Error('RowContext must be defined');
+        }
+
+        context.doneEditingModel(true);
+    }
+
     return (
         <>
             <h2>{isAdd ? 'Adding ' : 'Editing '} {modelTypeName || 'Item'}</h2>
             <div className='fields'>
                 {columns.map(c =>
                 {
-                    const focus = count === 1;
-                    count++;
                     return (
                         <div key={`${c.name}-editor`}>
                             <label>
                                 {c.name}
 
                                 {/* @ts-ignore: we know editable is defined because of filter */}
-                                {getEditorElement(c.editable, c.field, focus)}
+                                {getEditorElement(c.editable, c.field)}
                             </label>
                         </div>
                     );
                 })}
             </div>
             <div className='controls'>
-                <button>
+                <button onClick={cancel}>
                     Cancel
                 </button>
-                <button>
+                <button onClick={save}>
                     {isAdd ? 'Add' : 'Update'}
                 </button>
             </div>

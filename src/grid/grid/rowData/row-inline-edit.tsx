@@ -79,9 +79,10 @@ export const RowInlineEdit = <TModel extends object>(
 
     const rowEditContext: IRowContext = {
         model: rowData.model,
-        doneEditing,
+        doneEditingField: doneEditing,
         onChange,
-        focusField: editingContext.editField?.field
+        focusField: editingContext.editField?.field,
+        isAdd: rowData.syncAction === SyncAction.added,
     };
 
     return (
