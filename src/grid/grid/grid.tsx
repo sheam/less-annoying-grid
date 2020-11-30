@@ -44,7 +44,7 @@ export const Grid = <TModel extends object>(
     const showLoading = state.isLoading && props.children?.loadingState;
     const showSaving = state.syncProgress && props.children?.savingState;
     const showSync = showLoading || showSaving;
-    const needExternalEditor = props.editable?.editMode === GridEditMode.external;
+    const needExternalEditor = props.editable?.editMode === GridEditMode.external && state.editField;
 
     return (
         <GridContext.Provider value={context}>
