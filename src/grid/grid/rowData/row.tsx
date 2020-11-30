@@ -17,7 +17,7 @@ export const Row = <TModel extends object>(props: IRowProps<TModel>) =>
     }
 
     let row: JSX.Element | null = null;
-    if (!editingContext)
+    if (!editingContext || editingContext.editMode === GridEditMode.external)
     {
         row = <RowReadOnly {...props} />;
     } else if (editingContext.editMode === GridEditMode.inline)

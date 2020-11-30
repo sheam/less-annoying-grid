@@ -15,6 +15,7 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
 {
     const context = useRowContext();
     const model = cloneData(context.model);
+    const focus = field === context.focusField;
 
     const changeHandler = (
         e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
@@ -70,7 +71,7 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
                 <input
                     type="number"
                     value={n}
-                    autoFocus={true}
+                    autoFocus={focus}
                     onKeyDown={detectSpecialKeys}
                     onBlur={focusLost}
                     onChange={changeHandler}

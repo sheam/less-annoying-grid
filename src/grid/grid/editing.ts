@@ -131,6 +131,8 @@ export function addRow<TModel extends object>(
     setValidation(newRow, props.columns, state);
     state.setDataState({ data, totalCount: state.dataState.totalCount });
 
+    state.setEditField({ rowData: newRow, field: null });
+
     if (props.editable?.autoSave)
     {
         state.setSaveRequested(true);

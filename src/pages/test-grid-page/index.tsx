@@ -40,11 +40,11 @@ const TestGrid: React.FunctionComponent = (): JSX.Element =>
                 rowDetailButtonShowingContent="hide"
                 rowDetailButtonHiddenContent="show"
                 editable={{
-                    editMode: GridEditMode.inline,
+                    editMode: GridEditMode.external,
                     autoSave: false,
-                    addToBottom: true,
+                    addToBottom: false,
                     syncChanges: syncDataAsync,
-                    modelTypeName: 'MyObject',
+                    modelTypeName: 'Product',
                 }}
             >
                 {{
@@ -191,6 +191,10 @@ const cols: Array<Column<IMockData>> = [
                         );
                     });
                 },
+            },
+            {
+                type: 'edit',
+                buttonContent: 'Edit',
             },
         ],
     },

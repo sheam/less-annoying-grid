@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { Column, IDataColumn } from "../columns/types";
+import { Column, ColumnEditorType, IDataColumn } from "../columns/types";
 import { FieldEditor } from "./field-editor";
 import { useGridContext } from "../context";
 import { IRowContext, RowContext } from "./row-context";
@@ -18,58 +17,38 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
     {
         throw new Error('Do not render PopupEditor if grid is not editable');
     }
-    if (!context.editingContext.editField)
+    const editField = context.editingContext?.editField;
+    if (!editField)
     {
         return null;
     }
 
-    const hide = !context.editingContext?.editField;
+    const editableDataColumns = columns.filter(c => c.type === 'data' && c.editable) as Array<IDataColumn<TModel>>;
 
-    function doneEditing(commitChanges: boolean)
-    {
-        // if (!context.editingContext) {
-        //     throw new Error('editingContext must not be null');
-        // }
-        // if(!rowId)
-        // {
-        //     throw new Error('rowId not set');
-        // }
-        // if(!model)
-        // {
-        //     throw new Error('model is null');
-        // }
-        //
-        // if (commitChanges) {
-        //     context.editingContext.updateRow(rowId, model);
-        // } else {
-        //     context.editingContext.setEditField(null, null);
-        // }
-    }
+    const rowEditContext: IRowContext = {
+        model: editField.rowData.model,
+        doneEditing: (commit, _) => doneEditing(commit),
+        onChange,
+        focusField: editableDataColumns[0].field,
+    };
+
+    function doneEditing(commitChanges: boolean) { }
 
     function onChange(model: TModel)
     {
-        //setModel(model);
+        console.log('model changed');
+        rowEditContext.model = model;
     }
 
-    const rowEditContext: IRowContext = {
-        // model: model,
-        model: {} as any,
-        doneEditing: (commit, _) => doneEditing(commit),
-        onChange,
-    };
-
-    const dataColumns = columns.filter(c => c.type === 'data') as Array<IDataColumn<TModel>>;
-    // const isAdd = rowData.syncAction === SyncAction.added;
-    const isAdd = false;
 
     return (
         <RowContext.Provider value={rowEditContext}>
-            <div className="popup-editor" hidden={hide}>
+            <div className="popup-editor">
                 {context.editingContext.modelEditor}
                 {!context.editingContext.modelEditor &&
                     <PopupEditorGenerated
-                        columns={dataColumns}
-                        isAdd={isAdd}
+                        columns={editableDataColumns}
+                        isAdd={editField.rowData.syncAction === SyncAction.added}
                         modelTypeName={context.editingContext.modelTypeName || 'item'}
                     />
                 }
@@ -87,19 +66,24 @@ interface IPopupEditorGeneratedProps<TModel extends object>
 
 export const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, modelTypeName }: IPopupEditorGeneratedProps<TModel>) =>
 {
+    let count = 1;
     return (
         <>
             <h2>{isAdd ? 'Adding ' : 'Editing '} {modelTypeName || 'Item'}</h2>
             <div className='fields'>
-                {columns.filter(c => c.editable).map(c =>
+                {columns.map(c =>
                 {
+                    const focus = count === 1;
+                    count++;
                     return (
-                        <label>
-                            {c.name}
+                        <div key={`${c.name}-editor`}>
+                            <label>
+                                {c.name}
 
-                            {/* @ts-ignore: we know editable is defined because of filter */}
-                            <FieldEditor field={c.field} editorType={c.editable} />
-                        </label>
+                                {/* @ts-ignore: we know editable is defined because of filter */}
+                                {getEditorElement(c.editable, c.field, focus)}
+                            </label>
+                        </div>
                     );
                 })}
             </div>
@@ -115,4 +99,14 @@ export const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, mo
     );
 };
 
-
+function getEditorElement(
+    editor: ColumnEditorType,
+    field: string
+): JSX.Element
+{
+    if (editor.type === 'custom')
+    {
+        return editor.editor;
+    }
+    return <FieldEditor field={field} editorType={editor} />;
+}

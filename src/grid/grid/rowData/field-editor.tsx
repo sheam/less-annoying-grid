@@ -18,6 +18,7 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
 {
     const context = useRowContext();
     const model = cloneData(context.model);
+    const focus = context.focusField === field;
 
     const inputType =
         editorType.type === 'values' ? editorType.subType : editorType.type;
@@ -69,7 +70,7 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
                 type="text"
                 value={stringFieldValue}
                 maxLength={editorType.maxLength}
-                autoFocus={true}
+                autoFocus={focus}
                 onKeyDown={detectSpecialKeys}
                 onChange={changeHandler}
                 onBlur={focusLost}
@@ -86,7 +87,7 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
                 max={editorType.max}
                 step={editorType.step}
                 value={stringFieldValue}
-                autoFocus={true}
+                autoFocus={focus}
                 onKeyDown={detectSpecialKeys}
                 onChange={changeHandler}
                 onBlur={focusLost}
@@ -102,7 +103,7 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
                 min={editorType.startRange?.toString()}
                 max={editorType.endRange?.toString()}
                 value={stringFieldValue}
-                autoFocus={true}
+                autoFocus={focus}
                 onKeyDown={detectSpecialKeys}
                 onChange={changeHandler}
                 onBlur={focusLost}
@@ -115,7 +116,7 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
             <select
                 name={field}
                 value={stringFieldValue}
-                autoFocus={true}
+                autoFocus={focus}
                 onKeyDown={detectSpecialKeys}
                 onBlur={focusLost}
                 onChange={changeHandler}

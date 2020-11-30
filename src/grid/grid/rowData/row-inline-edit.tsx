@@ -81,6 +81,7 @@ export const RowInlineEdit = <TModel extends object>(
         model: rowData.model,
         doneEditing,
         onChange,
+        focusField: editingContext.editField?.field
     };
 
     return (
