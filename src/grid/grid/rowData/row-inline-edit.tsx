@@ -1,7 +1,7 @@
 import { useGridContext } from '../context';
 import * as React from 'react';
 import { KeyboardEvent, useState } from 'react';
-import { cloneData, hasChanged } from '../util';
+import { hasChanged, shallowClone } from '../util';
 import { IRowProps } from './types';
 import { CellInlineEdit } from './cell-inline-edit';
 import { ActionCell } from './cell-action';
@@ -33,7 +33,7 @@ export const RowInlineEdit = <TModel extends object>(
     const startEditing = (field: string) =>
     {
         editingContext.setEditField(field, props.data);
-        setRowData(cloneData(props.data));
+        setRowData(shallowClone(props.data));
     };
 
     const onChange = (model: TModel) =>

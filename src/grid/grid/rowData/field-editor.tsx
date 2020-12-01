@@ -3,7 +3,7 @@ import { ChangeEvent } from 'react';
 import { ColumnEditorTypeBuiltIn } from '../columns/types';
 import { Direction } from '../types-grid';
 import { useRowContext } from './row-context';
-import { cloneData } from '../util';
+import { shallowClone } from '../util';
 
 interface IFieldEditorProps
 {
@@ -18,7 +18,7 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
 }) =>
 {
     const context = useRowContext();
-    const model = cloneData(context.rowData.model);
+    const model = shallowClone(context.rowData.model);
     const detectSpecialKeys = context.detectSpecialKeys;
     const focus = context.focusField === field;
 
