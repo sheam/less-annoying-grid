@@ -27,8 +27,9 @@ export function syncDataEffect<TModel extends object>(
         state.setNeedsSave(false);
         return result;
     };
-    if (state.saveRequested && !state.validationErrors)
+    if (state.saveRequested && !state.validationErrors && !state.editField)
     {
+        console.log(`    requesting save`);
         state.setSaveRequested(false);
         sync();
     }

@@ -233,6 +233,11 @@ function setValidation<TModel extends object>(
         rowData.validationErrors = errors;
         state.setValidationErrors(true);
     }
+    else
+    {
+        const hasErrors = state.dataState.data.findIndex(r => r.validationErrors && r.validationErrors.length > 0) >= 0;
+        state.setValidationErrors(hasErrors);
+    }
 }
 
 export function createNewRow<TModel extends object>(

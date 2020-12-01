@@ -34,7 +34,7 @@ export const Grid = <TModel extends object>(
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => syncDataEffect(state, props), [state.saveRequested]);
+    useEffect(() => syncDataEffect(state, props), [state.saveRequested, state.validationErrors, state.editField]);
 
     const context = createGridContext(props, state);
 
