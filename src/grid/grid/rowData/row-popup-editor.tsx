@@ -5,7 +5,7 @@ import { useGridContext } from "../context";
 import { IRowContext, RowContext, useRowContext } from "./row-context";
 import { SyncAction } from "../types-sync";
 import { useState } from "react";
-import { Direction } from "../types-grid";
+import { ValidationError } from "./validation-error";
 
 interface IPopupEditorProps<TModel extends object>
 {
@@ -30,14 +30,13 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
 
     const rowEditContext: IRowContext = {
         model: model,
-        doneEditingField: (commit, dir) => doneEditingField(commit, dir),
+        doneEditingField: (commit, _) => doneEditingField(commit),
         doneEditingModel: (commit, finalModel) => complete(commit, finalModel),
         onChange,
-        focusField: editField.field,
         isAdd: editField.rowData.syncAction === SyncAction.added,
     };
 
-    function doneEditingField(commitChanges: boolean, dir: Direction)
+    function doneEditingField(commitChanges: boolean)
     {
         if (!context.editingContext || !editField)
         {
@@ -76,7 +75,6 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
 
         context.editingContext.setEditField(null, null);
     }
-
 
     return (
         <RowContext.Provider value={rowEditContext}>
@@ -139,6 +137,7 @@ export const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, mo
                                 {/* @ts-ignore: we know editable is defined because of filter */}
                                 {getEditorElement(c.editable, c.field)}
                             </label>
+                            {/*<ValidationError field={c.field} validationErrors={context.}*/}
                         </div>
                     );
                 })}

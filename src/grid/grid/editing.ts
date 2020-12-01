@@ -7,7 +7,7 @@ import { validateModel } from './columns/validation';
 
 export function advanceEditField<TModel extends object>(state: IGridState<TModel>, columns: Array<Column<TModel>>, direction: Direction)
 {
-    if (!state.editField)
+    if (!state.editField || direction === Direction.none)
     {
         return;
     }

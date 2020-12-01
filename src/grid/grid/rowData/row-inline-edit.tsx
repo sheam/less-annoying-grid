@@ -1,6 +1,6 @@
 import { useGridContext } from '../context';
 import * as React from 'react';
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import { cloneData, hasChanged } from '../util';
 import { IRowProps } from './types';
 import { CellInlineEdit } from './cell-inline-edit';
@@ -73,6 +73,30 @@ export const RowInlineEdit = <TModel extends object>(
         editingContext.advanceEditField(advance);
     };
 
+    function detectSpecialKeys(
+        e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
+    )
+    {
+        if (e.key === 'Escape')
+        {
+            e.preventDefault();
+            doneEditing(false, Direction.none);
+        }
+        if (e.key === 'Enter')
+        {
+            e.preventDefault();
+            doneEditing(true, Direction.none);
+        }
+        if (e.key === 'Tab')
+        {
+            e.preventDefault();
+            doneEditing(
+                true,
+                e.shiftKey ? Direction.backward : Direction.forward
+            );
+        }
+    }
+
     const classes = [rowData.syncAction.toString(), 'data-row'];
     if (hasChanged(rowData)) classes.push('modified');
     if (editingContext.editField) classes.push('edit-row');
@@ -81,8 +105,9 @@ export const RowInlineEdit = <TModel extends object>(
         model: rowData.model,
         doneEditingField: doneEditing,
         onChange,
-        focusField: editingContext.editField?.field,
         isAdd: rowData.syncAction === SyncAction.added,
+        detectSpecialKeys,
+        focusField: editingContext.editField?.field,
     };
 
     return (

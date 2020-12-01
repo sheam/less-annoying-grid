@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChangeEvent, KeyboardEvent } from 'react';
+import { ChangeEvent } from 'react';
 import { ColumnEditorTypeBuiltIn } from '../columns/types';
 import { Direction } from '../types-grid';
 import { useRowContext } from './row-context';
@@ -9,6 +9,7 @@ interface IFieldEditorProps
 {
     field: string;
     editorType: ColumnEditorTypeBuiltIn;
+
 }
 
 export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
@@ -18,8 +19,8 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
 {
     const context = useRowContext();
     const model = cloneData(context.model);
-    //const focus = context.focusField === field;
-    const focus = undefined;
+    const detectSpecialKeys = context.detectSpecialKeys;
+    const focus = context.focusField === field;
 
     const inputType =
         editorType.type === 'values' ? editorType.subType : editorType.type;
@@ -35,30 +36,6 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
     const focusLost = () =>
     {
         context.doneEditingField(true, Direction.none);
-    };
-
-    const detectSpecialKeys = (
-        e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
-    ) =>
-    {
-        if (e.key === 'Escape')
-        {
-            e.preventDefault();
-            context.doneEditingField(false, Direction.none);
-        }
-        if (e.key === 'Enter')
-        {
-            e.preventDefault();
-            context.doneEditingField(true, Direction.none);
-        }
-        if (e.key === 'Tab')
-        {
-            e.preventDefault();
-            context.doneEditingField(
-                true,
-                e.shiftKey ? Direction.backward : Direction.forward
-            );
-        }
     };
 
     const stringFieldValue = (model as any)[field]?.toString() || '';
