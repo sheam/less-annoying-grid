@@ -18,6 +18,7 @@ import
     SyncAction,
 } from './grid/types-sync';
 import * as validate from './grid/columns/validation';
+import { RowContext, useRowContext } from './grid/rowData/row-context';
 
 export type {
     IDataResult,
@@ -39,4 +40,6 @@ export
     Grid,
     useGridContext,
     validate,
+    RowContext,
+    useRowContext,
 };

@@ -12,6 +12,8 @@ import
     ISyncData,
     ISyncDataResult,
     SyncAction,
+    useGridContext,
+    validate
 } from '../../grid';
 import
 {
@@ -22,7 +24,6 @@ import
     updateData,
 } from './mock-data';
 import './styles.css';
-import { useGridContext, validate } from '../../grid';
 import { ToolBar } from './toolbar';
 import { CustomEditorExample } from './custom-editor-example';
 

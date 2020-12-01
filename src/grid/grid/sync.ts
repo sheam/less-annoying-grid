@@ -3,23 +3,14 @@ import { cloneData, hasChanged, uuid } from './util';
 import { IGridState } from './state';
 import
 {
-    IDataResult,
-    IFieldFilter,
-    IPagination,
-    ISortColumn,
-} from './types-pagination';
-import
-{
     IProgress,
     ISyncData,
     ISyncDataResult,
     SyncAction,
 } from './types-sync';
+import { useEffect } from "react";
 
-export function syncDataEffect<TModel extends object>(
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-)
+export function useSyncDataEffect<TModel extends object>(state: IGridState<TModel>, props: IGridProps<TModel>)
 {
     const sync = async () =>
     {
@@ -27,26 +18,24 @@ export function syncDataEffect<TModel extends object>(
         state.setNeedsSave(false);
         return result;
     };
-    if (state.saveRequested && !state.validationErrors && !state.editField)
+    useEffect(() =>
     {
-        console.log(`    requesting save`);
-        state.setSaveRequested(false);
-        sync();
-    }
+        if (state.saveRequested && !state.validationErrors && !state.editField)
+        {
+            state.setSaveRequested(false);
+            sync();
+        }
+    },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [state.saveRequested, state.validationErrors, state.editField]
+    );
 }
 
-export function loadDataEffect<TModel extends object>(
-    state: IGridState<TModel>,
-    getDataAsync: (
-        p: IPagination | null,
-        s: ISortColumn | null,
-        f: IFieldFilter[]
-    ) => Promise<IDataResult<TModel>>
-)
+export function useLoadDataEffect<TModel extends object>(state: IGridState<TModel>, props: IGridProps<TModel>)
 {
     const fetch = async () =>
     {
-        const d = await getDataAsync(
+        const d = await props.getDataAsync(
             state.pagination,
             state.sort,
             state.filters
@@ -71,10 +60,16 @@ export function loadDataEffect<TModel extends object>(
         state.setIsLoading(false);
     };
 
-    state.setIsLoading(true);
-
-    // noinspection JSIgnoredPromiseFromCall
-    fetch();
+    useEffect(
+        () =>
+        {
+            state.setIsLoading(true);
+            // noinspection JSIgnoredPromiseFromCall
+            fetch();
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [state.pagination, state.sort, state.filters, props.getDataAsync]
+    );
 }
 
 export async function syncChanges<TModel extends object>(

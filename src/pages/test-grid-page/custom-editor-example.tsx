@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { useRowContext } from '../../grid/grid/rowData/row-context';
-import { cloneData } from '../../grid/grid/util';
+import { useRowContext } from '../../grid';
 import { ChangeEvent } from 'react';
-import { Direction } from '../../grid/grid/types-grid';
 
 interface ICustomEditorExampleProps
 {
@@ -14,7 +12,7 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
 }) =>
 {
     const context = useRowContext();
-    const model = cloneData(context.rowData.model) as any;
+    const model = Object.assign({}, context.rowData.model) as any;
     const focus = context.focusField === field;
 
     const changeHandler = (
@@ -27,7 +25,7 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
 
     const focusLost = () =>
     {
-        context.doneEditingField(true, Direction.none);
+        context.doneEditingField(true);
     };
 
     const detectSpecialKeys = context.detectSpecialKeys;

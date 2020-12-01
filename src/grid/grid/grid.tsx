@@ -1,12 +1,12 @@
 /* tslint:disable:jsx-no-multiline-js */
 import * as React from 'react';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
 import { createGridContext, GridContext } from './context';
 import { Footer } from './header-footer/footer';
 import { Header } from './header-footer/header';
 import { Row } from './rowData/row';
 import { useGridState } from './state';
-import { loadDataEffect, syncDataEffect } from './sync';
+import { useSyncDataEffect, useLoadDataEffect } from './sync';
 import { GridEditMode, IGridProps } from './types-grid';
 import { getNonGroupColumns } from './util';
 import { PopupEditor } from "./rowData/row-popup-editor";
@@ -27,14 +27,8 @@ export const Grid = <TModel extends object>(
 {
     const state = useGridState(props);
 
-    useEffect(
-        () => loadDataEffect(state, props.getDataAsync),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [state.pagination, state.sort, state.filters, props]
-    );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => syncDataEffect(state, props), [state.saveRequested, state.validationErrors, state.editField]);
+    useLoadDataEffect(state, props);
+    useSyncDataEffect(state, props);
 
     const context = createGridContext(props, state);
 

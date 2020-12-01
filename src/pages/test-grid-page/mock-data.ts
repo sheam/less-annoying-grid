@@ -5,7 +5,6 @@ import
     IPagination,
     ISortColumn,
 } from '../../grid';
-import { cloneData } from '../../grid/grid/util';
 
 export interface IData
 {
@@ -18,7 +17,6 @@ export interface IData
     five: number;
     key: number;
 }
-
 export function update(model: IData): IData
 {
     const index = _data.findIndex(m => m.key === model.key);
@@ -138,4 +136,9 @@ function generateData(n: number)
         });
     }
     return result;
+}
+
+function cloneData<TModel>(model: TModel): TModel
+{
+    return JSON.parse(JSON.stringify(model));
 }

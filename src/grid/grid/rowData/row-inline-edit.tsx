@@ -53,7 +53,7 @@ export const RowInlineEdit = <TModel extends object>(
         });
     };
 
-    const doneEditing = (commitChanges: boolean, advance: Direction) =>
+    const doneEditing = (commitChanges: boolean, advance?: Direction) =>
     {
         if (!editingContext.editField)
         {
@@ -70,7 +70,10 @@ export const RowInlineEdit = <TModel extends object>(
             setRowData(props.data);
         }
 
-        editingContext.advanceEditField(advance);
+        if (advance)
+        {
+            editingContext.advanceEditField(advance);
+        }
     };
 
     function detectSpecialKeys(
