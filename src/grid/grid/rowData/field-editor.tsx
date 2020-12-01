@@ -18,7 +18,7 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
 }) =>
 {
     const context = useRowContext();
-    const model = cloneData(context.model);
+    const model = cloneData(context.rowData.model);
     const detectSpecialKeys = context.detectSpecialKeys;
     const focus = context.focusField === field;
 

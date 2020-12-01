@@ -101,8 +101,8 @@ export const RowInlineEdit = <TModel extends object>(
     if (hasChanged(rowData)) classes.push('modified');
     if (editingContext.editField) classes.push('edit-row');
 
-    const rowEditContext: IRowContext = {
-        model: rowData.model,
+    const rowEditContext: IRowContext<TModel> = {
+        rowData,
         doneEditingField: doneEditing,
         onChange,
         isAdd: rowData.syncAction === SyncAction.added,

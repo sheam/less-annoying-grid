@@ -14,7 +14,7 @@ export const CustomEditorExample: React.FunctionComponent<ICustomEditorExamplePr
 }) =>
 {
     const context = useRowContext();
-    const model = cloneData(context.model);
+    const model = cloneData(context.rowData.model) as any;
     const focus = context.focusField === field;
 
     const changeHandler = (

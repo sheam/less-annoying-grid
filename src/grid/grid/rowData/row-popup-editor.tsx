@@ -6,6 +6,8 @@ import { IRowContext, RowContext, useRowContext } from "./row-context";
 import { SyncAction } from "../types-sync";
 import { useState } from "react";
 import { ValidationError } from "./validation-error";
+import { IRowData } from "../types-grid";
+import { shallowClone } from "../util";
 
 interface IPopupEditorProps<TModel extends object>
 {
@@ -26,10 +28,10 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
     }
 
     const editableDataColumns = columns.filter(c => c.type === 'data' && c.editable) as Array<IDataColumn<TModel>>;
-    const [model, setModel] = useState(editField.rowData.model);
+    const [rowData, setRowData] = useState<IRowData<TModel>>(editField.rowData as IRowData<TModel>);
 
-    const rowEditContext: IRowContext = {
-        model: model,
+    const rowEditContext: IRowContext<TModel> = {
+        rowData: rowData,
         doneEditingField: (commit, _) => doneEditingField(commit),
         doneEditingModel: (commit, finalModel) => complete(commit, finalModel),
         onChange,
@@ -45,13 +47,17 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
 
         if (commitChanges)
         {
-            context.editingContext.updateRow(editField.rowData.rowId, model);
+            const result = context.editingContext.updateRow(rowData.rowId, rowData.model);
+            setRowData(result as IRowData<TModel>);
         }
     }
 
     function onChange(changedModel: TModel)
     {
-        setModel(changedModel);
+        console.log('changed');
+        const newRowData = shallowClone(rowData);
+        newRowData.model = changedModel;
+        setRowData(newRowData);
     }
 
     function complete(saveChanges: boolean, finalModel?: TModel)
@@ -137,7 +143,7 @@ export const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, mo
                                 {/* @ts-ignore: we know editable is defined because of filter */}
                                 {getEditorElement(c.editable, c.field)}
                             </label>
-                            {/*<ValidationError field={c.field} validationErrors={context.}*/}
+                            <ValidationError field={c.field} validationErrors={context.rowData.validationErrors} />
                         </div>
                     );
                 })}
