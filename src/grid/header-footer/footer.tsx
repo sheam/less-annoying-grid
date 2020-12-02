@@ -64,10 +64,10 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (
         >
             <tr>
                 <td colSpan={props.numColumns}>
-                    <span className="bn-navigation">
+                    <span className="lag-navigation">
                         <button
                             data-test="prev-button"
-                            className="bn-prev-next"
+                            className="lag-prev-next"
                             title="previous page"
                             disabled={preventPaging}
                             onClick={() =>
@@ -88,7 +88,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (
                         )}
                         <button
                             data-test="next-button"
-                            className="bn-prev-next"
+                            className="lag-prev-next"
                             title="next page"
                             disabled={preventPaging}
                             onClick={() =>
@@ -102,7 +102,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (
                         </button>
                     </span>
                     <span
-                        className="bn-page-size"
+                        className="lag-page-size"
                         title="number of items to display"
                     >
                         <select
@@ -124,7 +124,7 @@ export const Footer: (props: IInternalFooterProps) => JSX.Element = (
                         </select>
                         {itemsName} per page
                     </span>
-                    <span className="bn-total-count" data-test="total-label">
+                    <span className="lag-total-count" data-test="total-label">
                         {props.totalCount
                             ? `${props.totalCount} ${itemsName}`
                             : ''}
@@ -192,7 +192,7 @@ function getPageJumpButtons(
     pageJumps = pageJumps.sort((a, b) => a - b);
 
     return (
-        <span className="bn-jumps">
+        <span className="lag-jumps">
             {pageJumps.map(n => (
                 <button
                     key={n}

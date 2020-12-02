@@ -42,7 +42,7 @@ export const Grid = <TModel extends object>(
 
     return (
         <GridContext.Provider value={context}>
-            <div className="bn-grid">
+            <div className="lag-grid">
                 {needExternalEditor && <PopupEditor columns={props.columns} />}
                 <div hidden={!showSync} className="sync-panel">
                     <div className="sync-panel-content">

@@ -16,6 +16,7 @@ const jumpButtonValue = (c: ShallowWrapper, index: number) =>
     jumpButton(c, index).props().value;
 const jumpButtonDisabled = (c: ShallowWrapper, index: number) =>
     jumpButton(c, index).props().disabled;
+
 function setGridContextData(gridContext: GridContext.IGridContext<any>): void
 {
     if (!gridContext.setPagination)
@@ -23,7 +24,7 @@ function setGridContextData(gridContext: GridContext.IGridContext<any>): void
         gridContext.setPagination = jest.fn(); // default implementation
     }
     jest.spyOn(GridContext, 'useGridContext').mockImplementation(
-        () => gridContext
+        () => gridContext,
     );
 }
 
@@ -38,7 +39,7 @@ it('renders a footer with pagination data', () =>
     const totalCount = 50;
     const numColumns = 4;
     const component = shallow(
-        <Footer totalCount={totalCount} numColumns={numColumns} />
+        <Footer totalCount={totalCount} numColumns={numColumns} />,
     );
 
     expect(component.find('tfoot')).toHaveLength(1);
@@ -46,7 +47,7 @@ it('renders a footer with pagination data', () =>
     expect(getByTestId(component, 'prev-button')).toHaveLength(1);
     expect(getByTestId(component, 'total-label').text()).toContain(totalCount.toString());
     expect(getByTestId(component, 'page-size-select').props().value).toBe(
-        pagination.pageSize
+        pagination.pageSize,
     );
     expect(getByTestId(component, 'jump')).toHaveLength(5);
     expect(jumpButtonValue(component, 0)).toBe(1);
@@ -68,7 +69,7 @@ it('renders correct number of pages', () =>
     const totalCount = 100;
     const numColumns = 4;
     const component = shallow(
-        <Footer totalCount={totalCount} numColumns={numColumns} />
+        <Footer totalCount={totalCount} numColumns={numColumns} />,
     );
 
     expect(getByTestId(component, 'jump')).toHaveLength(7);
@@ -85,7 +86,7 @@ it('renders a footer with big jump to end', () =>
     const totalCount = 100;
     const numColumns = 4;
     const component = shallow(
-        <Footer totalCount={totalCount} numColumns={numColumns} />
+        <Footer totalCount={totalCount} numColumns={numColumns} />,
     );
 
     expect(getByTestId(component, 'jump')).toHaveLength(7);
@@ -109,7 +110,7 @@ it('renders a footer with big jump to front', () =>
     const totalCount = 100;
     const numColumns = 4;
     const component = shallow(
-        <Footer totalCount={totalCount} numColumns={numColumns} />
+        <Footer totalCount={totalCount} numColumns={numColumns} />,
     );
 
     expect(getByTestId(component, 'jump')).toHaveLength(7);
@@ -137,7 +138,7 @@ it('next advances 1 page', () =>
     setGridContextData({ pagination, setPagination: setPaginationMock });
 
     const component = shallow(
-        <Footer totalCount={totalCount} numColumns={numColumns} />
+        <Footer totalCount={totalCount} numColumns={numColumns} />,
     );
 
     getByTestId(component, 'next-button').simulate('click');
@@ -160,7 +161,7 @@ it('next does not advance past the end', () =>
     setGridContextData({ pagination, setPagination: setPaginationMock });
 
     const component = shallow(
-        <Footer totalCount={totalCount} numColumns={numColumns} />
+        <Footer totalCount={totalCount} numColumns={numColumns} />,
     );
 
     getByTestId(component, 'next-button').simulate('click');
@@ -183,7 +184,7 @@ it('prev goes 1 page back', () =>
     setGridContextData({ pagination, setPagination: setPaginationMock });
 
     const component = shallow(
-        <Footer totalCount={totalCount} numColumns={numColumns} />
+        <Footer totalCount={totalCount} numColumns={numColumns} />,
     );
 
     getByTestId(component, 'prev-button').simulate('click');
@@ -206,7 +207,7 @@ it('prev does not go back past 1', () =>
     setGridContextData({ pagination, setPagination: setPaginationMock });
 
     const component = shallow(
-        <Footer totalCount={totalCount} numColumns={numColumns} />
+        <Footer totalCount={totalCount} numColumns={numColumns} />,
     );
 
     getByTestId(component, 'prev-button').simulate('click');
@@ -237,11 +238,11 @@ it('page size options', () =>
             totalCount={totalCount}
             numColumns={numColumns}
             config={config}
-        />
+        />,
     );
 
     expect(
-        getByTestId(component, 'page-size-select').find('option')
+        getByTestId(component, 'page-size-select').find('option'),
     ).toHaveLength(3);
 
     if (!config.pageSizeOptions)
@@ -250,15 +251,15 @@ it('page size options', () =>
     }
     expect(
         getByTestId(component, 'page-size-select').find('option').at(0).props()
-            .value
+            .value,
     ).toBe(config.pageSizeOptions[0]);
     expect(
         getByTestId(component, 'page-size-select').find('option').at(1).props()
-            .value
+            .value,
     ).toBe(config.pageSizeOptions[1]);
     expect(
         getByTestId(component, 'page-size-select').find('option').at(2).props()
-            .value
+            .value,
     ).toBe(config.pageSizeOptions[2]);
 });
 
@@ -282,7 +283,7 @@ it('changing page size', () =>
             totalCount={totalCount}
             numColumns={numColumns}
             config={config}
-        />
+        />,
     );
 
     expect(getByTestId(component, 'page-size-select')).toHaveLength(1);
@@ -336,13 +337,13 @@ it('disabled when needs saving', () =>
             totalCount={totalCount}
             numColumns={numColumns}
             config={config}
-        />
+        />,
     );
 
     expect(getByTestId(component, 'next-button').prop('disabled')).toBeTruthy();
     expect(getByTestId(component, 'prev-button').prop('disabled')).toBeTruthy();
     expect(
-        getByTestId(component, 'page-size-select').prop('disabled')
+        getByTestId(component, 'page-size-select').prop('disabled'),
     ).toBeTruthy();
 
     const jumps = getByTestId(component, 'jump');
@@ -372,7 +373,16 @@ it('disabled when needs editing', () =>
             needsSave: false,
             syncProgress: null,
             updateRow: jest.fn(),
-            editField: { rowData: { rowNumber: 1, syncAction: SyncAction.updated, rowId: '1', showDetail: false, model: {}, originalModel: {} }, field: 'one' },
+            editField: {
+                rowData: {
+                    rowNumber: 1,
+                    syncAction: SyncAction.updated,
+                    rowId: '1',
+                    showDetail: false,
+                    model: {},
+                    originalModel: {},
+                }, field: 'one',
+            },
             setEditField: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
@@ -393,13 +403,13 @@ it('disabled when needs editing', () =>
             totalCount={totalCount}
             numColumns={numColumns}
             config={config}
-        />
+        />,
     );
 
     expect(getByTestId(component, 'next-button').prop('disabled')).toBeTruthy();
     expect(getByTestId(component, 'prev-button').prop('disabled')).toBeTruthy();
     expect(
-        getByTestId(component, 'page-size-select').prop('disabled')
+        getByTestId(component, 'page-size-select').prop('disabled'),
     ).toBeTruthy();
 
     const jumps = getByTestId(component, 'jump');
