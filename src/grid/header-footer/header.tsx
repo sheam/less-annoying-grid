@@ -56,16 +56,18 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
                 </th>
             );
         }
+        const sortable = c.type === 'data' && c.sortable;
         return (
             <th
                 key={c.name}
                 hidden={c.hidden}
                 onClick={() => headerClicked(c)}
                 data-test="header"
+                className={sortable ? 'sortable' : ''}
                 title={c.type === 'data' ? c.field : undefined}
             >
                 <span>{c.name}</span>
-                {getSortLabel(c)}
+                {sortable && getSortLabel(c)}
             </th>
         );
     };
