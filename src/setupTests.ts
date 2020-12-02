@@ -4,6 +4,7 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 import { configure } from 'enzyme';
-const Adapter = require("enzyme-adapter-react-16");
+const Adapter = require('@wojtekmaj/enzyme-adapter-react-17');
+// const Adapter = require("enzyme-adapter-react-16");
 
 configure({ adapter: new Adapter() });
