@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import * as React from 'react';
 import { IDataState, IEditField, IGridProps, Setter } from './types-grid';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 import { IProgress } from './types-sync';
@@ -34,21 +34,21 @@ export function useGridState<TModel extends object>(
     const initialPagination = props.footer?.initialPageSize
         ? { pageSize: props.footer?.initialPageSize, currentPage: 1 }
         : null;
-    const [pagination, setPagination] = useState<IPagination | null>(
+    const [pagination, setPagination] = React.useState<IPagination | null>(
         initialPagination
     );
-    const [sort, setSort] = useState<ISortColumn | null>(null);
-    const [filters, setFilters] = useState<IFieldFilter[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [syncProgress, setSyncProgress] = useState<IProgress | null>(null);
-    const [dataState, setDataState] = useState<IDataState<TModel>>({
+    const [sort, setSort] = React.useState<ISortColumn | null>(null);
+    const [filters, setFilters] = React.useState<IFieldFilter[]>([]);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [syncProgress, setSyncProgress] = React.useState<IProgress | null>(null);
+    const [dataState, setDataState] = React.useState<IDataState<TModel>>({
         totalCount: 0,
         data: [],
     });
-    const [editField, setEditField] = useState<IEditField<TModel> | null>(null);
-    const [saveRequested, setSaveRequested] = useState<boolean>(false);
-    const [needsSave, setNeedsSave] = useState(false);
-    const [validationErrors, setValidationErrors] = useState(false);
+    const [editField, setEditField] = React.useState<IEditField<TModel> | null>(null);
+    const [saveRequested, setSaveRequested] = React.useState<boolean>(false);
+    const [needsSave, setNeedsSave] = React.useState(false);
+    const [validationErrors, setValidationErrors] = React.useState(false);
 
     return {
         pagination,

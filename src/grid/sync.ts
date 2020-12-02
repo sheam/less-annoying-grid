@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { IDataState, IGridProps, IRowData } from './types-grid';
 import { cloneData, hasChanged, uuid } from './util';
 import { IGridState } from './state';
@@ -8,7 +9,6 @@ import
     ISyncDataResult,
     SyncAction,
 } from './types-sync';
-import { useEffect } from "react";
 
 export function useSyncDataEffect<TModel extends object>(state: IGridState<TModel>, props: IGridProps<TModel>)
 {
@@ -18,7 +18,7 @@ export function useSyncDataEffect<TModel extends object>(state: IGridState<TMode
         state.setNeedsSave(false);
         return result;
     };
-    useEffect(() =>
+    React.useEffect(() =>
     {
         if (state.saveRequested && !state.validationErrors && !state.editField)
         {
@@ -60,7 +60,7 @@ export function useLoadDataEffect<TModel extends object>(state: IGridState<TMode
         state.setIsLoading(false);
     };
 
-    useEffect(
+    React.useEffect(
         () =>
         {
             state.setIsLoading(true);
