@@ -1,18 +1,45 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import './grid/styles/grid.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Column } from './grid/columns/types';
+import { IFooterProps } from './grid/header-footer/footer';
+import { GridContext, useGridContext } from './grid/context';
+import { Grid } from './grid/grid';
+import { GridEditMode } from './grid/types-grid';
+import
+{
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+} from './grid/types-pagination';
+import
+{
+    IProgress,
+    ISyncData,
+    ISyncDataResult,
+    SyncAction,
+} from './grid/types-sync';
+import * as validate from './grid/columns/validation';
+import { RowContext, useRowContext } from './grid/rowData/row-context';
 
-ReactDOM.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+export type {
+    IDataResult,
+    IFieldFilter,
+    IPagination,
+    ISortColumn,
+    IProgress,
+    ISyncData,
+    ISyncDataResult,
+    IFooterProps,
+    Column,
+};
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+export
+{
+    GridEditMode,
+    SyncAction,
+    GridContext,
+    Grid,
+    useGridContext,
+    validate,
+    RowContext,
+    useRowContext,
+};

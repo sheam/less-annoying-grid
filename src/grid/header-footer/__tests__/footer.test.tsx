@@ -44,7 +44,7 @@ it('renders a footer with pagination data', () =>
     expect(component.find('tfoot')).toHaveLength(1);
     expect(getByTestId(component, 'next-button')).toHaveLength(1);
     expect(getByTestId(component, 'prev-button')).toHaveLength(1);
-    expect(getByTestId(component, 'total-label').text()).toContain(totalCount);
+    expect(getByTestId(component, 'total-label').text()).toContain(totalCount.toString());
     expect(getByTestId(component, 'page-size-select').props().value).toBe(
         pagination.pageSize
     );
