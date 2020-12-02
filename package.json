@@ -1,5 +1,9 @@
 {
     "name": "react-test-app",
+    "main": "dist/index.js",
+    "module": "dist/index.es.js",
+    "types": "dist/index.d.ts",
+    "files": ["dist"],
     "description": "An editable and configurable data grid which which doesn't get in your way.",
     "contributors": [
         "Shea Martin <shea.martin@gmail.com>"
@@ -26,9 +30,15 @@
         "husky": "^4.3.0",
         "jest": "^26.6.3",
         "lint-staged": "^10.5.2",
+        "rollup": "^2.34.0",
+        "rollup-plugin-typescript2": "^0.29.0",
         "typescript-formatter": "^7.2.2"
     },
-    "scripts": {},
+    "scripts": {
+        "compile": "tsc",
+        "build": "rollup -c",
+        "watch": "rollup -cw"
+    },
     "husky": {
         "hooks": {
             "pre-commit": [
