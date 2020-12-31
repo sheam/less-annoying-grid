@@ -1,7 +1,14 @@
 {
     "name": "less-annoying-grid",
     "description": "An editable and configurable data grid which which doesn't get in your way.",
-    "version": "0.9.0",
+    "keywords": [
+        "grid",
+        "data table",
+        "pagination",
+        "editing",
+        "react"
+    ],
+    "version": "0.9.1",
     "private": false,
     "main": "dist/index.js",
     "module": "dist/index.es.js",
@@ -17,7 +24,14 @@
         "react-dom": "^17.0.1"
     },
     "devDependencies": {
+        "@testing-library/jest-dom": "^5.11.4",
+        "@testing-library/react": "^11.1.0",
+        "@testing-library/user-event": "^12.1.10",
         "@types/enzyme": "^3.10.8",
+        "@types/jest": "^26.0.15",
+        "@types/node": "^12.0.0",
+        "@types/react": "^17.0.0",
+        "@types/react-dom": "^17.0.0",
         "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",
         "enzyme": "^3.11.0",
         "husky": "^4.3.0",
@@ -26,15 +40,8 @@
         "rollup": "^2.34.0",
         "rollup-plugin-typescript2": "^0.29.0",
         "ts-jest": "^26.4.4",
-        "typescript-formatter": "^7.2.2",
         "typescript": "^4.1.2",
-        "@testing-library/jest-dom": "^5.11.4",
-        "@testing-library/react": "^11.1.0",
-        "@testing-library/user-event": "^12.1.10",
-        "@types/jest": "^26.0.15",
-        "@types/node": "^12.0.0",
-        "@types/react": "^17.0.0",
-        "@types/react-dom": "^17.0.0"
+        "typescript-formatter": "^7.2.2"
     },
     "browserslist": {
         "production": [
@@ -57,7 +64,9 @@
     },
     "jest": {
         "slowTestThreshold": 7000,
-        "setupFilesAfterEnv": ["<rootDir>/src/setupTests.ts"],
+        "setupFilesAfterEnv": [
+            "<rootDir>/src/setupTests.ts"
+        ],
         "moduleFileExtensions": [
             "ts",
             "tsx",
