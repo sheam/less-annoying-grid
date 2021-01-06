@@ -28,6 +28,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
                     key={`no-group-${c.name}`}
                     hidden={hide}
                     data-test="group"
+                    className={c.className}
                 />
             );
         }
@@ -40,6 +41,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
                 }
                 key={`group-${c.name}`}
                 data-test="group"
+                className={c.className}
             >
                 {c.name}
             </th>
@@ -51,19 +53,25 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         if (c.type === 'action')
         {
             return (
-                <th key={c.name} hidden={c.hidden} data-test="header">
+                <th
+                    key={c.name}
+                    hidden={c.hidden}
+                    data-test="header"
+                    className={c.className}
+                >
                     {c.name}
                 </th>
             );
         }
         const sortable = c.type === 'data' && c.sortable;
+        const className = (sortable ? 'sortable' : '') + (c.className || '');
         return (
             <th
                 key={c.name}
                 hidden={c.hidden}
                 onClick={() => headerClicked(c)}
                 data-test="header"
-                className={sortable ? 'sortable' : ''}
+                className={className}
                 title={c.type === 'data' ? c.field : undefined}
             >
                 <span>{c.name}</span>

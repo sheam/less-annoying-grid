@@ -15,7 +15,7 @@ export const ActionCell = <TModel extends object>({
 }: IActionCellProps<TModel>) =>
 {
     return (
-        <td hidden={column.hidden}>
+        <td hidden={column.hidden} className={column.className}>
             {column.actions.map((a, i) => (
                 <ActionButton key={i} action={a} rowData={rowData} />
             ))}

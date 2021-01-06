@@ -13,6 +13,7 @@ export interface IDataColumn<TModel extends object>
     renderDisplay?: (model: TModel) => ElementOrString;
     validator?: AggregateValidator;
     defaultValue?: any | (() => any);
+    className?: string;
 }
 
 interface IDisplayColumn<TModel extends object>
@@ -21,6 +22,7 @@ interface IDisplayColumn<TModel extends object>
     name: string;
     hidden?: boolean;
     renderDisplay: (model: TModel) => ElementOrString;
+    className?: string;
 }
 
 export interface IActionColumn<TModel extends object>
@@ -29,6 +31,7 @@ export interface IActionColumn<TModel extends object>
     name: string;
     hidden?: boolean;
     actions: Array<Action<TModel>>;
+    className?: string;
 }
 
 interface IColumnGroup<TModel extends object>
@@ -37,6 +40,7 @@ interface IColumnGroup<TModel extends object>
     name: string;
     hidden?: boolean;
     subColumns?: Array<NonGroupColumn<TModel>>;
+    className?: string;
 }
 
 export type Column<TModel extends object> =

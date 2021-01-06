@@ -13,7 +13,7 @@ interface ICellInlineEditProps<TModel extends object>
 }
 
 export const CellInlineEdit = <TModel extends object>({
-    column: { field, hidden, renderDisplay, editable },
+    column: { field, hidden, renderDisplay, editable, className },
     data,
     isEditing,
     startEditing,
@@ -34,7 +34,7 @@ export const CellInlineEdit = <TModel extends object>({
         }
 
         return (
-            <td hidden={hidden}>
+            <td hidden={hidden} className={className}>
                 {getEditorElement(editable, field)}
                 <ValidationError
                     field={field}
@@ -46,7 +46,7 @@ export const CellInlineEdit = <TModel extends object>({
     {
         const clickHandler = editable ? () => startEditing(field) : undefined;
         return (
-            <td hidden={hidden} onClick={clickHandler}>
+            <td hidden={hidden} onClick={clickHandler} className={className}>
                 {renderDisplay && renderDisplay(data.model)}
                 {!renderDisplay &&
                     field &&

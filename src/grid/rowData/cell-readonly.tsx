@@ -19,7 +19,7 @@ export const CellReadonly = <TModel extends object>({
     if (c.type === 'data')
     {
         return (
-            <td hidden={c.hidden}>
+            <td hidden={c.hidden} className={column.className}>
                 {c.renderDisplay && c.renderDisplay(data.model)}
                 {!c.renderDisplay && (data.model as any)[c.field]?.toString()}
                 <ValidationError
@@ -31,7 +31,7 @@ export const CellReadonly = <TModel extends object>({
     }
     if (c.type === 'display')
     {
-        return <td>{c.renderDisplay(data.model)}</td>;
+        return <td className={column.className}>{c.renderDisplay(data.model)}</td>;
     }
 
     throw new Error(`Unexpected type for CellReadonly: '${c.type}'`);
