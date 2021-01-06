@@ -56,6 +56,7 @@ export const Grid = <TModel extends object>(
                         toolbar={props.children?.toolbar}
                         sortAscLabel={props.sortAscLabel}
                         sortDescLabel={props.sortDescLabel}
+                        unsortedLabel={props.unsortedLabel}
                     />
                     <tbody>
                         {!showLoading &&

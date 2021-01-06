@@ -12,6 +12,7 @@ export interface IHeaderProps<TModel extends object>
 
     sortAscLabel?: ElementOrString;
     sortDescLabel?: ElementOrString;
+    unsortedLabel?: ElementOrString;
 }
 
 export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
@@ -84,7 +85,15 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         c: NonGroupColumn<TModel>
     ): ElementOrString | null =>
     {
-        if (c.type !== 'data' || sort?.field !== c.field || !sort?.direction)
+        if (c.type === 'data' && !sort || !sort?.direction)
+        {
+            return (
+                <span className="sort-indicator" data-test="sort-unsorted">
+                    {props.unsortedLabel || '-'}
+                </span>
+            );
+        }
+        if (c.type !== 'data' || sort?.field !== c.field || !c.sortable)
         {
             return null;
         }

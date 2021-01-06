@@ -39,6 +39,7 @@ export interface IGridProps<TModel extends object>
 
     sortAscLabel?: ElementOrString;
     sortDescLabel?: ElementOrString;
+    unsortedLabel?: ElementOrString;
 
     renderRowDetail?: (model: TModel) => JSX.Element;
     rowDetailButtonShowingContent?: ElementOrString;
