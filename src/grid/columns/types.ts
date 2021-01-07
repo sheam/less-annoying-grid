@@ -54,11 +54,18 @@ export type NonGroupColumn<TModel extends object> =
     | IDisplayColumn<TModel>
     | IActionColumn<TModel>;
 
-export interface IActionEdit
+export enum ActionStatus { Active, Hidden, Disabled }
+
+export interface IActionEdit<TModel extends object>
 {
     type: 'edit';
     name?: string;
     buttonContent?: ElementOrString;
+    buttonState?: (
+        data: TModel,
+        rowId: string,
+        currentSyncAction: SyncAction
+    ) => ActionStatus;
 }
 
 export interface IActionDelete<TModel extends object>
@@ -66,6 +73,11 @@ export interface IActionDelete<TModel extends object>
     type: 'delete';
     name?: string;
     buttonContent?: ElementOrString;
+    buttonState?: (
+        data: TModel,
+        rowId: string,
+        currentSyncAction: SyncAction
+    ) => ActionStatus;
     confirm?:
     | boolean
     | ((model: TModel, currentSyncAction: SyncAction) => Promise<boolean>);
@@ -76,15 +88,21 @@ interface IActionCustom<TModel extends object>
     type: 'custom';
     name?: string;
     buttonContent?: ElementOrString;
-    handler: (
+    buttonState?: (
         data: TModel,
         rowId: string,
         currentSyncAction: SyncAction
-    ) => Array<ISyncData<TModel>> | null;
+    ) => ActionStatus;
+    handler: (
+        data: TModel,
+        rowId: string,
+        currentSyncAction: SyncAction,
+        pushRouteCallback?: (route: string) => void,
+    ) => Array<ISyncData<TModel>>;
 }
 
 export type Action<TModel extends object> =
-    | IActionEdit
+    | IActionEdit<TModel>
     | IActionDelete<TModel>
     | IActionCustom<TModel>;
 

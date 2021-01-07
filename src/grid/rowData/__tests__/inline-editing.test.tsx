@@ -7,8 +7,7 @@ import { RowInlineEdit } from '../row-inline-edit';
 import { cloneData, shallowClone } from '../../util';
 import { GridEditMode, IRowData } from '../../types-grid';
 import { IGridContext } from '../../context';
-import { Column } from '../../..';
-import { SyncAction } from '../../types-sync';
+import { Column, SyncAction } from '../../..';
 
 const getByTestId = (c: ReactWrapper | ShallowWrapper, name: string) =>
     c.find(`[data-test="${name}"]`);

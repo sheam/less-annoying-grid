@@ -42,6 +42,8 @@ export interface IGridContext<TModel extends object>
     rowDetailButtonHiddenContent?: ElementOrString;
 
     editingContext?: IGridEditContext<TModel> | null;
+
+    pushRoute?: (route: string) => void;
 }
 
 export const GridContext = React.createContext({});
@@ -79,6 +81,7 @@ export function createGridContext<TModel extends object>(
         showDetailForRow: (rowId, show) => showDetailForRow(rowId, show, state),
         rowDetailButtonShowingContent: props.rowDetailButtonShowingContent,
         rowDetailButtonHiddenContent: props.rowDetailButtonHiddenContent,
+        pushRoute: props.pushRoute,
     };
 }
 

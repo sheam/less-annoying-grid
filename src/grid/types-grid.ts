@@ -52,6 +52,8 @@ export interface IGridProps<TModel extends object>
     ) => Promise<IDataResult<TModel>>;
 
     editable?: IGridEditConfig<TModel>;
+
+    pushRoute?: (route: string) => void;
 }
 
 export interface IGridEditConfig<TModel extends object>

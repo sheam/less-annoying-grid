@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { IGridContext, useGridContext } from '../context';
-import { IRowData } from '../types-grid';
-import { Action } from '../columns/types';
-import { SyncAction } from '../types-sync';
+import { IGridContext, useGridContext } from 'grid/context';
+import { IRowData } from 'grid/types-grid';
+import { Action, ActionStatus } from 'grid/columns/types';
+import { SyncAction } from 'grid/types-sync';
 
 interface IActionButtonProps<TModel extends object>
 {
@@ -17,10 +17,16 @@ export const ActionButton = <TModel extends object>({
 {
     const context = useGridContext<TModel>();
     const name = action.name || action.type;
+    const state = action.buttonState ? action.buttonState(rowData.model, rowData.rowId, rowData.syncAction) : ActionStatus.Active;
     const content = action.buttonContent || <>{name}</>;
     const handler = getHandler(action, rowData, context);
     return (
-        <button onClick={handler} className={`action-${name}`}>
+        <button
+            onClick={handler}
+            className={`action-${name}`}
+            disabled={state === ActionStatus.Disabled}
+            hidden={state === ActionStatus.Hidden}
+        >
             {content}
         </button>
     );
@@ -69,7 +75,8 @@ function getHandler<TModel extends object>(
                 const changes = action.handler(
                     rowData.model,
                     rowData.rowId,
-                    rowData.syncAction
+                    rowData.syncAction,
+                    context.pushRoute,
                 );
                 if (changes)
                 {
