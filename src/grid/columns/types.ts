@@ -97,7 +97,7 @@ interface IActionCustom<TModel extends object>
         data: TModel,
         rowId: string,
         currentSyncAction: SyncAction,
-        pushRouteCallback?: (route: string) => void,
+        pushRoute?: (route: string) => void,
     ) => Array<ISyncData<TModel>>;
 }
 
