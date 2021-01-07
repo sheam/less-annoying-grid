@@ -85,35 +85,35 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         c: NonGroupColumn<TModel>
     ): ElementOrString | null =>
     {
-        if (c.type === 'data' && !sort || !sort?.direction)
-        {
-            return (
-                <span className="sort-indicator" data-test="sort-unsorted">
-                    {props.unsortedLabel || '-'}
-                </span>
-            );
-        }
-        if (c.type !== 'data' || sort?.field !== c.field || !c.sortable)
+        if (c.type !== 'data' || !c.sortable)
         {
             return null;
         }
-        if (sort.direction === 'ASC')
+
+        if (sort?.field === c.field)
         {
-            return (
-                <span className="sort-indicator" data-test="sort-asc">
-                    {props.sortAscLabel || 'v'}
-                </span>
-            );
+            if (sort.direction === 'ASC')
+            {
+                return (
+                    <span className="sort-indicator" data-test="sort-asc">
+                        {props.sortAscLabel || 'v'}
+                    </span>
+                );
+            }
+            if (sort.direction === 'DESC')
+            {
+                return (
+                    <span className="sort-indicator" data-test="sort-desc">
+                        {props.sortDescLabel || '^'}
+                    </span>
+                );
+            }
         }
-        if (sort.direction === 'DESC')
-        {
-            return (
-                <span className="sort-indicator" data-test="sort-desc">
-                    {props.sortDescLabel || '^'}
-                </span>
-            );
-        }
-        return null;
+        return (
+            <span className="sort-indicator" data-test="sort-unsorted">
+                {props.unsortedLabel || '-'}
+            </span>
+        );
     };
 
     const headerClicked = (c: NonGroupColumn<TModel>): void =>
