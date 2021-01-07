@@ -1,4 +1,4 @@
-import { Column } from './grid/columns/types';
+import { Column, ActionStatus } from './grid/columns/types';
 import { IFooterProps } from './grid/header-footer/footer';
 import { GridContext, useGridContext } from './grid/context';
 import { Grid } from './grid/grid';
@@ -34,6 +34,7 @@ export type {
 
 export
 {
+    ActionStatus,
     GridEditMode,
     SyncAction,
     GridContext,

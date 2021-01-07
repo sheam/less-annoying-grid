@@ -54,7 +54,12 @@ export type NonGroupColumn<TModel extends object> =
     | IDisplayColumn<TModel>
     | IActionColumn<TModel>;
 
-export enum ActionStatus { Active, Hidden, Disabled }
+export enum ActionStatus
+{
+    Active = 'active',
+    Hidden = 'hidden',
+    Disabled = 'disabled',
+}
 
 export interface IActionEdit<TModel extends object>
 {
