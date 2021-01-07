@@ -110,16 +110,19 @@ it('renders sort ASC', () =>
             name: 'col 1',
             field: 'col1',
             type: 'data',
+            sortable: true,
         },
         {
             name: 'col 2',
             field: 'col2',
             type: 'data',
+            sortable: true,
         },
         {
             name: 'col 3',
             field: 'col3',
             type: 'data',
+            sortable: true,
         },
     ];
     const sort: ISortColumn = {
@@ -149,16 +152,19 @@ it('renders sort ASC custom', () =>
             name: 'col 1',
             field: 'col1',
             type: 'data',
+            sortable: true,
         },
         {
             name: 'col 2',
             field: 'col2',
             type: 'data',
+            sortable: true,
         },
         {
             name: 'col 3',
             field: 'col3',
             type: 'data',
+            sortable: true,
         },
     ];
     const sort: ISortColumn = {
@@ -188,16 +194,19 @@ it('renders sort DESC', () =>
             name: 'col 1',
             field: 'col1',
             type: 'data',
+            sortable: true,
         },
         {
             name: 'col 2',
             field: 'col2',
             type: 'data',
+            sortable: true,
         },
         {
             name: 'col 3',
             field: 'col3',
             type: 'data',
+            sortable: true,
         },
     ];
     const sort: ISortColumn = {
@@ -227,16 +236,19 @@ it('non-sortable header clicked -> no sorting', () =>
             name: 'col 1',
             field: 'col1',
             type: 'data',
+            sortable: false,
         },
         {
             name: 'col 2',
             field: 'col2',
             type: 'data',
+            sortable: false,
         },
         {
             name: 'col 3',
             field: 'col3',
             type: 'data',
+            sortable: false,
         },
     ];
     const sort = null;
