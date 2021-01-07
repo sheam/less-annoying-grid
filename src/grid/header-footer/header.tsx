@@ -65,14 +65,14 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
             );
         }
         const sortable = c.type === 'data' && c.sortable;
-        const className = (sortable ? 'sortable' : '') + (c.className || '');
+        const className = (sortable ? 'sortable' : '') + ' ' + (c.className || '');
         return (
             <th
                 key={c.name}
                 hidden={c.hidden}
                 onClick={() => headerClicked(c)}
                 data-test="header"
-                className={className}
+                className={className.trim()}
                 title={c.type === 'data' ? c.field : undefined}
             >
                 <span>{c.name}</span>
@@ -136,6 +136,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
                 return;
             }
         }
+
         setSort(sortCol);
     };
 
