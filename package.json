@@ -8,7 +8,7 @@
         "editing",
         "react"
     ],
-    "version": "0.9.3",
+    "version": "0.9.4",
     "private": false,
     "main": "dist/index.js",
     "module": "dist/index.es.js",
@@ -19,8 +19,7 @@
     "contributors": [
         "Shea Martin <shea.martin@gmail.com>"
     ],
-    "peerDependencies": {
-    },
+    "peerDependencies": {},
     "devDependencies": {
         "@testing-library/jest-dom": "^5.11.4",
         "@testing-library/react": "^11.1.0",
