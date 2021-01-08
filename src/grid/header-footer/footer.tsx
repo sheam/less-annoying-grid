@@ -7,8 +7,6 @@ export interface IFooterProps
     initialPageSize?: number;
     numPageJumpButtons?: number;
 
-    firstLabel?: string;
-    lastLabel?: string;
     nextLabel?: string;
     prevLabel?: string;
     itemsName?: string;
