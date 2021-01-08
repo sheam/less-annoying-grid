@@ -5,9 +5,11 @@ This isn't meant as a quick way to show data.
 Most large projects tend to use grids in a way specific to their data and needs.
 So using a grid that works well out of the box always ends up causing pain long term.
 
+However, it does allow you to quickly create a dynamic grid with very little configuration.
+But the flexibility is there for you later, as your needs evolve.
+
 This grid is used in a production application with multiple use cases.
-So hopefully it can solve most of your needs out of the box. If there is a scenario that is
-is needed by your application that is not covered, feel free to submit a pull-request.
+So hopefully it can solve most of your needs out of the box. If there is a scenario that is needed by your application that is not covered, feel free to submit a pull-request.
 
 For development, there is a less-annoying-grid-samples project which can be linked with this project.
 
