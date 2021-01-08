@@ -54,7 +54,6 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
 
     function onChange(changedModel: TModel)
     {
-        console.log('changed');
         const newRowData = shallowClone(rowData);
         newRowData.model = changedModel;
         setRowData(newRowData);

@@ -120,7 +120,6 @@ export async function syncChanges<TModel extends object>(
     } finally
     {
         state.setSyncProgress(null);
-        console.log('done saving');
     }
 }
 
