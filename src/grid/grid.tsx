@@ -39,6 +39,7 @@ export const Grid = <TModel extends object>(
     const showSaving = state.syncProgress && props.children?.savingState;
     const showSync = showLoading || showSaving;
     const needExternalEditor = props.editable?.editMode === GridEditMode.external && state.editField;
+    const showEmptyState = !showLoading && !state.dataState.data.length && props.children?.emptyState;
 
     return (
         <GridContext.Provider value={context}>
@@ -59,19 +60,17 @@ export const Grid = <TModel extends object>(
                         unsortedLabel={props.unsortedLabel}
                     />
                     <tbody>
-                        {!showLoading &&
-                            !state.dataState.totalCount &&
-                            props.children?.emptyState && (
-                                <tr>
-                                    <td colSpan={renderColWidth}>
-                                        {props.children.emptyState}
-                                    </td>
-                                </tr>
-                            )}
+                        {showEmptyState &&
+                            <tr>
+                                <td colSpan={renderColWidth}>
+                                    {props.children?.emptyState}
+                                </td>
+                            </tr>
+                        }
                         {state.dataState.data.map(d =>
                         {
-                            const key = `${d.rowId}-${d.syncAction}-${d.validationErrors?.length || 0
-                                }`;
+                            const numErrors = d.validationErrors?.length || 0;
+                            const key = `${d.rowId}-${d.syncAction}-${numErrors}`;
                             return (
                                 <Row
                                     key={key}
