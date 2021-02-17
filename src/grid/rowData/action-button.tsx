@@ -44,27 +44,30 @@ function getHandler<TModel extends object>(
         switch (action.type)
         {
             case 'delete':
-                if (action.confirm)
+                if (action.confirm === true || action.confirm === undefined)
                 {
-                    if (action.confirm === true)
+                    if (window.confirm(`Delete ${modelTypeName}?`))
                     {
-                        if (window.confirm(`Delete ${modelTypeName}?`))
-                        {
-                            context.editingContext?.deleteRow(rowData.rowId);
-                        }
-                    } else
-                    {
-                        action
-                            .confirm(rowData.model, rowData.syncAction)
-                            .then(doDelete =>
-                            {
-                                if (doDelete)
-                                {
-                                    context.editingContext?.deleteRow(rowData.rowId);
-                                }
-                            });
+                        context.editingContext?.deleteRow(rowData.rowId);
                     }
                 }
+                else if (action.confirm)
+                {
+                    action
+                        .confirm(rowData.model, rowData.syncAction)
+                        .then(doDelete =>
+                        {
+                            if (doDelete)
+                            {
+                                context.editingContext?.deleteRow(rowData.rowId);
+                            }
+                        });
+                }
+                else
+                {
+                    context.editingContext?.deleteRow(rowData.rowId);
+                }
+
                 break;
 
             case 'edit':
