@@ -19,7 +19,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
 {
     const { sort, setSort, renderRowDetail } = useGridContext();
 
-    const getGroupHeaderCell = (c: Column<TModel>): JSX.Element =>
+    function getGroupHeaderCell(c: Column<TModel>): JSX.Element
     {
         if (c.type !== 'group' || !c.subColumns)
         {
@@ -47,9 +47,9 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
                 {c.name}
             </th>
         );
-    };
+    }
 
-    const getHeaderCell = (c: NonGroupColumn<TModel>): JSX.Element =>
+    function getHeaderCell(c: NonGroupColumn<TModel>): JSX.Element
     {
         if (c.type === 'action')
         {
@@ -79,11 +79,9 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
                 {sortable && getSortLabel(c)}
             </th>
         );
-    };
+    }
 
-    const getSortLabel = (
-        c: NonGroupColumn<TModel>
-    ): ElementOrString | null =>
+    function getSortLabel(c: NonGroupColumn<TModel>): ElementOrString | null
     {
         if (c.type !== 'data' || !c.sortable)
         {
@@ -116,7 +114,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         );
     };
 
-    const headerClicked = (c: NonGroupColumn<TModel>): void =>
+    function headerClicked(c: NonGroupColumn<TModel>): void
     {
         if (c.type !== 'data' || !setSort || !c.sortable)
         {
@@ -138,7 +136,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         }
 
         setSort(sortCol);
-    };
+    }
 
     const columns = props.columns;
 
