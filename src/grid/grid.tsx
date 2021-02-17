@@ -51,10 +51,14 @@ export const Grid = <TModel extends object>(
                         {showSaving && props.children?.savingState}
                     </div>
                 </div>
+                {props.children?.toolbar &&
+                    <div className="toolbar" data-test="toolbar">
+                        {props.children.toolbar}
+                    </div>
+                }
                 <table>
                     <Header
                         columns={props.columns}
-                        toolbar={props.children?.toolbar}
                         sortAscLabel={props.sortAscLabel}
                         sortDescLabel={props.sortDescLabel}
                         unsortedLabel={props.unsortedLabel}

@@ -8,7 +8,6 @@ import { getNonGroupColumns } from '../util';
 export interface IHeaderProps<TModel extends object>
 {
     columns: Array<Column<TModel>>;
-    toolbar?: JSX.Element;
 
     sortAscLabel?: ElementOrString;
     sortDescLabel?: ElementOrString;
@@ -142,14 +141,8 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
 
     const hasGroups = !!columns.find(c => c.type === 'group');
     const allCols = getNonGroupColumns(columns);
-    const toolbarWidth = allCols.length + (renderRowDetail ? 1 : 0);
     return (
         <thead>
-            {props.toolbar && (
-                <tr className="toolbar" data-test="toolbar">
-                    <th colSpan={toolbarWidth}>{props.toolbar}</th>
-                </tr>
-            )}
             {hasGroups && (
                 <tr className="column-groups">
                     {renderRowDetail && <td className="detail-button-col" />}
