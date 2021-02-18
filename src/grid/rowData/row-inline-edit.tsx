@@ -131,15 +131,15 @@ export const RowInlineEdit = <TModel extends object>(
 
                     if (c.type === 'data' && c.editable)
                     {
+                        const isEditing = editingContext?.editField?.field === c.field &&
+                            editingContext?.editField?.rowData.rowId === props.data.rowId;
+                        // const isEditing = props.data.rowNumber === 1;
                         return (
                             <CellInlineEdit
                                 key={`td-${uid}-${c.name}`}
                                 column={c}
                                 data={rowData}
-                                isEditing={
-                                    editingContext?.editField?.field === c.field &&
-                                    editingContext?.editField?.rowData.rowId === props.data.rowId
-                                }
+                                isEditing={isEditing}
                                 startEditing={startEditing}
                             />
                         );

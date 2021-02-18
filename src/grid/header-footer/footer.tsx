@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useGridContext } from '../context';
+import { ElementOrString } from '../types-grid';
 
 export interface IFooterProps
 {
@@ -7,8 +8,8 @@ export interface IFooterProps
     initialPageSize?: number;
     numPageJumpButtons?: number;
 
-    nextLabel?: string;
-    prevLabel?: string;
+    nextLabel?: ElementOrString;
+    prevLabel?: ElementOrString;
     itemsName?: string;
 }
 
