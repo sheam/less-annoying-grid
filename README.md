@@ -82,9 +82,9 @@ Properties for configuring the appearance and behaviour of the grids footer.
 - **pageSizeOptions** - (number[]) _optional_ list of options for the page size of the grid
 - **initialPageSize** - (number) _optional_ initial pages size. Should exist in the `pageSizeOptions` list.
 - **numPageJumpButtons** - (number) _optional_ number of page jump buttons shown on the footer besides the _next_ and _previous_ buttons.
-- **nextLabel** - (string) Default = `>`. Text to put on the button to trigger loading next page of data.
-- **prevLabel** - (string) Default = `<`. Text to put on the button to trigger loading previous page of data.
-- **itemsName** - (string) Default = `items'. For text displaying the number of items in grid, and in page.
+- **nextLabel** - (string) Default = `>`. Text or element to put in the button to trigger loading next page of data.
+- **prevLabel** - (string or JSX.Element) Default = `<`. Text or element to put in the button to trigger loading previous page of data.
+- **itemsName** - (string or JSX.Element) Default = `items'. For text displaying the number of items in grid, and in page.
 
 ### SyncAction
 Enum to indicate the state of data in a row.
