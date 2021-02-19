@@ -8,7 +8,7 @@
         "editing",
         "react"
     ],
-    "version": "0.9.5",
+    "version": "0.9.6",
     "private": false,
     "main": "dist/index.js",
     "module": "dist/index.es.js",
