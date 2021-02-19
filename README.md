@@ -554,3 +554,10 @@ are put back into the `devDependencies`. See below.
 1. From module directory
 1. Add `react` back to devDependencies.
 1. Run `rm -rf node_modules && yarn install`
+
+## Publish to NPM
+1. Commit all work. Do not change version number in the _package.json_, next step will take care of that.
+1. `npm version <new version number>`
+1. `npm login`
+1. `npm publish`
+1. `git push`
