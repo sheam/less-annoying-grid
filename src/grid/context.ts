@@ -21,7 +21,7 @@ import
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 import { IProgress } from "../index";
 
-export interface IGridContext<TSummaryModel extends object, TEditModel extends object>
+export interface IGridContext<TSummaryModel extends object, TEditModel extends object, TDetailModel>
 {
     pagination?: IPagination | null;
     setPagination?: Setter<IPagination>;
@@ -37,7 +37,7 @@ export interface IGridContext<TSummaryModel extends object, TEditModel extends o
     setIsLoading?: Setter<boolean>;
 
     showDetailForRow?: (rowId: string, show: boolean) => void;
-    renderRowDetail?: (model: TSummaryModel) => JSX.Element;
+    renderRowDetail?: (model: TDetailModel) => JSX.Element;
     rowDetailButtonShowingContent?: ElementOrString;
     rowDetailButtonHiddenContent?: ElementOrString;
 
@@ -48,13 +48,13 @@ export interface IGridContext<TSummaryModel extends object, TEditModel extends o
 
 export const GridContext = React.createContext({});
 
-export const useGridContext = <TSummaryModel extends object, TEditModel extends object>() =>
-    useContext<IGridContext<TSummaryModel, TEditModel>>(GridContext);
+export const useGridContext = <TSummaryModel extends object, TEditModel extends object, TDetailModel>() =>
+    useContext<IGridContext<TSummaryModel, TEditModel, TDetailModel>>(GridContext);
 
-export function createGridContext<TSummaryModel extends object, TEditModel extends object>(
-    props: IGridProps<TSummaryModel, TEditModel>,
+export function createGridContext<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+    props: IGridProps<TSummaryModel, TEditModel, TDetailModel>,
     state: IGridState<TSummaryModel>
-): IGridContext<TSummaryModel, TEditModel>
+): IGridContext<TSummaryModel, TEditModel, TDetailModel>
 {
     return {
         pagination: state.pagination,
@@ -135,9 +135,9 @@ function defaultGetEditModel<TSummaryModel extends object, TEditModel extends ob
     const editModel = (m as any) as TEditModel;
     return Promise.resolve(editModel);
 }
-export function createEditingContext<TSummaryModel extends object, TEditModel extends object>(
+export function createEditingContext<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
     state: IGridState<TSummaryModel>,
-    props: IGridProps<TSummaryModel, TEditModel>
+    props: IGridProps<TSummaryModel, TEditModel, TDetailModel>
 ): IGridEditContext<TSummaryModel, TEditModel> | null
 {
     if (!props.editable)

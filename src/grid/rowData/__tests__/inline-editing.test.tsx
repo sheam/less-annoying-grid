@@ -16,7 +16,7 @@ const getCellAt = (c: ReactWrapper | ShallowWrapper, index: number) =>
     c.find(`[data-test="data-row"]`).find('td').at(index);
 
 function setGridContextData(
-    gridContext: GridContext.IGridContext<IData, IDataDetailed>
+    gridContext: GridContext.IGridContext<IData, IDataDetailed, IDataDetailed>
 ): void
 {
     if (!gridContext.setPagination)
@@ -28,7 +28,7 @@ function setGridContextData(
     );
 }
 
-function getDefaultContext(): IGridContext<IData, IDataDetailed>
+function getDefaultContext(): IGridContext<IData, IDataDetailed, IDataDetailed>
 {
     return {
         editingContext: {

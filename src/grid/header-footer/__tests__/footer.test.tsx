@@ -17,7 +17,7 @@ const jumpButtonValue = (c: ShallowWrapper, index: number) =>
 const jumpButtonDisabled = (c: ShallowWrapper, index: number) =>
     jumpButton(c, index).props().disabled;
 
-function setGridContextData(gridContext: GridContext.IGridContext<any, any>): void
+function setGridContextData(gridContext: GridContext.IGridContext<any, any, any>): void
 {
     if (!gridContext.setPagination)
     {

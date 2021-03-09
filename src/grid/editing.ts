@@ -64,11 +64,11 @@ export function advanceEditField<TSummaryModel extends object>(state: IGridState
 }
 
 //exported for testing only
-export function updateRow<TSummaryModel extends object, TEditModel extends object>(
+export function updateRow<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
     rowId: string,
     model: TEditModel,
     state: IGridState<TSummaryModel>,
-    props: IGridProps<TSummaryModel, TEditModel>
+    props: IGridProps<TSummaryModel, TEditModel, TDetailModel>
 ): IRowData<TSummaryModel>
 {
     const data = state.dataState.data;
@@ -102,10 +102,10 @@ export function updateRow<TSummaryModel extends object, TEditModel extends objec
 }
 
 //exported for testing only
-export function addRow<TSummaryModel extends object, TEditModel extends object>(
+export function addRow<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
     model: TEditModel,
     state: IGridState<TSummaryModel>,
-    props: IGridProps<TSummaryModel, TEditModel>
+    props: IGridProps<TSummaryModel, TEditModel, TDetailModel>
 ): IRowData<TSummaryModel>
 {
     const data = state.dataState.data;
@@ -142,10 +142,10 @@ export function addRow<TSummaryModel extends object, TEditModel extends object>(
 }
 
 //exported for testing only
-export function deleteRow<TSummaryModel extends object, TEditModel extends object>(
+export function deleteRow<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
     rowId: string,
     state: IGridState<TSummaryModel>,
-    props: IGridProps<TSummaryModel, TEditModel>
+    props: IGridProps<TSummaryModel, TEditModel, TDetailModel>
 ): void
 {
     const data = state.dataState.data;

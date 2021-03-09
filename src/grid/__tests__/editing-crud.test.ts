@@ -6,7 +6,7 @@ import { getData, IData, IDataDetailed } from './mock-data';
 import { SyncAction } from "../types-sync";
 import { cloneData, shallowClone } from "../util";
 
-function getDefaultProps(): IGridProps<IData, IDataDetailed>
+function getDefaultProps(): IGridProps<IData, IDataDetailed, IDataDetailed>
 {
     return {
         columns: [

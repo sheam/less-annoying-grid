@@ -32,7 +32,7 @@ export enum Direction
     backward = 'backward',
 }
 
-export interface IGridProps<TSummaryModel extends object, TEditModel extends object>
+export interface IGridProps<TSummaryModel extends object, TEditModel extends object, TDetailModel>
 {
     columns: Array<Column<TSummaryModel>>;
     footer?: IFooterProps;
@@ -41,7 +41,8 @@ export interface IGridProps<TSummaryModel extends object, TEditModel extends obj
     sortDescLabel?: ElementOrString;
     unsortedLabel?: ElementOrString;
 
-    renderRowDetail?: (model: TSummaryModel) => JSX.Element;
+    getDetailModel?: (model: TSummaryModel) => TDetailModel;
+    renderRowDetail?: (model: TDetailModel) => JSX.Element;
     rowDetailButtonShowingContent?: ElementOrString;
     rowDetailButtonHiddenContent?: ElementOrString;
 

@@ -10,12 +10,12 @@ interface IActionButtonProps<TSummaryModel extends object>
     rowData: IRowData<TSummaryModel>;
 }
 
-export const ActionButton = <TSummaryModel extends object, TEditModel extends object>({
+export const ActionButton = <TSummaryModel extends object, TEditModel extends object, TDetailModel>({
     action,
     rowData,
 }: IActionButtonProps<TSummaryModel>) =>
 {
-    const context = useGridContext<TSummaryModel, TEditModel>();
+    const context = useGridContext<TSummaryModel, TEditModel, TDetailModel>();
     const name = action.name || action.type;
     const state = action.buttonState ? action.buttonState(rowData.model, rowData.rowId, rowData.syncAction) : ActionStatus.Active;
     const content = action.buttonContent || <>{name}</>;
@@ -32,10 +32,10 @@ export const ActionButton = <TSummaryModel extends object, TEditModel extends ob
     );
 };
 
-function getHandler<TSummaryModel extends object, TEditModel extends object>(
+function getHandler<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
     action: Action<TSummaryModel>,
     rowData: IRowData<TSummaryModel>,
-    context: IGridContext<TSummaryModel, TEditModel>
+    context: IGridContext<TSummaryModel, TEditModel, TDetailModel>
 )
 {
     const modelTypeName = context.editingContext?.modelTypeName || 'item';
