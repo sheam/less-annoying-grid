@@ -20,6 +20,11 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
 
     function getGroupHeaderCell(c: Column<TModel>): JSX.Element
     {
+        if (c.type === 'field')
+        {
+            throw new Error('column must not be an Edit Only column');
+        }
+
         if (c.type !== 'group' || !c.subColumns)
         {
             const hide = c.type !== 'display' && c.hidden;
@@ -111,7 +116,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
                 {props.unsortedLabel || '-'}
             </span>
         );
-    };
+    }
 
     function headerClicked(c: NonGroupColumn<TModel>): void
     {
@@ -137,7 +142,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         setSort(sortCol);
     }
 
-    const columns = props.columns;
+    const columns = props.columns.filter(c => c.type !== 'field');
 
     const hasGroups = !!columns.find(c => c.type === 'group');
     const allCols = getNonGroupColumns(columns);

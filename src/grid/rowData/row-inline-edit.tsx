@@ -25,9 +25,11 @@ export const RowInlineEdit = <TModel extends object>(
         );
     }
 
-    const columns = props.columns.flatMap(c =>
-        c.type === 'group' ? c.subColumns : c
-    );
+    const columns = props.columns
+        .filter(c => c.type !== 'field')
+        .flatMap(c =>
+            c.type === 'group' ? c.subColumns : c
+        );
     const uid = props.data.rowNumber;
 
     const startEditing = (field: string) =>
@@ -164,7 +166,7 @@ export const RowInlineEdit = <TModel extends object>(
                             />
                         );
                     }
-                    throw new Error(`unexpected cell type`);
+                    throw new Error(`Unexpected cell type for Inline Editing: '${c.type}' for column ${c.name}`);
                 })}
             </tr>
         </RowContext.Provider>

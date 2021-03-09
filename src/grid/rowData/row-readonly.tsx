@@ -10,9 +10,11 @@ export const RowReadOnly = <TModel extends object>(
 ) =>
 {
     const { renderRowDetail } = useGridContext();
-    const columns = props.columns.flatMap(c =>
-        c.type === 'group' ? c.subColumns : c
-    );
+    const columns = props.columns
+        .filter(c => c.type !== 'field')
+        .flatMap(c =>
+            c.type === 'group' ? c.subColumns : c
+        );
     const uid = props.data.rowNumber;
 
     return (
@@ -45,7 +47,7 @@ export const RowReadOnly = <TModel extends object>(
                         />
                     );
                 }
-                throw new Error('unexpected cell type');
+                throw new Error(`Unexpected cell type for Read Only Row: '${c?.type}' for column '${c?.name}'`);
             })}
         </tr>
     );

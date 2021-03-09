@@ -15,7 +15,7 @@ export function validateModel<TModel extends object>(
 {
     const result = new Array<IValidationError>();
     const dataColumns = columns.filter(
-        c => c.type === 'data' && c.validator
+        c => (c.type === 'data' || c.type === 'field') && c.validator
     ) as IDataColumn<TModel>[];
     for (let c of dataColumns)
     {

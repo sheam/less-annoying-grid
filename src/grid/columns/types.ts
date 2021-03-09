@@ -2,6 +2,7 @@ import { ElementOrString } from '../types-grid';
 import { ISyncData, SyncAction } from '../types-sync';
 import { AggregateValidator } from './validation';
 
+//nameof operator for typescript: https://schneidenbach.gitbooks.io/typescript-cookbook/content/nameof-operator.html
 export interface IDataColumn<TModel extends object>
 {
     type: 'data';
@@ -14,6 +15,16 @@ export interface IDataColumn<TModel extends object>
     validator?: AggregateValidator;
     defaultValue?: any | (() => any);
     className?: string;
+}
+
+export interface IEditOnlyField<TModel extends object>
+{
+    type: 'field';
+    name: string;
+    field: string;
+    editable: ColumnEditorType;
+    validator?: AggregateValidator;
+    defaultValue?: any | (() => any);
 }
 
 interface IDisplayColumn<TModel extends object>
@@ -47,7 +58,8 @@ export type Column<TModel extends object> =
     | IDataColumn<TModel>
     | IColumnGroup<TModel>
     | IDisplayColumn<TModel>
-    | IActionColumn<TModel>;
+    | IActionColumn<TModel>
+    | IEditOnlyField<TModel>;
 
 export type NonGroupColumn<TModel extends object> =
     | IDataColumn<TModel>

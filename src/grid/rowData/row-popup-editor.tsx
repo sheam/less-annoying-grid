@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Column, ColumnEditorType, IDataColumn } from "../columns/types";
+import { Column, ColumnEditorType, IDataColumn, IEditOnlyField } from "../columns/types";
 import { FieldEditor } from "./field-editor";
 import { useGridContext } from "../context";
 import { IRowContext, RowContext, useRowContext } from "./row-context";
@@ -27,7 +27,7 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
         throw new Error('edit field not defined');
     }
 
-    const editableDataColumns = columns.filter(c => c.type === 'data' && c.editable) as Array<IDataColumn<TModel>>;
+    const editableDataColumns = columns.filter(c => (c.type === 'data' || c.type === 'field') && c.editable) as Array<IDataColumn<TModel> | IEditOnlyField<TModel>>;
     const [rowData, setRowData] = useState<IRowData<TModel>>(editField.rowData as IRowData<TModel>);
 
     const rowEditContext: IRowContext<TModel> = {
@@ -99,12 +99,12 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
 
 interface IPopupEditorGeneratedProps<TModel extends object>
 {
-    columns: Array<IDataColumn<TModel>>;
+    columns: Array<IDataColumn<TModel> | IEditOnlyField<TModel>>;
     isAdd: boolean;
     modelTypeName?: string;
 }
 
-export const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, modelTypeName }: IPopupEditorGeneratedProps<TModel>) =>
+const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, modelTypeName }: IPopupEditorGeneratedProps<TModel>) =>
 {
     const context = useRowContext();
 
@@ -127,6 +127,8 @@ export const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, mo
 
         context.doneEditingModel(true);
     }
+
+    const hasValidationErrors = !!(context.rowData.validationErrors?.length);
 
     return (
         <>
@@ -151,7 +153,7 @@ export const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, mo
                 <button onClick={cancel}>
                     Cancel
                 </button>
-                <button onClick={save}>
+                <button onClick={save} disabled={hasValidationErrors}>
                     {isAdd ? 'Add' : 'Update'}
                 </button>
             </div>
