@@ -1,8 +1,8 @@
 import { Column } from '../..';
 import { IRowData } from '../types-grid';
 
-export interface IRowProps<TModel extends object>
+export interface IRowProps<TSummaryModel extends object>
 {
-    columns: Column<TModel>[];
-    data: IRowData<TModel>;
+    columns: Column<TSummaryModel>[];
+    data: IRowData<TSummaryModel>;
 }

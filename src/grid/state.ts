@@ -3,18 +3,18 @@ import { IDataState, IEditField, IGridProps, Setter } from './types-grid';
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 import { IProgress } from './types-sync';
 
-export interface IGridState<TModel extends object>
+export interface IGridState<TSummaryModel extends object>
 {
     pagination: IPagination | null;
     setPagination: Setter<IPagination>;
-    dataState: IDataState<TModel>;
-    setDataState: Setter<IDataState<TModel>>;
+    dataState: IDataState<TSummaryModel>;
+    setDataState: Setter<IDataState<TSummaryModel>>;
     sort: ISortColumn | null;
     setSort: Setter<ISortColumn | null>;
     filters: IFieldFilter[];
     setFilters: Setter<IFieldFilter[]>;
-    editField: IEditField<TModel> | null;
-    setEditField: Setter<IEditField<TModel> | null>;
+    editField: IEditField<TSummaryModel> | null;
+    setEditField: Setter<IEditField<TSummaryModel> | null>;
     syncProgress: IProgress | null;
     setSyncProgress: Setter<IProgress | null>;
     needsSave: boolean;
@@ -27,9 +27,9 @@ export interface IGridState<TModel extends object>
     setValidationErrors: Setter<boolean>;
 }
 
-export function useGridState<TModel extends object>(
-    props: IGridProps<TModel>
-): IGridState<TModel>
+export function useGridState<TSummaryModel extends object>(
+    props: IGridProps<TSummaryModel>
+): IGridState<TSummaryModel>
 {
     const initialPagination = props.footer?.initialPageSize
         ? { pageSize: props.footer?.initialPageSize, currentPage: 1 }
@@ -41,11 +41,11 @@ export function useGridState<TModel extends object>(
     const [filters, setFilters] = React.useState<IFieldFilter[]>([]);
     const [isLoading, setIsLoading] = React.useState(false);
     const [syncProgress, setSyncProgress] = React.useState<IProgress | null>(null);
-    const [dataState, setDataState] = React.useState<IDataState<TModel>>({
+    const [dataState, setDataState] = React.useState<IDataState<TSummaryModel>>({
         totalCount: 0,
         data: [],
     });
-    const [editField, setEditField] = React.useState<IEditField<TModel> | null>(null);
+    const [editField, setEditField] = React.useState<IEditField<TSummaryModel> | null>(null);
     const [saveRequested, setSaveRequested] = React.useState<boolean>(false);
     const [needsSave, setNeedsSave] = React.useState(false);
     const [validationErrors, setValidationErrors] = React.useState(false);

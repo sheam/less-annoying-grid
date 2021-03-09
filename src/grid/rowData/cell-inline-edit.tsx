@@ -4,20 +4,20 @@ import { IRowData } from '../types-grid';
 import { ValidationError } from './validation-error';
 import { ColumnEditorType, IDataColumn } from '../columns/types';
 
-interface ICellInlineEditProps<TModel extends object>
+interface ICellInlineEditProps<TSummaryModel extends object>
 {
     isEditing: boolean;
     startEditing: (field: string) => void;
-    column: IDataColumn<TModel>;
-    data: IRowData<TModel>;
+    column: IDataColumn<TSummaryModel>;
+    data: IRowData<TSummaryModel>;
 }
 
-export const CellInlineEdit = <TModel extends object>({
+export const CellInlineEdit = <TSummaryModel extends object>({
     column: { field, hidden, renderDisplay, editable, className },
     data,
     isEditing,
     startEditing,
-}: ICellInlineEditProps<TModel>) =>
+}: ICellInlineEditProps<TSummaryModel>) =>
 {
     if (!field)
     {

@@ -5,8 +5,8 @@ import { CellReadonly } from './cell-readonly';
 import { RowDetailTemplateTriggerCell } from "./detail-template";
 import { useGridContext } from "../context";
 
-export const RowReadOnly = <TModel extends object>(
-    props: IRowProps<TModel>
+export const RowReadOnly = <TSummaryModel extends object>(
+    props: IRowProps<TSummaryModel>
 ) =>
 {
     const { renderRowDetail } = useGridContext();

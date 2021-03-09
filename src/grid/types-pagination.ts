@@ -17,8 +17,8 @@ export interface IPagination
     pageSize: number;
 }
 
-export interface IDataResult<TModel extends object>
+export interface IDataResult<TSummaryModel extends object>
 {
     totalCount: number;
-    data: TModel[];
+    data: TSummaryModel[];
 }

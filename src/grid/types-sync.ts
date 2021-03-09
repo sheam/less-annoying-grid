@@ -6,15 +6,15 @@ export enum SyncAction
     deleted = 'deleted',
 }
 
-export interface ISyncData<TModel extends object>
+export interface ISyncData<TSummaryModel extends object>
 {
-    model: TModel | null;
+    model: TSummaryModel | null;
     rowId: string;
     syncAction: SyncAction;
 }
 
-export interface ISyncDataResult<TModel extends object>
-    extends ISyncData<TModel>
+export interface ISyncDataResult<TSummaryModel extends object>
+    extends ISyncData<TSummaryModel>
 {
     success: boolean;
     error?: string;

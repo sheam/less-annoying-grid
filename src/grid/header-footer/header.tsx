@@ -5,20 +5,20 @@ import { ISortColumn } from '../types-pagination';
 import { ElementOrString } from '../types-grid';
 import { getNonGroupColumns } from '../util';
 
-export interface IHeaderProps<TModel extends object>
+export interface IHeaderProps<TSummaryModel extends object>
 {
-    columns: Array<Column<TModel>>;
+    columns: Array<Column<TSummaryModel>>;
 
     sortAscLabel?: ElementOrString;
     sortDescLabel?: ElementOrString;
     unsortedLabel?: ElementOrString;
 }
 
-export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
+export const Header = <TSummaryModel extends object>(props: IHeaderProps<TSummaryModel>) =>
 {
     const { sort, setSort, renderRowDetail } = useGridContext();
 
-    function getGroupHeaderCell(c: Column<TModel>): JSX.Element
+    function getGroupHeaderCell(c: Column<TSummaryModel>): JSX.Element
     {
         if (c.type === 'field')
         {
@@ -53,7 +53,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         );
     }
 
-    function getHeaderCell(c: NonGroupColumn<TModel>): JSX.Element
+    function getHeaderCell(c: NonGroupColumn<TSummaryModel>): JSX.Element
     {
         if (c.type === 'action')
         {
@@ -85,7 +85,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         );
     }
 
-    function getSortLabel(c: NonGroupColumn<TModel>): ElementOrString | null
+    function getSortLabel(c: NonGroupColumn<TSummaryModel>): ElementOrString | null
     {
         if (c.type !== 'data' || !c.sortable)
         {
@@ -118,7 +118,7 @@ export const Header = <TModel extends object>(props: IHeaderProps<TModel>) =>
         );
     }
 
-    function headerClicked(c: NonGroupColumn<TModel>): void
+    function headerClicked(c: NonGroupColumn<TSummaryModel>): void
     {
         if (c.type !== 'data' || !setSort || !c.sortable)
         {

@@ -3,16 +3,16 @@ import { IRowData } from '../types-grid';
 import { IActionColumn } from '../columns/types';
 import { ActionButton } from './action-button';
 
-interface IActionCellProps<TModel extends object>
+interface IActionCellProps<TSummaryModel extends object>
 {
-    column: IActionColumn<TModel>;
-    rowData: IRowData<TModel>;
+    column: IActionColumn<TSummaryModel>;
+    rowData: IRowData<TSummaryModel>;
 }
 
-export const ActionCell = <TModel extends object>({
+export const ActionCell = <TSummaryModel extends object>({
     column,
     rowData,
-}: IActionCellProps<TModel>) =>
+}: IActionCellProps<TSummaryModel>) =>
 {
     return (
         <td hidden={column.hidden} className={column.className}>

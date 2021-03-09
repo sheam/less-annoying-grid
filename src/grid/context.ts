@@ -21,7 +21,7 @@ import
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 import { IProgress } from "../index";
 
-export interface IGridContext<TModel extends object>
+export interface IGridContext<TSummaryModel extends object>
 {
     pagination?: IPagination | null;
     setPagination?: Setter<IPagination>;
@@ -37,24 +37,24 @@ export interface IGridContext<TModel extends object>
     setIsLoading?: Setter<boolean>;
 
     showDetailForRow?: (rowId: string, show: boolean) => void;
-    renderRowDetail?: (model: TModel) => JSX.Element;
+    renderRowDetail?: (model: TSummaryModel) => JSX.Element;
     rowDetailButtonShowingContent?: ElementOrString;
     rowDetailButtonHiddenContent?: ElementOrString;
 
-    editingContext?: IGridEditContext<TModel> | null;
+    editingContext?: IGridEditContext<TSummaryModel> | null;
 
     pushRoute?: (route: string) => void;
 }
 
 export const GridContext = React.createContext({});
 
-export const useGridContext = <TModel extends object>() =>
-    useContext<IGridContext<TModel>>(GridContext);
+export const useGridContext = <TSummaryModel extends object>() =>
+    useContext<IGridContext<TSummaryModel>>(GridContext);
 
-export function createGridContext<TModel extends object>(
-    props: IGridProps<TModel>,
-    state: IGridState<TModel>
-): IGridContext<TModel>
+export function createGridContext<TSummaryModel extends object>(
+    props: IGridProps<TSummaryModel>,
+    state: IGridState<TSummaryModel>
+): IGridContext<TSummaryModel>
 {
     return {
         pagination: state.pagination,
@@ -85,10 +85,10 @@ export function createGridContext<TModel extends object>(
     };
 }
 
-function showDetailForRow<TModel extends object>(
+function showDetailForRow<TSummaryModel extends object>(
     rowId: string,
     show: boolean,
-    state: IGridState<TModel>
+    state: IGridState<TSummaryModel>
 ): void
 {
     const data = state.dataState.data;
@@ -103,7 +103,7 @@ function showDetailForRow<TModel extends object>(
     state.setDataState({ totalCount: state.dataState.totalCount, data });
 }
 
-export interface IGridEditContext<TModel extends object>
+export interface IGridEditContext<TSummaryModel extends object>
 {
     editMode: GridEditMode;
     autoSave: boolean;
@@ -112,12 +112,12 @@ export interface IGridEditContext<TModel extends object>
     syncProgress: IProgress | null;
     validationErrors: boolean;
 
-    editField: IEditField<TModel> | null;
-    setEditField: (field: string | null, rowData: IRowData<TModel> | null) => void;
+    editField: IEditField<TSummaryModel> | null;
+    setEditField: (field: string | null, rowData: IRowData<TSummaryModel> | null) => void;
     advanceEditField: (direction: Direction) => void;
 
-    updateRow: (rowId: string, model: TModel) => IRowData<TModel>;
-    addRow: (model?: TModel) => IRowData<TModel>;
+    updateRow: (rowId: string, model: TSummaryModel) => IRowData<TSummaryModel>;
+    addRow: (model?: TSummaryModel) => IRowData<TSummaryModel>;
     deleteRow: (rowId: string) => void;
     revertAll: () => void;
     revertRow: (rowId: string) => void;
@@ -128,10 +128,10 @@ export interface IGridEditContext<TModel extends object>
     sync: () => void;
 }
 
-export function createEditingContext<TModel extends object>(
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): IGridEditContext<TModel> | null
+export function createEditingContext<TSummaryModel extends object>(
+    state: IGridState<TSummaryModel>,
+    props: IGridProps<TSummaryModel>
+): IGridEditContext<TSummaryModel> | null
 {
     if (!props.editable)
     {
@@ -142,9 +142,9 @@ export function createEditingContext<TModel extends object>(
         needsSave: state.needsSave,
         syncProgress: state.syncProgress,
         editField: state.editField,
-        setEditField: (f: string | null, r: IRowData<TModel> | null) => r ? state.setEditField({ field: f, rowData: r }) : state.setEditField(null),
-        updateRow: (rowId: string, model: TModel) => updateRow(rowId, model, state, props),
-        addRow: (model?: TModel) =>
+        setEditField: (f: string | null, r: IRowData<TSummaryModel> | null) => r ? state.setEditField({ field: f, rowData: r }) : state.setEditField(null),
+        updateRow: (rowId: string, model: TSummaryModel) => updateRow(rowId, model, state, props),
+        addRow: (model?: TSummaryModel) =>
             addRow(model || createNewRow(props.columns), state, props),
         deleteRow: (rowId: string) => deleteRow(rowId, state, props),
         editMode: props.editable.editMode,

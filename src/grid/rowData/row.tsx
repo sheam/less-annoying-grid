@@ -8,7 +8,7 @@ import { SyncAction } from '../types-sync';
 import { RowDetailTemplate } from './detail-template';
 import { getNonGroupColumns } from '../util';
 
-export const Row = <TModel extends object>(props: IRowProps<TModel>) =>
+export const Row = <TSummaryModel extends object>(props: IRowProps<TSummaryModel>) =>
 {
     const { editingContext, renderRowDetail } = useGridContext();
     if (props.data.syncAction === SyncAction.deleted)

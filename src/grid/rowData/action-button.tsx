@@ -4,18 +4,18 @@ import { IRowData } from 'grid/types-grid';
 import { Action, ActionStatus } from 'grid/columns/types';
 import { SyncAction } from 'grid/types-sync';
 
-interface IActionButtonProps<TModel extends object>
+interface IActionButtonProps<TSummaryModel extends object>
 {
-    action: Action<TModel>;
-    rowData: IRowData<TModel>;
+    action: Action<TSummaryModel>;
+    rowData: IRowData<TSummaryModel>;
 }
 
-export const ActionButton = <TModel extends object>({
+export const ActionButton = <TSummaryModel extends object>({
     action,
     rowData,
-}: IActionButtonProps<TModel>) =>
+}: IActionButtonProps<TSummaryModel>) =>
 {
-    const context = useGridContext<TModel>();
+    const context = useGridContext<TSummaryModel>();
     const name = action.name || action.type;
     const state = action.buttonState ? action.buttonState(rowData.model, rowData.rowId, rowData.syncAction) : ActionStatus.Active;
     const content = action.buttonContent || <>{name}</>;
@@ -32,10 +32,10 @@ export const ActionButton = <TModel extends object>({
     );
 };
 
-function getHandler<TModel extends object>(
-    action: Action<TModel>,
-    rowData: IRowData<TModel>,
-    context: IGridContext<TModel>
+function getHandler<TSummaryModel extends object>(
+    action: Action<TSummaryModel>,
+    rowData: IRowData<TSummaryModel>,
+    context: IGridContext<TSummaryModel>
 )
 {
     const modelTypeName = context.editingContext?.modelTypeName || 'item';

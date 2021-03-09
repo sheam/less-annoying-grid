@@ -2,9 +2,9 @@ import * as React from 'react';
 import { KeyboardEvent, useContext } from 'react';
 import { Direction, IRowData } from '../types-grid';
 
-export interface IRowContext<TModel extends object>
+export interface IRowContext<TSummaryModel extends object>
 {
-    rowData: IRowData<TModel>
+    rowData: IRowData<TSummaryModel>
     onChange: (model: any) => void;
     doneEditingField: (commitChanges: boolean, direction?: Direction) => void;
     doneEditingModel?: (commitChanges: boolean, finalModel?: any) => void;
@@ -15,4 +15,4 @@ export interface IRowContext<TModel extends object>
 
 export const RowContext = React.createContext({} as any);
 
-export const useRowContext = <TModel extends object>() => useContext<IRowContext<TModel>>(RowContext);
+export const useRowContext = <TSummaryModel extends object>() => useContext<IRowContext<TSummaryModel>>(RowContext);

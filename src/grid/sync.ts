@@ -10,7 +10,7 @@ import
     SyncAction,
 } from './types-sync';
 
-export function useSyncDataEffect<TModel extends object>(state: IGridState<TModel>, props: IGridProps<TModel>)
+export function useSyncDataEffect<TSummaryModel extends object>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel>)
 {
     const sync = async () =>
     {
@@ -31,7 +31,7 @@ export function useSyncDataEffect<TModel extends object>(state: IGridState<TMode
     );
 }
 
-export function useLoadDataEffect<TModel extends object>(state: IGridState<TModel>, props: IGridProps<TModel>)
+export function useLoadDataEffect<TSummaryModel extends object>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel>)
 {
     const fetch = async () =>
     {
@@ -40,11 +40,11 @@ export function useLoadDataEffect<TModel extends object>(state: IGridState<TMode
             state.sort,
             state.filters
         );
-        const newState: IDataState<TModel> = {
+        const newState: IDataState<TSummaryModel> = {
             totalCount: d.totalCount,
             data: d.data.map((m, i) =>
             {
-                const result: IRowData<TModel> = {
+                const result: IRowData<TSummaryModel> = {
                     syncAction: SyncAction.unchanged,
                     model: m,
                     rowNumber: i + 1,
@@ -72,10 +72,10 @@ export function useLoadDataEffect<TModel extends object>(state: IGridState<TMode
     );
 }
 
-export async function syncChanges<TModel extends object>(
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): Promise<ISyncDataResult<TModel>[]>
+export async function syncChanges<TSummaryModel extends object>(
+    state: IGridState<TSummaryModel>,
+    props: IGridProps<TSummaryModel>
+): Promise<ISyncDataResult<TSummaryModel>[]>
 {
     if (!props.editable)
     {
@@ -94,7 +94,7 @@ export async function syncChanges<TModel extends object>(
         .filter(r => hasChanged(r))
         .map(r =>
         {
-            const result: ISyncData<TModel> = {
+            const result: ISyncData<TSummaryModel> = {
                 model: r.model,
                 rowId: r.rowId,
                 syncAction: r.syncAction,
@@ -109,7 +109,7 @@ export async function syncChanges<TModel extends object>(
 
     const applyUpdates = (
         p: IProgress,
-        interim?: Array<ISyncDataResult<TModel>>
+        interim?: Array<ISyncDataResult<TSummaryModel>>
     ) => _applySyncResults(state, p, interim);
 
     try
@@ -123,10 +123,10 @@ export async function syncChanges<TModel extends object>(
     }
 }
 
-export function _applySyncResults<TModel extends object>(
-    state: IGridState<TModel>,
+export function _applySyncResults<TSummaryModel extends object>(
+    state: IGridState<TSummaryModel>,
     progress: IProgress | null,
-    results: Array<ISyncDataResult<TModel>> | undefined
+    results: Array<ISyncDataResult<TSummaryModel>> | undefined
 ): void
 {
     if (progress)

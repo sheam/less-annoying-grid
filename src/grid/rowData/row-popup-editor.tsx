@@ -9,12 +9,12 @@ import { ValidationError } from "./validation-error";
 import { IRowData } from "../types-grid";
 import { shallowClone } from "../util";
 
-interface IPopupEditorProps<TModel extends object>
+interface IPopupEditorProps<TSummaryModel extends object>
 {
-    columns: Array<Column<TModel>>;
+    columns: Array<Column<TSummaryModel>>;
 }
 
-export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProps<TModel>) =>
+export const PopupEditor = <TSummaryModel extends object>({ columns }: IPopupEditorProps<TSummaryModel>) =>
 {
     const context = useGridContext();
     if (!context.editingContext)
@@ -27,10 +27,10 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
         throw new Error('edit field not defined');
     }
 
-    const editableDataColumns = columns.filter(c => (c.type === 'data' || c.type === 'field') && c.editable) as Array<IDataColumn<TModel> | IEditOnlyField<TModel>>;
-    const [rowData, setRowData] = useState<IRowData<TModel>>(editField.rowData as IRowData<TModel>);
+    const editableDataColumns = columns.filter(c => (c.type === 'data' || c.type === 'field') && c.editable) as Array<IDataColumn<TSummaryModel> | IEditOnlyField<TSummaryModel>>;
+    const [rowData, setRowData] = useState<IRowData<TSummaryModel>>(editField.rowData as IRowData<TSummaryModel>);
 
-    const rowEditContext: IRowContext<TModel> = {
+    const rowEditContext: IRowContext<TSummaryModel> = {
         rowData: rowData,
         doneEditingField: (commit, _) => doneEditingField(commit),
         doneEditingModel: (commit, finalModel) => complete(commit, finalModel),
@@ -48,18 +48,18 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
         if (commitChanges)
         {
             const result = context.editingContext.updateRow(rowData.rowId, rowData.model);
-            setRowData(result as IRowData<TModel>);
+            setRowData(result as IRowData<TSummaryModel>);
         }
     }
 
-    function onChange(changedModel: TModel)
+    function onChange(changedModel: TSummaryModel)
     {
         const newRowData = shallowClone(rowData);
         newRowData.model = changedModel;
         setRowData(newRowData);
     }
 
-    function complete(saveChanges: boolean, finalModel?: TModel)
+    function complete(saveChanges: boolean, finalModel?: TSummaryModel)
     {
         if (!context.editingContext || !editField)
         {
@@ -97,14 +97,14 @@ export const PopupEditor = <TModel extends object>({ columns }: IPopupEditorProp
     );
 };
 
-interface IPopupEditorGeneratedProps<TModel extends object>
+interface IPopupEditorGeneratedProps<TSummaryModel extends object>
 {
-    columns: Array<IDataColumn<TModel> | IEditOnlyField<TModel>>;
+    columns: Array<IDataColumn<TSummaryModel> | IEditOnlyField<TSummaryModel>>;
     isAdd: boolean;
     modelTypeName?: string;
 }
 
-const PopupEditorGenerated = <TModel extends object>({ columns, isAdd, modelTypeName }: IPopupEditorGeneratedProps<TModel>) =>
+const PopupEditorGenerated = <TSummaryModel extends object>({ columns, isAdd, modelTypeName }: IPopupEditorGeneratedProps<TSummaryModel>) =>
 {
     const context = useRowContext();
 

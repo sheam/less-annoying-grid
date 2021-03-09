@@ -11,8 +11,8 @@ import { CellReadonly } from './cell-readonly';
 import { IRowContext, RowContext } from './row-context';
 import { RowDetailTemplateTriggerCell } from './detail-template';
 
-export const RowInlineEdit = <TModel extends object>(
-    props: IRowProps<TModel>
+export const RowInlineEdit = <TSummaryModel extends object>(
+    props: IRowProps<TSummaryModel>
 ) =>
 {
     const { editingContext, renderRowDetail } = useGridContext();
@@ -38,7 +38,7 @@ export const RowInlineEdit = <TModel extends object>(
         setRowData(shallowClone(props.data));
     };
 
-    const onChange = (model: TModel) =>
+    const onChange = (model: TSummaryModel) =>
     {
         if (!editingContext.editField)
         {
@@ -106,7 +106,7 @@ export const RowInlineEdit = <TModel extends object>(
     if (hasChanged(rowData)) classes.push('modified');
     if (editingContext.editField) classes.push('edit-row');
 
-    const rowEditContext: IRowContext<TModel> = {
+    const rowEditContext: IRowContext<TSummaryModel> = {
         rowData,
         doneEditingField: doneEditing,
         onChange,

@@ -2,12 +2,12 @@ import { IRowData } from './types-grid';
 import { SyncAction } from './types-sync';
 import { Column, NonGroupColumn } from './columns/types';
 
-export function cloneData<TModel>(model: TModel): TModel
+export function cloneData<TSummaryModel>(model: TSummaryModel): TSummaryModel
 {
     return JSON.parse(JSON.stringify(model));
 }
 
-export function shallowClone<TModel>(model: TModel): TModel
+export function shallowClone<TSummaryModel>(model: TSummaryModel): TSummaryModel
 {
     return Object.assign({}, model);
 }
@@ -54,7 +54,7 @@ export function getNewSyncAction(
     );
 }
 
-export const hasChanged = <TModel extends object>(rowData: IRowData<TModel>) =>
+export const hasChanged = <TSummaryModel extends object>(rowData: IRowData<TSummaryModel>) =>
     rowData.syncAction !== SyncAction.unchanged;
 
 //stealing from interwebs until next ES release which is supposed to have UID module
@@ -68,9 +68,9 @@ export function uuid(): string
     });
 }
 
-export function getNonGroupColumns<TModel extends object>(
-    columns: Array<Column<TModel>>
-): Array<NonGroupColumn<TModel>>
+export function getNonGroupColumns<TSummaryModel extends object>(
+    columns: Array<Column<TSummaryModel>>
+): Array<NonGroupColumn<TSummaryModel>>
 {
     if (!columns)
     {
@@ -91,7 +91,7 @@ export function getNonGroupColumns<TModel extends object>(
     });
 
     // @ts-ignore
-    return result as NonGroupColumn<TModel>;
+    return result as NonGroupColumn<TSummaryModel>;
 }
 
 export function fdate(date: Date): string

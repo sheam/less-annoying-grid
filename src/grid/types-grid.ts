@@ -32,16 +32,16 @@ export enum Direction
     backward = 'backward',
 }
 
-export interface IGridProps<TModel extends object>
+export interface IGridProps<TSummaryModel extends object>
 {
-    columns: Array<Column<TModel>>;
+    columns: Array<Column<TSummaryModel>>;
     footer?: IFooterProps;
 
     sortAscLabel?: ElementOrString;
     sortDescLabel?: ElementOrString;
     unsortedLabel?: ElementOrString;
 
-    renderRowDetail?: (model: TModel) => JSX.Element;
+    renderRowDetail?: (model: TSummaryModel) => JSX.Element;
     rowDetailButtonShowingContent?: ElementOrString;
     rowDetailButtonHiddenContent?: ElementOrString;
 
@@ -49,47 +49,47 @@ export interface IGridProps<TModel extends object>
         pagination: IPagination | null,
         sort: ISortColumn | null,
         filters: IFieldFilter[]
-    ) => Promise<IDataResult<TModel>>;
+    ) => Promise<IDataResult<TSummaryModel>>;
 
-    editable?: IGridEditConfig<TModel>;
+    editable?: IGridEditConfig<TSummaryModel>;
 
     pushRoute?: (route: string) => void;
 }
 
-export interface IGridEditConfig<TModel extends object>
+export interface IGridEditConfig<TSummaryModel extends object>
 {
     editMode: GridEditMode;
     autoSave: boolean;
     addToBottom?: boolean;
     syncChanges: (
-        changes: Array<ISyncData<TModel>>,
+        changes: Array<ISyncData<TSummaryModel>>,
         updateProgress: (
             p: IProgress,
-            interimResults?: Array<ISyncDataResult<TModel>>
+            interimResults?: Array<ISyncDataResult<TSummaryModel>>
         ) => void
-    ) => Promise<Array<ISyncDataResult<TModel>>>;
+    ) => Promise<Array<ISyncDataResult<TSummaryModel>>>;
     modelEditor?: JSX.Element;
     modelTypeName: string;
 }
 
-export interface IEditField<TModel extends object>
+export interface IEditField<TSummaryModel extends object>
 {
-    rowData: IRowData<TModel>
+    rowData: IRowData<TSummaryModel>
     field: string | null;
 }
 
-export interface IDataState<TModel extends object>
+export interface IDataState<TSummaryModel extends object>
 {
     totalCount: number;
-    data: Array<IRowData<TModel>>;
+    data: Array<IRowData<TSummaryModel>>;
 }
 
-export interface IRowData<TModel extends object>
+export interface IRowData<TSummaryModel extends object>
 {
     rowNumber: number;
     rowId: string;
-    model: TModel;
-    originalModel: TModel;
+    model: TSummaryModel;
+    originalModel: TSummaryModel;
     syncAction: SyncAction;
     showDetail: boolean;
     validationErrors?: IValidationError[] | null;

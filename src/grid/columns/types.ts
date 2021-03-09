@@ -3,7 +3,7 @@ import { ISyncData, SyncAction } from '../types-sync';
 import { AggregateValidator } from './validation';
 
 //nameof operator for typescript: https://schneidenbach.gitbooks.io/typescript-cookbook/content/nameof-operator.html
-export interface IDataColumn<TModel extends object>
+export interface IDataColumn<TSummaryModel extends object>
 {
     type: 'data';
     name: string;
@@ -11,13 +11,13 @@ export interface IDataColumn<TModel extends object>
     hidden?: boolean;
     sortable?: boolean;
     editable?: ColumnEditorType;
-    renderDisplay?: (model: TModel) => ElementOrString;
+    renderDisplay?: (model: TSummaryModel) => ElementOrString;
     validator?: AggregateValidator;
     defaultValue?: any | (() => any);
     className?: string;
 }
 
-export interface IEditOnlyField<TModel extends object>
+export interface IEditOnlyField<TSummaryModel extends object>
 {
     type: 'field';
     name: string;
@@ -27,44 +27,44 @@ export interface IEditOnlyField<TModel extends object>
     defaultValue?: any | (() => any);
 }
 
-interface IDisplayColumn<TModel extends object>
+interface IDisplayColumn<TSummaryModel extends object>
 {
     type: 'display';
     name: string;
     hidden?: boolean;
-    renderDisplay: (model: TModel) => ElementOrString;
+    renderDisplay: (model: TSummaryModel) => ElementOrString;
     className?: string;
 }
 
-export interface IActionColumn<TModel extends object>
+export interface IActionColumn<TSummaryModel extends object>
 {
     type: 'action';
     name: string;
     hidden?: boolean;
-    actions: Array<Action<TModel>>;
+    actions: Array<Action<TSummaryModel>>;
     className?: string;
 }
 
-interface IColumnGroup<TModel extends object>
+interface IColumnGroup<TSummaryModel extends object>
 {
     type: 'group';
     name: string;
     hidden?: boolean;
-    subColumns?: Array<NonGroupColumn<TModel>>;
+    subColumns?: Array<NonGroupColumn<TSummaryModel>>;
     className?: string;
 }
 
-export type Column<TModel extends object> =
-    | IDataColumn<TModel>
-    | IColumnGroup<TModel>
-    | IDisplayColumn<TModel>
-    | IActionColumn<TModel>
-    | IEditOnlyField<TModel>;
+export type Column<TSummaryModel extends object> =
+    | IDataColumn<TSummaryModel>
+    | IColumnGroup<TSummaryModel>
+    | IDisplayColumn<TSummaryModel>
+    | IActionColumn<TSummaryModel>
+    | IEditOnlyField<TSummaryModel>;
 
-export type NonGroupColumn<TModel extends object> =
-    | IDataColumn<TModel>
-    | IDisplayColumn<TModel>
-    | IActionColumn<TModel>;
+export type NonGroupColumn<TSummaryModel extends object> =
+    | IDataColumn<TSummaryModel>
+    | IDisplayColumn<TSummaryModel>
+    | IActionColumn<TSummaryModel>;
 
 export enum ActionStatus
 {
@@ -73,55 +73,55 @@ export enum ActionStatus
     Disabled = 'disabled',
 }
 
-export interface IActionEdit<TModel extends object>
+export interface IActionEdit<TSummaryModel extends object>
 {
     type: 'edit';
     name?: string;
     buttonContent?: ElementOrString;
     buttonState?: (
-        data: TModel,
+        data: TSummaryModel,
         rowId: string,
         currentSyncAction: SyncAction
     ) => ActionStatus;
 }
 
-export interface IActionDelete<TModel extends object>
+export interface IActionDelete<TSummaryModel extends object>
 {
     type: 'delete';
     name?: string;
     buttonContent?: ElementOrString;
     buttonState?: (
-        data: TModel,
+        data: TSummaryModel,
         rowId: string,
         currentSyncAction: SyncAction
     ) => ActionStatus;
     confirm?:
     | boolean
-    | ((model: TModel, currentSyncAction: SyncAction) => Promise<boolean>);
+    | ((model: TSummaryModel, currentSyncAction: SyncAction) => Promise<boolean>);
 }
 
-interface IActionCustom<TModel extends object>
+interface IActionCustom<TSummaryModel extends object>
 {
     type: 'custom';
     name?: string;
     buttonContent?: ElementOrString;
     buttonState?: (
-        data: TModel,
+        data: TSummaryModel,
         rowId: string,
         currentSyncAction: SyncAction
     ) => ActionStatus;
     handler: (
-        data: TModel,
+        data: TSummaryModel,
         rowId: string,
         currentSyncAction: SyncAction,
         pushRoute?: (route: string) => void,
-    ) => Array<ISyncData<TModel>>;
+    ) => Array<ISyncData<TSummaryModel>>;
 }
 
-export type Action<TModel extends object> =
-    | IActionEdit<TModel>
-    | IActionDelete<TModel>
-    | IActionCustom<TModel>;
+export type Action<TSummaryModel extends object> =
+    | IActionEdit<TSummaryModel>
+    | IActionDelete<TSummaryModel>
+    | IActionCustom<TSummaryModel>;
 
 interface IEditorText
 {

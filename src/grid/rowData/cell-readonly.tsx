@@ -3,16 +3,16 @@ import { ValidationError } from './validation-error';
 import { Column } from '../..';
 import { IRowData } from '../types-grid';
 
-interface ICellProps<TModel extends object>
+interface ICellProps<TSummaryModel extends object>
 {
-    column: Column<TModel>;
-    data: IRowData<TModel>;
+    column: Column<TSummaryModel>;
+    data: IRowData<TSummaryModel>;
 }
 
-export const CellReadonly = <TModel extends object>({
+export const CellReadonly = <TSummaryModel extends object>({
     column,
     data,
-}: ICellProps<TModel>) =>
+}: ICellProps<TSummaryModel>) =>
 {
     const c = column;
 

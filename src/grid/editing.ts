@@ -5,7 +5,7 @@ import { SyncAction } from './types-sync';
 import { Column, IDataColumn } from './columns/types';
 import { validateModel } from './columns/validation';
 
-export function advanceEditField<TModel extends object>(state: IGridState<TModel>, columns: Array<Column<TModel>>, direction: Direction)
+export function advanceEditField<TSummaryModel extends object>(state: IGridState<TSummaryModel>, columns: Array<Column<TSummaryModel>>, direction: Direction)
 {
     if (!state.editField || direction === Direction.none)
     {
@@ -13,7 +13,7 @@ export function advanceEditField<TModel extends object>(state: IGridState<TModel
     }
 
     const data = state.dataState.data;
-    const dataColumns = columns.filter(c => c.type === 'data' && c.editable) as Array<IDataColumn<TModel>>;
+    const dataColumns = columns.filter(c => c.type === 'data' && c.editable) as Array<IDataColumn<TSummaryModel>>;
 
     let colIndex = dataColumns.findIndex(c => c.field === state.editField?.field);
     if (colIndex < 0)
@@ -64,12 +64,12 @@ export function advanceEditField<TModel extends object>(state: IGridState<TModel
 }
 
 //exported for testing only
-export function updateRow<TModel extends object>(
+export function updateRow<TSummaryModel extends object>(
     rowId: string,
-    model: TModel,
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): IRowData<TModel>
+    model: TSummaryModel,
+    state: IGridState<TSummaryModel>,
+    props: IGridProps<TSummaryModel>
+): IRowData<TSummaryModel>
 {
     const data = state.dataState.data;
     const index = data.findIndex(r => r.rowId === rowId);
@@ -102,14 +102,14 @@ export function updateRow<TModel extends object>(
 }
 
 //exported for testing only
-export function addRow<TModel extends object>(
-    model: TModel,
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
-): IRowData<TModel>
+export function addRow<TSummaryModel extends object>(
+    model: TSummaryModel,
+    state: IGridState<TSummaryModel>,
+    props: IGridProps<TSummaryModel>
+): IRowData<TSummaryModel>
 {
     const data = state.dataState.data;
-    const newRow: IRowData<TModel> = {
+    const newRow: IRowData<TSummaryModel> = {
         rowId: uuid(),
         model,
         syncAction: SyncAction.added,
@@ -142,10 +142,10 @@ export function addRow<TModel extends object>(
 }
 
 //exported for testing only
-export function deleteRow<TModel extends object>(
+export function deleteRow<TSummaryModel extends object>(
     rowId: string,
-    state: IGridState<TModel>,
-    props: IGridProps<TModel>
+    state: IGridState<TSummaryModel>,
+    props: IGridProps<TSummaryModel>
 ): void
 {
     const data = state.dataState.data;
@@ -177,13 +177,13 @@ export function deleteRow<TModel extends object>(
 }
 
 // exported only for testing
-export function revertRows<TModel extends object>(
+export function revertRows<TSummaryModel extends object>(
     revertRowIdList: Array<string>,
-    state: IGridState<TModel>
+    state: IGridState<TSummaryModel>
 ): void
 {
     const existingData = state.dataState.data;
-    const newData = new Array<IRowData<TModel>>();
+    const newData = new Array<IRowData<TSummaryModel>>();
     for (let existingRow of existingData)
     {
         const index = revertRowIdList.indexOf(existingRow.rowId);
@@ -219,10 +219,10 @@ export function revertRows<TModel extends object>(
     state.setNeedsSave(hasChanges);
 }
 
-function setValidation<TModel extends object>(
-    rowData: IRowData<TModel>,
-    columns: Array<Column<TModel>>,
-    state: IGridState<TModel>
+function setValidation<TSummaryModel extends object>(
+    rowData: IRowData<TSummaryModel>,
+    columns: Array<Column<TSummaryModel>>,
+    state: IGridState<TSummaryModel>
 ): void
 {
     rowData.validationErrors = null;
@@ -240,9 +240,9 @@ function setValidation<TModel extends object>(
     }
 }
 
-export function createNewRow<TModel extends object>(
-    columns: Array<Column<TModel>>
-): TModel
+export function createNewRow<TSummaryModel extends object>(
+    columns: Array<Column<TSummaryModel>>
+): TSummaryModel
 {
     const model: any = {};
 
@@ -257,5 +257,5 @@ export function createNewRow<TModel extends object>(
         }
     });
 
-    return model as TModel;
+    return model as TSummaryModel;
 }

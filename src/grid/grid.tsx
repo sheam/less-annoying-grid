@@ -21,8 +21,8 @@ interface IChildren
     };
 }
 
-export const Grid = <TModel extends object>(
-    props: IGridProps<TModel> & PropsWithChildren<IChildren>
+export const Grid = <TSummaryModel extends object>(
+    props: IGridProps<TSummaryModel> & PropsWithChildren<IChildren>
 ) =>
 {
     const state = useGridState(props);

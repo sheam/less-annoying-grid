@@ -8,15 +8,15 @@ export type AggregateValidator = (
     field: string
 ) => IValidationError[];
 
-export function validateModel<TModel extends object>(
+export function validateModel<TSummaryModel extends object>(
     model: any,
-    columns: Array<Column<TModel>>
+    columns: Array<Column<TSummaryModel>>
 ): IValidationError[]
 {
     const result = new Array<IValidationError>();
     const dataColumns = columns.filter(
         c => (c.type === 'data' || c.type === 'field') && c.validator
-    ) as IDataColumn<TModel>[];
+    ) as IDataColumn<TSummaryModel>[];
     for (let c of dataColumns)
     {
         if (!c.validator)
