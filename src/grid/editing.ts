@@ -64,11 +64,11 @@ export function advanceEditField<TSummaryModel extends object>(state: IGridState
 }
 
 //exported for testing only
-export function updateRow<TSummaryModel extends object>(
+export function updateRow<TSummaryModel extends object, TEditModel extends object>(
     rowId: string,
-    model: TSummaryModel,
+    model: TEditModel,
     state: IGridState<TSummaryModel>,
-    props: IGridProps<TSummaryModel>
+    props: IGridProps<TSummaryModel, TEditModel>
 ): IRowData<TSummaryModel>
 {
     const data = state.dataState.data;
@@ -84,7 +84,7 @@ export function updateRow<TSummaryModel extends object>(
     }
 
     const newRow = Object.assign({}, existingRow);
-    newRow.model = model;
+    newRow.model = (model as any) as TSummaryModel;
     newRow.syncAction = getNewSyncAction(existingRow.syncAction, SyncAction.updated);
 
     data[index] = newRow;
@@ -102,20 +102,20 @@ export function updateRow<TSummaryModel extends object>(
 }
 
 //exported for testing only
-export function addRow<TSummaryModel extends object>(
-    model: TSummaryModel,
+export function addRow<TSummaryModel extends object, TEditModel extends object>(
+    model: TEditModel,
     state: IGridState<TSummaryModel>,
-    props: IGridProps<TSummaryModel>
+    props: IGridProps<TSummaryModel, TEditModel>
 ): IRowData<TSummaryModel>
 {
     const data = state.dataState.data;
     const newRow: IRowData<TSummaryModel> = {
         rowId: uuid(),
-        model,
+        model: model as any,
         syncAction: SyncAction.added,
         rowNumber: -1,
         showDetail: false,
-        originalModel: model,
+        originalModel: model as any,
     };
 
     if (props.editable?.addToBottom)
@@ -142,10 +142,10 @@ export function addRow<TSummaryModel extends object>(
 }
 
 //exported for testing only
-export function deleteRow<TSummaryModel extends object>(
+export function deleteRow<TSummaryModel extends object, TEditModel extends object>(
     rowId: string,
     state: IGridState<TSummaryModel>,
-    props: IGridProps<TSummaryModel>
+    props: IGridProps<TSummaryModel, TEditModel>
 ): void
 {
     const data = state.dataState.data;

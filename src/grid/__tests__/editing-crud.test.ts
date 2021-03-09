@@ -2,11 +2,11 @@ import { GridEditMode, IDataState, IGridProps, IRowData } from "../types-grid";
 import { IGridState } from "../state";
 import { addRow, deleteRow, updateRow } from "../editing";
 import * as mock from './mock-data'
-import { getData, IData } from './mock-data'
+import { getData, IData, IDataDetailed } from './mock-data';
 import { SyncAction } from "../types-sync";
 import { cloneData, shallowClone } from "../util";
 
-function getDefaultProps(): IGridProps<IData>
+function getDefaultProps(): IGridProps<IData, IDataDetailed>
 {
     return {
         columns: [
@@ -88,7 +88,7 @@ it('add row: autosave=false', () =>
     }
     props.editable.autoSave = false;
 
-    const modelToAdd: IData = { key: 0, name: 'new-guy', age: 7, eyeColor: 'blue' };
+    const modelToAdd: IDataDetailed = { key: 0, name: 'new-guy', age: 7, eyeColor: 'blue', faceDetail: 'nice', hairDetail: 'brown' };
 
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
     {
@@ -120,7 +120,7 @@ it('add row: autosave=true', () =>
     }
     props.editable.autoSave = true;
 
-    const modelToAdd: IData = { key: 0, name: 'new-guy', age: 99, eyeColor: 'blue' };
+    const modelToAdd: IDataDetailed = { key: 0, name: 'new-guy', age: 99, eyeColor: 'blue', faceDetail: 'nice', hairDetail: 'brown' };
 
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
     {
@@ -155,7 +155,8 @@ it('update row: autosave=false', () =>
     const index = 3;
     const originalRow = cloneData(state.dataState.data[index]);
     const updatedRow = cloneData(state.dataState.data[index]);
-    updatedRow.model = { key: originalRow.model.key, name: 'new name value', age: 99, eyeColor: 'blue' };
+    const model: IDataDetailed = { key: originalRow.model.key, name: 'new name value', age: 99, eyeColor: 'blue', faceDetail: 'nice', hairDetail: 'brown' };
+    updatedRow.model = model;
     updatedRow.syncAction = SyncAction.updated;
 
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
@@ -171,7 +172,7 @@ it('update row: autosave=false', () =>
         expect(newState.data[index].syncAction).toBe(SyncAction.updated);
     });
 
-    updateRow(updatedRow.rowId, updatedRow.model, state, props);
+    updateRow(updatedRow.rowId, updatedRow.model as any, state, props);
 
     expect(state.setDataState).toHaveBeenCalledTimes(1);
     expect(state.setNeedsSave).toHaveBeenLastCalledWith(true);
@@ -192,7 +193,8 @@ it('update row: autosave=true', () =>
     const index = 3;
     const originalRow = cloneData(state.dataState.data[index]);
     const updatedRow = cloneData(state.dataState.data[index]);
-    updatedRow.model = { key: originalRow.model.key, name: 'new name value', age: 99, eyeColor: 'blue' };
+    const model: IDataDetailed = { key: originalRow.model.key, name: 'new name value', age: 99, eyeColor: 'blue', hairDetail: 'blonde', faceDetail: 'boxy' }
+    updatedRow.model = model;
     updatedRow.syncAction = SyncAction.updated;
 
     state.setDataState = jest.fn().mockImplementation((newState: IDataState<IData>) =>
@@ -208,7 +210,7 @@ it('update row: autosave=true', () =>
         expect(newState.data[index].syncAction).toBe(SyncAction.updated);
     });
 
-    updateRow(updatedRow.rowId, updatedRow.model, state, props);
+    updateRow(updatedRow.rowId, updatedRow.model as any, state, props);
 
     expect(state.setDataState).toHaveBeenCalledTimes(1);
     expect(state.setNeedsSave).toHaveBeenLastCalledWith(true);

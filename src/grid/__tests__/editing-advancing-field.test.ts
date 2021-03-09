@@ -2,11 +2,11 @@ import { Direction, GridEditMode, IEditField, IGridProps, IRowData } from "../ty
 import { IGridState } from "../state";
 import { advanceEditField } from "../editing";
 import * as mock from './mock-data'
-import { getData, IData } from './mock-data'
+import { getData, IData, IDataDetailed } from './mock-data';
 import { SyncAction } from "../types-sync";
 import { shallowClone } from "../util";
 
-function getDefaultProps(): IGridProps<IData>
+function getDefaultProps(): IGridProps<IData, IDataDetailed>
 {
     return {
         columns: [

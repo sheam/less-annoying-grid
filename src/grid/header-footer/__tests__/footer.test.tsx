@@ -17,7 +17,7 @@ const jumpButtonValue = (c: ShallowWrapper, index: number) =>
 const jumpButtonDisabled = (c: ShallowWrapper, index: number) =>
     jumpButton(c, index).props().disabled;
 
-function setGridContextData(gridContext: GridContext.IGridContext<any>): void
+function setGridContextData(gridContext: GridContext.IGridContext<any, any>): void
 {
     if (!gridContext.setPagination)
     {
@@ -319,6 +319,7 @@ it('disabled when needs saving', () =>
             updateRow: jest.fn(),
             editMode: GridEditMode.inline,
             editField: null,
+            getEditModelAsync: jest.fn(),
             autoSave: false,
             sync: jest.fn(),
             deleteRow: jest.fn(),
@@ -384,6 +385,7 @@ it('disabled when needs editing', () =>
                 }, field: 'one',
             },
             setEditField: jest.fn(),
+            getEditModelAsync: jest.fn(),
             editMode: GridEditMode.inline,
             autoSave: false,
             sync: jest.fn(),

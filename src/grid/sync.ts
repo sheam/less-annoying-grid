@@ -10,7 +10,7 @@ import
     SyncAction,
 } from './types-sync';
 
-export function useSyncDataEffect<TSummaryModel extends object>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel>)
+export function useSyncDataEffect<TSummaryModel extends object, TEditModel extends object>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel, TEditModel>)
 {
     const sync = async () =>
     {
@@ -31,7 +31,7 @@ export function useSyncDataEffect<TSummaryModel extends object>(state: IGridStat
     );
 }
 
-export function useLoadDataEffect<TSummaryModel extends object>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel>)
+export function useLoadDataEffect<TSummaryModel extends object, TEditModel extends object>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel, TEditModel>)
 {
     const fetch = async () =>
     {
@@ -72,9 +72,9 @@ export function useLoadDataEffect<TSummaryModel extends object>(state: IGridStat
     );
 }
 
-export async function syncChanges<TSummaryModel extends object>(
+export async function syncChanges<TSummaryModel extends object, TEditModel extends object>(
     state: IGridState<TSummaryModel>,
-    props: IGridProps<TSummaryModel>
+    props: IGridProps<TSummaryModel, TEditModel>
 ): Promise<ISyncDataResult<TSummaryModel>[]>
 {
     if (!props.editable)
@@ -94,8 +94,8 @@ export async function syncChanges<TSummaryModel extends object>(
         .filter(r => hasChanged(r))
         .map(r =>
         {
-            const result: ISyncData<TSummaryModel> = {
-                model: r.model,
+            const result: ISyncData<TEditModel> = {
+                model: (<any>r.model) as TEditModel,
                 rowId: r.rowId,
                 syncAction: r.syncAction,
             };

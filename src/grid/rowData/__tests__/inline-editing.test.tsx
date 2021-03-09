@@ -8,6 +8,7 @@ import { cloneData, shallowClone } from '../../util';
 import { GridEditMode, IRowData } from '../../types-grid';
 import { IGridContext } from '../../context';
 import { Column, SyncAction } from '../../..';
+import { IDataDetailed } from '../../__tests__/mock-data';
 
 const getByTestId = (c: ReactWrapper | ShallowWrapper, name: string) =>
     c.find(`[data-test="${name}"]`);
@@ -15,7 +16,7 @@ const getCellAt = (c: ReactWrapper | ShallowWrapper, index: number) =>
     c.find(`[data-test="data-row"]`).find('td').at(index);
 
 function setGridContextData(
-    gridContext: GridContext.IGridContext<IData>
+    gridContext: GridContext.IGridContext<IData, IDataDetailed>
 ): void
 {
     if (!gridContext.setPagination)
@@ -27,12 +28,13 @@ function setGridContextData(
     );
 }
 
-function getDefaultContext(): IGridContext<IData>
+function getDefaultContext(): IGridContext<IData, IDataDetailed>
 {
     return {
         editingContext: {
             needsSave: false,
             syncProgress: null,
+            getEditModelAsync: jest.fn(),
             editField: null,
             setEditField: jest.fn(),
             updateRow: jest.fn(),

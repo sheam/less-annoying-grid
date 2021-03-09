@@ -9,6 +9,16 @@ export interface IData
     eyeColor: string;
 }
 
+export interface IDataDetailed
+{
+    key: number;
+    name: string;
+    age: number;
+    eyeColor: string;
+    hairDetail: string;
+    faceDetail: string;
+}
+
 export function update(model: IData): IData
 {
     const index = _data.findIndex(m => m.key === model.key);

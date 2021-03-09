@@ -4,17 +4,17 @@ import { FieldEditor } from "./field-editor";
 import { useGridContext } from "../context";
 import { IRowContext, RowContext, useRowContext } from "./row-context";
 import { SyncAction } from "../types-sync";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ValidationError } from "./validation-error";
 import { IRowData } from "../types-grid";
-import { shallowClone } from "../util";
+import { cloneData, shallowClone } from "../util";
 
 interface IPopupEditorProps<TSummaryModel extends object>
 {
     columns: Array<Column<TSummaryModel>>;
 }
 
-export const PopupEditor = <TSummaryModel extends object>({ columns }: IPopupEditorProps<TSummaryModel>) =>
+export const PopupEditor = <TSummaryModel extends object, TEditModel extends object>({ columns }: IPopupEditorProps<TSummaryModel>) =>
 {
     const context = useGridContext();
     if (!context.editingContext)
@@ -26,16 +26,49 @@ export const PopupEditor = <TSummaryModel extends object>({ columns }: IPopupEdi
     {
         throw new Error('edit field not defined');
     }
+    const [rowData, setRowData] = useState<IRowData<TSummaryModel>>(editField.rowData as IRowData<TSummaryModel>);
+    const [loading, setLoading] = useState(true);
+    const isAdd = editField.rowData.syncAction === SyncAction.added;
+
+    useEffect(() =>
+    {
+        if (isAdd)
+        {
+            setLoading(false);
+        }
+        else
+        {
+            context.editingContext?.getEditModelAsync(editField.rowData.model).then((editModel) =>
+            {
+                const newRowData = cloneData(
+                    rowData);
+                newRowData.model = editModel as TSummaryModel;
+                setRowData(
+                    newRowData);
+                setLoading(
+                    false);
+            });
+        }
+    }, []);
+
+    if (loading)
+    {
+        const loadingContent = context.editingContext?.getLoadSingleState ? context.editingContext?.getLoadSingleState(rowData.model) : 'loading';
+        return <div className='popup-editor'>
+            <div className='loading-state'>
+                {loadingContent}
+            </div>
+        </div>;
+    }
 
     const editableDataColumns = columns.filter(c => (c.type === 'data' || c.type === 'field') && c.editable) as Array<IDataColumn<TSummaryModel> | IEditOnlyField<TSummaryModel>>;
-    const [rowData, setRowData] = useState<IRowData<TSummaryModel>>(editField.rowData as IRowData<TSummaryModel>);
 
     const rowEditContext: IRowContext<TSummaryModel> = {
         rowData: rowData,
         doneEditingField: (commit, _) => doneEditingField(commit),
         doneEditingModel: (commit, finalModel) => complete(commit, finalModel),
         onChange,
-        isAdd: editField.rowData.syncAction === SyncAction.added,
+        isAdd,
     };
 
     function doneEditingField(commitChanges: boolean)
@@ -97,14 +130,14 @@ export const PopupEditor = <TSummaryModel extends object>({ columns }: IPopupEdi
     );
 };
 
-interface IPopupEditorGeneratedProps<TSummaryModel extends object>
+interface IPopupEditorGeneratedProps<TEditModel extends object>
 {
-    columns: Array<IDataColumn<TSummaryModel> | IEditOnlyField<TSummaryModel>>;
+    columns: Array<IDataColumn<TEditModel> | IEditOnlyField<TEditModel>>;
     isAdd: boolean;
     modelTypeName?: string;
 }
 
-const PopupEditorGenerated = <TSummaryModel extends object>({ columns, isAdd, modelTypeName }: IPopupEditorGeneratedProps<TSummaryModel>) =>
+const PopupEditorGenerated = <TEditModel extends object>({ columns, isAdd, modelTypeName }: IPopupEditorGeneratedProps<TEditModel>) =>
 {
     const context = useRowContext();
 

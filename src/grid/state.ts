@@ -27,8 +27,8 @@ export interface IGridState<TSummaryModel extends object>
     setValidationErrors: Setter<boolean>;
 }
 
-export function useGridState<TSummaryModel extends object>(
-    props: IGridProps<TSummaryModel>
+export function useGridState<TSummaryModel extends object, TEditModel extends object>(
+    props: IGridProps<TSummaryModel, TEditModel>
 ): IGridState<TSummaryModel>
 {
     const initialPagination = props.footer?.initialPageSize

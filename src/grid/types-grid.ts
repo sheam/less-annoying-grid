@@ -32,7 +32,7 @@ export enum Direction
     backward = 'backward',
 }
 
-export interface IGridProps<TSummaryModel extends object>
+export interface IGridProps<TSummaryModel extends object, TEditModel extends object>
 {
     columns: Array<Column<TSummaryModel>>;
     footer?: IFooterProps;
@@ -45,24 +45,27 @@ export interface IGridProps<TSummaryModel extends object>
     rowDetailButtonShowingContent?: ElementOrString;
     rowDetailButtonHiddenContent?: ElementOrString;
 
+    getLoadSingleState?: (m: TSummaryModel) => ElementOrString;
+
     getDataAsync: (
         pagination: IPagination | null,
         sort: ISortColumn | null,
         filters: IFieldFilter[]
     ) => Promise<IDataResult<TSummaryModel>>;
 
-    editable?: IGridEditConfig<TSummaryModel>;
+    editable?: IGridEditConfig<TSummaryModel, TEditModel>;
 
     pushRoute?: (route: string) => void;
 }
 
-export interface IGridEditConfig<TSummaryModel extends object>
+export interface IGridEditConfig<TSummaryModel extends object, TEditModel extends object>
 {
     editMode: GridEditMode;
     autoSave: boolean;
     addToBottom?: boolean;
+    getEditModelAsync?: (model: TSummaryModel) => Promise<TEditModel>
     syncChanges: (
-        changes: Array<ISyncData<TSummaryModel>>,
+        changes: Array<ISyncData<TEditModel>>,
         updateProgress: (
             p: IProgress,
             interimResults?: Array<ISyncDataResult<TSummaryModel>>

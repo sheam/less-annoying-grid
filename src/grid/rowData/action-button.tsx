@@ -10,12 +10,12 @@ interface IActionButtonProps<TSummaryModel extends object>
     rowData: IRowData<TSummaryModel>;
 }
 
-export const ActionButton = <TSummaryModel extends object>({
+export const ActionButton = <TSummaryModel extends object, TEditModel extends object>({
     action,
     rowData,
 }: IActionButtonProps<TSummaryModel>) =>
 {
-    const context = useGridContext<TSummaryModel>();
+    const context = useGridContext<TSummaryModel, TEditModel>();
     const name = action.name || action.type;
     const state = action.buttonState ? action.buttonState(rowData.model, rowData.rowId, rowData.syncAction) : ActionStatus.Active;
     const content = action.buttonContent || <>{name}</>;
@@ -32,10 +32,10 @@ export const ActionButton = <TSummaryModel extends object>({
     );
 };
 
-function getHandler<TSummaryModel extends object>(
+function getHandler<TSummaryModel extends object, TEditModel extends object>(
     action: Action<TSummaryModel>,
     rowData: IRowData<TSummaryModel>,
-    context: IGridContext<TSummaryModel>
+    context: IGridContext<TSummaryModel, TEditModel>
 )
 {
     const modelTypeName = context.editingContext?.modelTypeName || 'item';
@@ -91,16 +91,17 @@ function getHandler<TSummaryModel extends object>(
                                 'the changed model must not be null'
                             );
                         }
+                        const editModel = (change.model as any) as TEditModel;
                         switch (change.syncAction)
                         {
                             case SyncAction.deleted:
                                 context.editingContext?.deleteRow(rowData.rowId);
                                 break;
                             case SyncAction.added:
-                                context.editingContext?.addRow(change.model);
+                                context.editingContext?.addRow(editModel);
                                 break;
                             case SyncAction.updated:
-                                context.editingContext?.updateRow(change.rowId, change.model);
+                                context.editingContext?.updateRow(change.rowId, editModel);
                                 break;
                         }
                     }
