@@ -38,19 +38,21 @@ The `Grid` component is your starting point. It is configured with both children
 | toolbar         | JSX  | no       | rendered above data, has access to `useGridContext()`
 
 ### Props
-| Name                          | Type               | Required | Description
-|-------------------------------|--------------------|----------|-----------------------------------------
-| getDataAsync                  | function           | yes      | Gets data grid will display.
-| columns                       | Column[]           | yes      | Array of column definitions.
-| footer                        | IFooterProps       | no       | Properties for footer. No footer if not present.
-| sortAscLabel                  | JSX / string       | no       | Default = `^`. Shows on column header when grid is sorted (ascending) by that column.
-| sortDescLabel                 | JSX / string       | no       | Default = `v`. Shows on column header when grid is sorted (descending) by that column.
-| unsortedLabel                 | JSX / string       | no       | Default = `-`. Shows on a _sortable_ column, when grid is _not_ sorted by that column.
-| renderRowDetail               | (model) => JSX     | no       | Content for an _accordion_ section with details that does not fit in columns.
-| rowDetailButtonShowingContent | JSX / string       | no       | Default = `v`. Button to show the extra row details in accordion.
-| rowDetailButtonHiddenContent  | JSX / string       | no       | Default = `^`. Button to hide the extra row details in accordion.
-| editable                      | IGridEditConfig    | no       | Properties pertaining to editing functionality of the grid. Presence enables editing functionality.
-| pushRoute                     | (route) => void    | no       | A callback provided to column actions for routing within your application.
+| Name                          | Type                   | Required | Description
+|-------------------------------|------------------------|----------|-----------------------------------------
+| getDataAsync                  | function               | yes      | Gets data grid will display.
+| columns                       | Column[]               | yes      | Array of column definitions.
+| footer                        | IFooterProps           | no       | Properties for footer. No footer if not present.
+| sortAscLabel                  | JSX / string           | no       | Default = `^`. Shows on column header when grid is sorted (ascending) by that column.
+| sortDescLabel                 | JSX / string           | no       | Default = `v`. Shows on column header when grid is sorted (descending) by that column.
+| unsortedLabel                 | JSX / string           | no       | Default = `-`. Shows on a _sortable_ column, when grid is _not_ sorted by that column.
+| renderRowDetail               | (model) => JSX         | no       | Content for an _accordion_ section with details that does not fit in columns.
+| getDetailModelAsync           | (model) => detailModel | no       | If supplied, the model will be fetched using this callback when the details are shown.
+| getLoadSingleState            | (model) => JSX / string| no       | Will be rendered inline when loading a model for editing or for the detail expansion.
+| rowDetailButtonShowingContent | JSX / string           | no       | Default = `v`. Button to show the extra row details in accordion.
+| rowDetailButtonHiddenContent  | JSX / string           | no       | Default = `^`. Button to hide the extra row details in accordion.
+| editable                      | IGridEditConfig        | no       | Properties pertaining to editing functionality of the grid. Presence enables editing functionality.
+| pushRoute                     | (route) => void        | no       | A callback provided to column actions for routing within your application.
 
 ## Further description of types and callbacks
 ### getDataAsync
@@ -59,6 +61,13 @@ The `Grid` component is your starting point. It is configured with both children
 This callback is called when the grid needs to fetch data.
 You can return static data, data already loaded, or fetch data over a network and return it.
 See more information on the types used below.
+
+### getDetailModelAsync
+`getDetailModelAsync?: (model: TSummaryModel) => Promise<TDetailModel>;`
+
+When the row details are shown, by default the detail panel just has access to the summary model.
+To help to keep your summary model light, then you can have a different
+detailed model that will be loaded on demand, using a heavier model, and a different endpoint.
 
 ### IPagination
 Used for passing a filter to `getDataAsync` to indicate how the returned data should be paginated.
@@ -120,6 +129,7 @@ Properties for defining the editing behaviour of the grid.
                     If the editMode is _external_ and this arg is not present an editing dialog will be auto generated with all fields.
                     See documentation on building a custom editor.
 - **syncChanges** - callback for saving the data. See below for more details
+- **getEditModelAsync** - callback for loading a different model for an external editor.
 
 ### syncChanges
 `(changes: Array<ISyncData<TModel>>, updateProgress: (progress: IProgress, interimResults?: Array<ISyncDataResult<TModel>>) => void ) => Promise<Array<ISyncDataResult<TModel>>>;`
@@ -131,6 +141,13 @@ Properties for defining the editing behaviour of the grid.
                        If it is not provided, all the results will just be processed from the return value of the function.
 - **returns** - The returned promise should return a list of results which corresponds to `changes` parameter.  Results should be matched to input via matching `RowId`
 
+### getEditModelAsync
+`(model: TSummaryModel) => Promise<TEditModel>`
+
+By default, the model that the external editor uses is the summary model from the grid.
+If the model needed for editing is more extensive, then you can use this to fetch a more detailed model from a different endpoint.
+This helps to keep your summary model light for faster loads, and reduced backend stress.
+This function is _not_ supported for inline editing.
 
 ## Column Definitions
 Columns essentially describe how your data is represented in the grid.
