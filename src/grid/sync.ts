@@ -10,7 +10,7 @@ import
     SyncAction,
 } from './types-sync';
 
-export function useSyncDataEffect<TSummaryModel extends object, TEditModel extends object, TDetailModel>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel, TEditModel, TDetailModel>)
+export function useSyncDataEffect<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel, TEditModel, TDetailModel>)
 {
     const sync = async () =>
     {
@@ -31,7 +31,7 @@ export function useSyncDataEffect<TSummaryModel extends object, TEditModel exten
     );
 }
 
-export function useLoadDataEffect<TSummaryModel extends object, TEditModel extends object, TDetailModel>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel, TEditModel, TDetailModel>)
+export function useLoadDataEffect<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(state: IGridState<TSummaryModel>, props: IGridProps<TSummaryModel, TEditModel, TDetailModel>)
 {
     const fetch = async () =>
     {
@@ -72,7 +72,7 @@ export function useLoadDataEffect<TSummaryModel extends object, TEditModel exten
     );
 }
 
-export async function syncChanges<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+export async function syncChanges<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(
     state: IGridState<TSummaryModel>,
     props: IGridProps<TSummaryModel, TEditModel, TDetailModel>
 ): Promise<ISyncDataResult<TSummaryModel>[]>

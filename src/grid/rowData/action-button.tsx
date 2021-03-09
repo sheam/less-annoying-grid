@@ -10,7 +10,7 @@ interface IActionButtonProps<TSummaryModel extends object>
     rowData: IRowData<TSummaryModel>;
 }
 
-export const ActionButton = <TSummaryModel extends object, TEditModel extends object, TDetailModel>({
+export const ActionButton = <TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>({
     action,
     rowData,
 }: IActionButtonProps<TSummaryModel>) =>
@@ -32,7 +32,7 @@ export const ActionButton = <TSummaryModel extends object, TEditModel extends ob
     );
 };
 
-function getHandler<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+function getHandler<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(
     action: Action<TSummaryModel>,
     rowData: IRowData<TSummaryModel>,
     context: IGridContext<TSummaryModel, TEditModel, TDetailModel>

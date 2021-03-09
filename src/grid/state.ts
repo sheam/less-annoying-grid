@@ -27,7 +27,7 @@ export interface IGridState<TSummaryModel extends object>
     setValidationErrors: Setter<boolean>;
 }
 
-export function useGridState<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+export function useGridState<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(
     props: IGridProps<TSummaryModel, TEditModel, TDetailModel>
 ): IGridState<TSummaryModel>
 {

@@ -64,7 +64,7 @@ export function advanceEditField<TSummaryModel extends object>(state: IGridState
 }
 
 //exported for testing only
-export function updateRow<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+export function updateRow<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(
     rowId: string,
     model: TEditModel,
     state: IGridState<TSummaryModel>,
@@ -102,7 +102,7 @@ export function updateRow<TSummaryModel extends object, TEditModel extends objec
 }
 
 //exported for testing only
-export function addRow<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+export function addRow<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(
     model: TEditModel,
     state: IGridState<TSummaryModel>,
     props: IGridProps<TSummaryModel, TEditModel, TDetailModel>
@@ -142,7 +142,7 @@ export function addRow<TSummaryModel extends object, TEditModel extends object, 
 }
 
 //exported for testing only
-export function deleteRow<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+export function deleteRow<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(
     rowId: string,
     state: IGridState<TSummaryModel>,
     props: IGridProps<TSummaryModel, TEditModel, TDetailModel>

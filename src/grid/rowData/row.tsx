@@ -36,11 +36,9 @@ export const Row = <TSummaryModel extends object>(props: IRowProps<TSummaryModel
             <>
                 {row}
                 <RowDetailTemplate
-                    show={props.data.showDetail}
+                    data={props.data}
                     numColumns={getNonGroupColumns(props.columns).length}
-                >
-                    {renderRowDetail(props.data.model)}
-                </RowDetailTemplate>
+                />
             </>
         );
     } else

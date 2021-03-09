@@ -21,7 +21,7 @@ import
 import { IFieldFilter, IPagination, ISortColumn } from './types-pagination';
 import { IProgress } from "../index";
 
-export interface IGridContext<TSummaryModel extends object, TEditModel extends object, TDetailModel>
+export interface IGridContext<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>
 {
     pagination?: IPagination | null;
     setPagination?: Setter<IPagination>;
@@ -35,7 +35,8 @@ export interface IGridContext<TSummaryModel extends object, TEditModel extends o
 
     isLoading?: boolean;
     setIsLoading?: Setter<boolean>;
-
+    getLoadSingleState?: (m: TSummaryModel) => ElementOrString;
+    getDetailModelAsync?: (model: TSummaryModel) => Promise<TDetailModel>;
     showDetailForRow?: (rowId: string, show: boolean) => void;
     renderRowDetail?: (model: TDetailModel) => JSX.Element;
     rowDetailButtonShowingContent?: ElementOrString;
@@ -48,10 +49,10 @@ export interface IGridContext<TSummaryModel extends object, TEditModel extends o
 
 export const GridContext = React.createContext({});
 
-export const useGridContext = <TSummaryModel extends object, TEditModel extends object, TDetailModel>() =>
+export const useGridContext = <TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>() =>
     useContext<IGridContext<TSummaryModel, TEditModel, TDetailModel>>(GridContext);
 
-export function createGridContext<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+export function createGridContext<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(
     props: IGridProps<TSummaryModel, TEditModel, TDetailModel>,
     state: IGridState<TSummaryModel>
 ): IGridContext<TSummaryModel, TEditModel, TDetailModel>
@@ -76,6 +77,8 @@ export function createGridContext<TSummaryModel extends object, TEditModel exten
         setFilters: state.setFilters,
         isLoading: state.isLoading,
         setIsLoading: state.setIsLoading,
+        getLoadSingleState: props.getLoadSingleState,
+        getDetailModelAsync: props.getDetailModelAsync || defaultGetDetailModel,
         renderRowDetail: props.renderRowDetail,
         editingContext: createEditingContext(state, props),
         showDetailForRow: (rowId, show) => showDetailForRow(rowId, show, state),
@@ -135,7 +138,14 @@ function defaultGetEditModel<TSummaryModel extends object, TEditModel extends ob
     const editModel = (m as any) as TEditModel;
     return Promise.resolve(editModel);
 }
-export function createEditingContext<TSummaryModel extends object, TEditModel extends object, TDetailModel>(
+
+function defaultGetDetailModel<TSummaryModel extends object, TDetailModel extends object>(m: TSummaryModel): Promise<TDetailModel>
+{
+    const detailModel = (m as any) as TDetailModel;
+    return Promise.resolve(detailModel);
+}
+
+export function createEditingContext<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>(
     state: IGridState<TSummaryModel>,
     props: IGridProps<TSummaryModel, TEditModel, TDetailModel>
 ): IGridEditContext<TSummaryModel, TEditModel> | null
