@@ -25,6 +25,8 @@ export const RowInlineEdit = <TSummaryModel extends object>(
         );
     }
 
+    console.log(`>>> Row Data [${rowData.rowNumber}]: ${(rowData.model as any).MaterialName}`);
+
     const columns = props.columns
         .filter(c => c.type !== 'field')
         .flatMap(c =>
@@ -32,15 +34,21 @@ export const RowInlineEdit = <TSummaryModel extends object>(
         );
     const uid = props.data.rowNumber;
 
-    const startEditing = (field: string) =>
+    function startEditing(field: string): void
     {
+        if (!editingContext)
+        {
+            throw new Error(
+                'RowInlineEdit can not be used with a not editable grid'
+            );
+        }
         editingContext.setEditField(field, props.data);
         setRowData(shallowClone(props.data));
     };
 
-    const onChange = (model: TSummaryModel) =>
+    function onChange(model: TSummaryModel): void
     {
-        if (!editingContext.editField)
+        if (!editingContext?.editField)
         {
             throw new Error('on change fired without an edit field set');
         }
@@ -53,16 +61,16 @@ export const RowInlineEdit = <TSummaryModel extends object>(
             showDetail: props.data.showDetail,
             originalModel: props.data.originalModel
         });
-    };
+    }
 
-    const doneEditing = (commitChanges: boolean, advance?: Direction) =>
+    function doneEditing(commitChanges: boolean, advance?: Direction): void
     {
-        if (!editingContext.editField)
+        //for some reason when this function is called, rowData has the old data in it.
+        //It is like the row is being re-initialized with the original data
+        if (!editingContext?.editField)
         {
             throw new Error('doneEditing called but now editField in context');
         }
-
-        editingContext.setEditField(null, null);
 
         if (commitChanges && hasChanged(rowData))
         {
@@ -71,6 +79,8 @@ export const RowInlineEdit = <TSummaryModel extends object>(
         {
             setRowData(props.data);
         }
+
+        editingContext.setEditField(null, null);
 
         if (advance)
         {

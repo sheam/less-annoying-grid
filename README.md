@@ -552,16 +552,17 @@ interface IRowContext<TModel extends object>
 
 # Development
 ## Testing
+**Note**: there is now a script called `link-for-testing.sh` which will do the linking and unlinking for you.
 ### Testing your application using the local version of _less-annoying-grid_
 1. In terminal, cd to _less-annoying_grid_ directory.
 1. Remove `react` from devDependencies.
 1. Run `rm -rf node_modules && yarn && yarn link`
-1. Run `yarn watch`
 1. **cd** to your app directory
 1. Run `yarn link less-annoying-grid`
-1. Link the app's React version `cd node_modules/react`
+1. Link the app's React version `cd node_modules/react && yarn link`
 1. **cd** back to module directory
 1. Complete the link `yarn link react`
+1. Run `yarn watch`
 1. Run your application
 
 **Note**: you will not be able to run the unit tests for the module until the packages
