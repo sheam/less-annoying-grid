@@ -25,10 +25,10 @@ export const RowInlineEdit = <TSummaryModel extends object>(
         );
     }
 
-    if (rowData.rowNumber === 1)
-    {
-        console.log(`>>> Row Data [${rowData.rowNumber}]: ${(rowData.model as any).MaterialName} rowId=${rowData.rowId}`);
-    }
+    // if (rowData.rowNumber === 1)
+    // {
+    //     console.log(`>>> Row Data [${rowData.rowNumber}]: ${(rowData.model as any).MaterialName} rowId=${rowData.rowId}`);
+    // }
 
     const columns = props.columns
         .filter(c => c.type !== 'field')
@@ -39,10 +39,10 @@ export const RowInlineEdit = <TSummaryModel extends object>(
 
     const startEditing = useCallback((field: string) =>
     {
-        if (rowData.rowNumber === 1)
-        {
-            console.log(`>>> Start -> Row Data [${rowData.rowNumber}]: ${(rowData.model as any).MaterialName} rowId=${rowData.rowId}`);
-        }
+        // if (rowData.rowNumber === 1)
+        // {
+        //     console.log(`>>> Start -> Row Data [${rowData.rowNumber}]: ${(rowData.model as any).MaterialName} rowId=${rowData.rowId}`);
+        // }
         if (!editingContext)
         {
             throw new Error(
@@ -55,10 +55,10 @@ export const RowInlineEdit = <TSummaryModel extends object>(
 
     const onChange = useCallback((model: TSummaryModel) =>
     {
-        if (rowData.rowNumber === 1)
-        {
-            console.log(`>>> Change -> Row Data [${rowData.rowNumber}]: ${(model as any).MaterialName} rowId=${rowData.rowId}`);
-        }
+        // if (rowData.rowNumber === 1)
+        // {
+        //     console.log(`>>> Change -> Row Data [${rowData.rowNumber}]: ${(model as any).MaterialName} rowId=${rowData.rowId}`);
+        // }
         if (!editingContext?.editField)
         {
             throw new Error('on change fired without an edit field set');
@@ -76,12 +76,10 @@ export const RowInlineEdit = <TSummaryModel extends object>(
 
     const doneEditing = useCallback((commitChanges: boolean, advance?: Direction) =>
     {
-        if (rowData.rowNumber === 1)
-        {
-            console.log(`>>> Done -> Row Data [${rowData.rowNumber}]: ${(rowData.model as any).MaterialName} rowId=${rowData.rowId}`);
-        }
-        //for some reason when this function is called, rowData has the old data in it.
-        //It is like the row is being re-initialized with the original data
+        // if (rowData.rowNumber === 1)
+        // {
+        //     console.log(`>>> Done -> Row Data [${rowData.rowNumber}]: ${(rowData.model as any).MaterialName} rowId=${rowData.rowId}`);
+        // }
         if (!editingContext?.editField)
         {
             throw new Error('doneEditing called but now editField in context');
@@ -103,7 +101,7 @@ export const RowInlineEdit = <TSummaryModel extends object>(
         }
     }, [editingContext, rowData]);
 
-    const detectSpecialKeys = (
+    const detectSpecialKeys = useCallback((
         e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
     ) =>
     {
@@ -125,7 +123,7 @@ export const RowInlineEdit = <TSummaryModel extends object>(
                 e.shiftKey ? Direction.backward : Direction.forward
             );
         }
-    };
+    }, [doneEditing]);
 
     const classes = [rowData.syncAction.toString(), 'data-row'];
     if (hasChanged(rowData)) classes.push('modified');

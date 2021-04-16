@@ -3,6 +3,7 @@ import { IGridContext, useGridContext } from 'grid/context';
 import { IRowData } from 'grid/types-grid';
 import { Action, ActionStatus } from 'grid/columns/types';
 import { SyncAction } from 'grid/types-sync';
+import { shallowClone } from '../util';
 
 interface IActionButtonProps<TSummaryModel extends object>
 {
@@ -76,7 +77,7 @@ function getHandler<TSummaryModel extends object, TEditModel extends object, TDe
 
             case 'custom':
                 const changes = action.handler(
-                    rowData.model,
+                    shallowClone(rowData.model),
                     rowData.rowId,
                     rowData.syncAction,
                     context.pushRoute,
