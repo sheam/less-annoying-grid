@@ -37,7 +37,7 @@ export const RowInlineEdit = <TSummaryModel extends object>(
         );
     const uid = props.data.rowNumber;
 
-    const startEditing = (field: string) =>
+    const startEditing = useCallback((field: string) =>
     {
         if (rowData.rowNumber === 1)
         {
@@ -51,9 +51,9 @@ export const RowInlineEdit = <TSummaryModel extends object>(
         }
         editingContext.setEditField(field, props.data);
         setRowData(shallowClone(props.data));
-    };
+    }, [editingContext, rowData]);
 
-    const onChange = (model: TSummaryModel) =>
+    const onChange = useCallback((model: TSummaryModel) =>
     {
         if (rowData.rowNumber === 1)
         {
@@ -72,9 +72,9 @@ export const RowInlineEdit = <TSummaryModel extends object>(
             showDetail: props.data.showDetail,
             originalModel: props.data.originalModel
         });
-    };
+    }, [rowData, editingContext]);
 
-    const doneEditing = (commitChanges: boolean, advance?: Direction) =>
+    const doneEditing = useCallback((commitChanges: boolean, advance?: Direction) =>
     {
         if (rowData.rowNumber === 1)
         {
@@ -101,7 +101,7 @@ export const RowInlineEdit = <TSummaryModel extends object>(
         {
             editingContext.advanceEditField(advance);
         }
-    };
+    }, [editingContext, rowData]);
 
     const detectSpecialKeys = (
         e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
