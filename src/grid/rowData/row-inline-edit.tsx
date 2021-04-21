@@ -102,7 +102,9 @@ export const RowInlineEdit = <TSummaryModel extends object>(
     }, [editingContext, rowData]);
 
     const detectSpecialKeys = useCallback((
-        e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>
+        e: KeyboardEvent<HTMLInputElement> |
+            KeyboardEvent<HTMLSelectElement> |
+            KeyboardEvent<HTMLTextAreaElement>
     ) =>
     {
         if (e.key === 'Escape')

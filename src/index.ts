@@ -2,7 +2,7 @@ import { Column, ActionStatus } from './grid/columns/types';
 import { IFooterProps } from './grid/header-footer/footer';
 import { GridContext, useGridContext } from './grid/context';
 import { Grid } from './grid/grid';
-import { GridEditMode } from './grid/types-grid';
+import { GridEditMode, IRowData } from './grid/types-grid';
 import
 {
     IDataResult,
@@ -26,6 +26,7 @@ export type {
     IPagination,
     ISortColumn,
     IProgress,
+    IRowData,
     ISyncData,
     ISyncDataResult,
     IFooterProps,

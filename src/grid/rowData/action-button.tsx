@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IGridContext, useGridContext } from 'grid/context';
 import { IRowData } from 'grid/types-grid';
 import { Action, ActionStatus } from 'grid/columns/types';
-import { SyncAction } from 'grid/types-sync';
+import { ISyncData, SyncAction } from 'grid/types-sync';
 import { shallowClone } from '../util';
 
 interface IActionButtonProps<TSummaryModel extends object>
@@ -76,10 +76,18 @@ function getHandler<TSummaryModel extends object, TEditModel extends object, TDe
                 break;
 
             case 'custom':
+                const item: ISyncData<TSummaryModel> = {
+                    model: shallowClone(rowData.model),
+                    rowId: rowData.rowId,
+                    syncAction: rowData.syncAction
+                };
+                if (!context.dataModel)
+                {
+                    throw new Error('data model is not defined');
+                }
                 const changes = action.handler(
-                    shallowClone(rowData.model),
-                    rowData.rowId,
-                    rowData.syncAction,
+                    item,
+                    context.dataModel,
                     context.pushRoute,
                 );
                 if (changes)

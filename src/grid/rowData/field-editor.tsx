@@ -9,12 +9,13 @@ interface IFieldEditorProps
 {
     field: string;
     editorType: ColumnEditorTypeBuiltIn;
-
+    isPopup?: boolean;
 }
 
 export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
     field,
     editorType,
+    isPopup
 }) =>
 {
     const context = useRowContext();
@@ -26,7 +27,9 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
         editorType.type === 'values' ? editorType.subType : editorType.type;
 
     const changeHandler = (
-        e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+        e: ChangeEvent<HTMLInputElement> |
+            ChangeEvent<HTMLSelectElement> |
+            ChangeEvent<HTMLTextAreaElement>
     ) =>
     {
         (model as any)[field] = coerceValueType(e.target.value, inputType);
@@ -42,6 +45,23 @@ export const FieldEditor: React.FunctionComponent<IFieldEditorProps> = ({
 
     if (editorType.type === 'text')
     {
+        const max = editorType.maxLength || 0;
+        if (isPopup && max > 100)
+        {
+            const rows = max / 100;
+            return (
+                <textarea
+                    name={field}
+                    value={stringFieldValue}
+                    maxLength={editorType.maxLength}
+                    autoFocus={focus}
+                    onKeyDown={detectSpecialKeys}
+                    onChange={changeHandler}
+                    onBlur={focusLost}
+                    rows={rows}
+                />
+            );
+        }
         return (
             <input
                 name={field}

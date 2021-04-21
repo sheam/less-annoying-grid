@@ -23,6 +23,7 @@ import { IProgress } from "../index";
 
 export interface IGridContext<TSummaryModel extends object, TEditModel extends object, TDetailModel extends object>
 {
+    dataModel?: Array<IRowData<TSummaryModel>>;
     pagination?: IPagination | null;
     setPagination?: Setter<IPagination>;
     resetPagination?: () => void;
@@ -58,6 +59,7 @@ export function createGridContext<TSummaryModel extends object, TEditModel exten
 ): IGridContext<TSummaryModel, TEditModel, TDetailModel>
 {
     return {
+        dataModel: state.dataState.data,
         pagination: state.pagination,
         setPagination: state.setPagination,
         resetPagination: () =>
@@ -164,7 +166,7 @@ export function createEditingContext<TSummaryModel extends object, TEditModel ex
         setEditField: (f: string | null, r: IRowData<TSummaryModel> | null) => r ? state.setEditField({ field: f, rowData: r }) : state.setEditField(null),
         updateRow: (rowId: string, model: TEditModel) => updateRow(rowId, model, state, props),
         addRow: (model?: TEditModel) =>
-            addRow(model || (createNewRow(props.columns) as any) as TEditModel, state, props),
+            addRow(createNewRow(model, props.columns) as TEditModel, state, props),
         deleteRow: (rowId: string) => deleteRow(rowId, state, props),
         editMode: props.editable.editMode,
         autoSave: props.editable.autoSave,

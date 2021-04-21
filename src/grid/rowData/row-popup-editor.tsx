@@ -26,7 +26,10 @@ export const PopupEditor = <TSummaryModel extends object, TEditModel extends obj
     {
         throw new Error('edit field not defined');
     }
-    const [rowData, setRowData] = useState<IRowData<TSummaryModel>>(editField.rowData as IRowData<TSummaryModel>);
+    const model = shallowClone(editField.rowData.model);
+    const newRowData = shallowClone(editField.rowData);
+    newRowData.model = model;
+    const [rowData, setRowData] = useState<IRowData<TSummaryModel>>(newRowData as IRowData<TSummaryModel>);
     const [loading, setLoading] = useState(true);
     const isAdd = editField.rowData.syncAction === SyncAction.added;
 
@@ -169,15 +172,16 @@ const PopupEditorGenerated = <TEditModel extends object>({ columns, isAdd, model
             <div className='fields'>
                 {columns.map(c =>
                 {
+                    const errors = context.rowData.validationErrors?.filter(x => x.field === c.field);
                     return (
-                        <div key={`${c.name}-editor`}>
+                        <div key={`${c.name}-editor`} className={c.className}>
                             <label>
                                 {c.name}
 
                                 {/* @ts-ignore: we know editable is defined because of filter */}
                                 {getEditorElement(c.editable, c.field)}
                             </label>
-                            <ValidationError field={c.field} validationErrors={context.rowData.validationErrors} />
+                            <ValidationError field={c.field} validationErrors={errors} />
                         </div>
                     );
                 })}
@@ -203,5 +207,5 @@ function getEditorElement(
     {
         return editor.editor;
     }
-    return <FieldEditor field={field} editorType={editor} />;
+    return <FieldEditor field={field} editorType={editor} isPopup={true} />;
 }

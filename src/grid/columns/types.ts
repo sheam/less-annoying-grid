@@ -1,4 +1,4 @@
-import { ElementOrString } from '../types-grid';
+import { ElementOrString, IRowData } from '../types-grid';
 import { ISyncData, SyncAction } from '../types-sync';
 import { AggregateValidator } from './validation';
 
@@ -25,6 +25,7 @@ export interface IEditOnlyField<TSummaryModel extends object>
     editable: ColumnEditorType;
     validator?: AggregateValidator;
     defaultValue?: any | (() => any);
+    className?: string;
 }
 
 interface IDisplayColumn<TSummaryModel extends object>
@@ -111,9 +112,8 @@ interface IActionCustom<TSummaryModel extends object>
         currentSyncAction: SyncAction
     ) => ActionStatus;
     handler: (
-        data: TSummaryModel,
-        rowId: string,
-        currentSyncAction: SyncAction,
+        item: ISyncData<TSummaryModel>,
+        data: Array<IRowData<TSummaryModel>>,
         pushRoute?: (route: string) => void,
     ) => Array<ISyncData<TSummaryModel>>;
 }

@@ -8,7 +8,7 @@ export interface IRowContext<TSummaryModel extends object>
     onChange: (model: any) => void;
     doneEditingField: (commitChanges: boolean, direction?: Direction) => void;
     doneEditingModel?: (commitChanges: boolean, finalModel?: any) => void;
-    detectSpecialKeys?: (e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement>) => void;
+    detectSpecialKeys?: (e: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLSelectElement> | KeyboardEvent<HTMLTextAreaElement>) => void;
     focusField?: string | null;
     isAdd: boolean;
 }

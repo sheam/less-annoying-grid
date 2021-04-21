@@ -240,11 +240,12 @@ function setValidation<TSummaryModel extends object>(
     }
 }
 
-export function createNewRow<TSummaryModel extends object>(
+export function createNewRow<TSummaryModel extends object, TEditModel extends object>(
+    startingModel: TEditModel | undefined,
     columns: Array<Column<TSummaryModel>>
-): TSummaryModel
+): TEditModel
 {
-    const model: any = {};
+    const model = (startingModel as any) || {};
 
     columns.forEach(c =>
     {
@@ -257,5 +258,5 @@ export function createNewRow<TSummaryModel extends object>(
         }
     });
 
-    return model as TSummaryModel;
+    return model as TEditModel;
 }

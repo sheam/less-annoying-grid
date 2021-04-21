@@ -73,8 +73,8 @@ export const Grid = <TSummaryModel extends object, TEditModel extends object, TD
                         }
                         {state.dataState.data.map(d =>
                         {
-                            const k = d.rowId;
-                            // const k = `row-${d.rowId}-${d.syncAction}-${d.validationErrors?.length}`
+                            // const k = d.rowId;
+                            const k = `row-${d.rowId}-${d.syncAction}-${d.validationErrors?.length}`
                             return (
                                 <Row
                                     key={k}
