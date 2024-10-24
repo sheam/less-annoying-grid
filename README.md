@@ -1,4 +1,7 @@
 # The Less Annoying Grid
+
+**Note:** I am no longer maintaining this package. I have switched to using [Tanstack Table](https://tanstack.com/table/latest). If someone wants to to take this over, let me know. 
+
 An editable data grid that is meant for multiple scenarios.
 
 This isn't meant as a quick way to show data.
